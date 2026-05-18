@@ -92,6 +92,7 @@ const tagline = produit.description?.trim() || rayon?.tagline || "";
     produit.description ||
     `${produit.nom} — disponible au rayon ${rayon?.nom ?? produit.rayon} du Marché de Mo' à Toulouse et Portet-sur-Garonne.`
   }
+  ogImage={produit.image || undefined}
   schema={combinedSchema}
 >
   <Breadcrumb

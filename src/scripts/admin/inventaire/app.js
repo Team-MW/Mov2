@@ -581,6 +581,7 @@ function renderTable() {
       <td class="px-3 py-2 text-right tabular-nums font-bold ${a.quantite <= (a.seuil || 0) ? 'text-red-600' : 'text-slate-900'}">${a.quantite ?? ''}</td>
       <td class="px-3 py-2 whitespace-nowrap">${renderStatusBadge(a.statut)}</td>
       <td class="px-3 py-2 text-right whitespace-nowrap print:hidden">
+        <button data-action="publish" data-id="${a.id}" class="text-indigo-600 hover:text-indigo-800 text-xs font-semibold mr-2">Publier</button>
         <button data-action="edit" data-id="${a.id}" class="text-vert hover:text-vert-800 text-xs font-semibold mr-2">Éditer</button>
         <button data-action="delete" data-id="${a.id}" class="text-red-600 hover:text-red-800 text-xs font-semibold">Suppr.</button>
       </td>
@@ -706,6 +707,20 @@ function wireInventoryTable() {
 
       if (action === 'edit') {
         openEditModal(article);
+      } else if (action === 'publish') {
+        if (!confirm(`Publier l'article ${article.numero_article} au catalogue ?`)) return;
+        try {
+          const res = await fetch('/api/admin/inventaire/publish', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: article.id }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Erreur lors de la publication');
+          toast('Article publié au catalogue !', 'success');
+        } catch (err) {
+          toast(err.message, 'error');
+        }
       } else if (action === 'delete') {
         if (!confirm(`Supprimer définitivement l'article ${article.numero_article} ?`)) return;
         try {

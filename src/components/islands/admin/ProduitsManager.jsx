@@ -11,6 +11,7 @@ import MobileActionBar from "./MobileActionBar.jsx";
 import { adminFetch, clearDraft, loadDraft, saveDraft } from "./adminFetch.js";
 import { compareRows, useAdminListState } from "./useAdminListState.js";
 import { humanizeError } from "../../../lib/admin-errors";
+import { TAXONOMIE } from "../../../lib/taxonomie";
 
 /**
  * ProduitsManager — admin table for public.produits (catalogue vitrine).
@@ -656,8 +657,8 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
       {/* Sticky toolbar */}
       <div id="produits-toolbar" className="sticky top-0 z-30 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 pt-2 pb-3 bg-white/85 backdrop-blur-md">
         <div className="bg-white rounded-3xl shadow-card p-4 md:p-5 flex flex-col md:flex-row gap-3 md:items-center">
-          <div className="flex-1 flex flex-col sm:flex-row gap-2">
-            <div className="flex-1 min-w-0 relative">
+          <div className="flex-1 grid grid-cols-2 gap-2 sm:flex sm:flex-row">
+            <div className="col-span-2 sm:flex-1 min-w-0 relative">
               <input
                 ref={searchInputRef}
                 type="search"
@@ -749,7 +750,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
               {filter.recent === "24h" ? "24 h" : filter.recent === "7d" ? "7 j" : "Récents"}
             </button>
           </div>
-          <div className="flex gap-2 shrink-0 flex-wrap">
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap shrink-0">
             {canReorder && (
               <button
                 type="button"
@@ -938,7 +939,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
                     onDragOver={reorderMode ? (e) => onDragOverRow(e, p.id) : undefined}
                     onDrop={reorderMode ? () => onDropRow(p.id) : undefined}
                     className={[
-                      "flex items-center gap-3 px-4 md:px-5 py-3 transition",
+                      "flex items-center gap-3 px-4 md:px-5 py-2 transition",
                       isSel ? "bg-vert/5" : "hover:bg-white/50",
                       isDragOver ? "outline outline-2 outline-vert -outline-offset-2" : "",
                     ].join(" ")}
@@ -1031,7 +1032,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
                       <button
                         type="button"
                         onClick={() => toggleActif(p)}
-                        className={`px-2 py-0.5 rounded-full text-[11px] font-bold transition ${
+                        className={`px-3 py-1 rounded-full text-[12px] font-bold transition ${
                           p.actif
                             ? "bg-vert/15 text-vert-dark hover:bg-vert/25"
                             : "bg-neutral-200 text-neutral-500 hover:bg-neutral-300"
@@ -1243,6 +1244,9 @@ function EditModal({ produit, rayonsOptions, onCancel, onSave }) {
     !!(produit.id || produit.slug) || !!loadDraft(draftKey),
   );
   const formRef = useRef(null);
+
+  const categoriesOptions = form.rayon ? Object.keys(TAXONOMIE[form.rayon] || {}) : [];
+  const subCategoriesOptions = (form.rayon && form.categorie) ? (TAXONOMIE[form.rayon][form.categorie] || []) : [];
 
   /* Debounced auto-save of the draft to sessionStorage so closing the
    * tab / browser crash / 401-during-typing all recover gracefully on
@@ -1481,22 +1485,55 @@ function EditModal({ produit, rayonsOptions, onCancel, onSave }) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="Catégorie" hint="Niveau 1 de la taxonomie (drill-down sur la page rayon).">
-              <input
-                type="text"
-                value={form.categorie ?? ""}
-                onChange={(e) => set("categorie", e.target.value)}
-                className="input"
-                placeholder="Fruits, Viandes, Épices…"
-              />
+              {categoriesOptions.length > 0 ? (
+                <select
+                  value={form.categorie ?? ""}
+                  onChange={(e) => {
+                    set("categorie", e.target.value);
+                    set("sous_categorie", ""); // Reset sub-category when category changes
+                  }}
+                  className="input"
+                >
+                  <option value="">— Choisir —</option>
+                  {categoriesOptions.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  value={form.categorie ?? ""}
+                  onChange={(e) => set("categorie", e.target.value)}
+                  className="input"
+                  placeholder="Fruits, Viandes, Épices…"
+                />
+              )}
             </Field>
             <Field label="Sous-catégorie" hint="Niveau 2 optionnel (ex : « Dattes » sous « Fruits »).">
-              <input
-                type="text"
-                value={form.sous_categorie ?? ""}
-                onChange={(e) => set("sous_categorie", e.target.value)}
-                className="input"
-                placeholder="Dattes, Exotiques…"
-              />
+              {subCategoriesOptions.length > 0 ? (
+                <select
+                  value={form.sous_categorie ?? ""}
+                  onChange={(e) => set("sous_categorie", e.target.value)}
+                  className="input"
+                >
+                  <option value="">— Choisir —</option>
+                  {subCategoriesOptions.map((sc) => (
+                    <option key={sc} value={sc}>
+                      {sc}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  value={form.sous_categorie ?? ""}
+                  onChange={(e) => set("sous_categorie", e.target.value)}
+                  className="input"
+                  placeholder="Dattes, Exotiques…"
+                />
+              )}
             </Field>
           </div>
 

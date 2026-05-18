@@ -82,15 +82,41 @@ const expired = Astro.url.searchParams.get("expired") === "1";
           <input type="hidden" name="next" value={next} />
           <div>
             <label for="password" class="block text-[13px] font-bold mb-1.5">Mot de passe</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              autocomplete="current-password"
-              autofocus
-              class="input-admin"
-            />
+            <div class="relative">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                autocomplete="current-password"
+                autofocus
+                class="input-admin pr-12"
+              />
+              <button
+                type="button"
+                id="toggle-password"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-noir transition"
+                aria-label="Afficher le mot de passe"
+              >
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+
+            <script>
+              const toggleBtn = document.getElementById('toggle-password');
+              const passwordInput = document.getElementById('password');
+
+              toggleBtn?.addEventListener('click', () => {
+                if (passwordInput instanceof HTMLInputElement) {
+                  const type = passwordInput.type === 'password' ? 'text' : 'password';
+                  passwordInput.type = type;
+                  toggleBtn.setAttribute('aria-label', type === 'text' ? 'Masquer le mot de passe' : 'Afficher le mot de passe');
+                }
+              });
+            </script>
           </div>
 
           {error && (
