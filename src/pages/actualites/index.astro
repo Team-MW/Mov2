@@ -54,7 +54,7 @@ const getMeta = (cat: string) =>
     <section class="section-sm bg-blanc">
       <div class="container-mo">
         <a href={`/actualites/${featured.slug}`} class="group grid lg:grid-cols-2 gap-8 lg:gap-14 items-center">
-          <div class="aspect-[4/3] lg:aspect-[5/4] overflow-hidden rounded-3xl bg-creme">
+          <div class="aspect-[4/3] lg:aspect-[5/4] overflow-hidden rounded-3xl bg-white">
             <img
               src={featured.data.image}
               alt={featured.data.titre}
@@ -93,7 +93,7 @@ const getMeta = (cat: string) =>
 
   <!-- Grid -->
   {others.length > 0 && (
-    <section class="section bg-creme">
+    <section class="section bg-white">
       <div class="container-mo">
         <h2 class="display-md text-balance max-w-2xl">Tous les articles.</h2>
         <div class="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -105,7 +105,7 @@ const getMeta = (cat: string) =>
                 class="group bg-white rounded-3xl overflow-hidden shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all reveal reveal-scale"
                 style={`--reveal-delay: ${(i % 3) * 70}ms`}
               >
-                <div class="aspect-[4/3] overflow-hidden bg-creme">
+                <div class="aspect-[4/3] overflow-hidden bg-white">
                   <img
                     src={a.data.image}
                     alt={a.data.titre}

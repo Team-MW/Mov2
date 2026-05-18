@@ -294,7 +294,7 @@ export default function AdminCatalogueTree({ tree = [], activePath = "", publicU
       className="bg-white rounded-3xl shadow-card overflow-hidden"
     >
       {/* Header + search */}
-      <div className="px-4 py-3 border-b border-black/5 bg-creme">
+      <div className="px-4 py-3 border-b border-black/5 bg-white">
         <p className="font-soft font-bold text-[14px] text-noir">
           Catalogue
           <span className="ml-2 text-[11px] font-normal text-neutral-500">
@@ -375,7 +375,7 @@ export default function AdminCatalogueTree({ tree = [], activePath = "", publicU
       </div>
 
       {/* Legend */}
-      <div className="px-4 py-2 border-t border-black/5 bg-creme/50 flex items-center gap-3 text-[10px] text-neutral-500 flex-wrap">
+      <div className="px-4 py-2 border-t border-black/5 bg-white/50 flex items-center gap-3 text-[10px] text-neutral-500 flex-wrap">
         <span className="inline-flex items-center gap-1">
           <span className="w-2 h-2 rounded-full bg-vert" />
           actifs
@@ -407,7 +407,7 @@ function TopLink({ href, label, active = false, muted = false, count, external =
           ? "bg-noir text-white"
           : muted
           ? "text-neutral-500 hover:bg-neutral-100"
-          : "text-noir hover:bg-creme"
+          : "text-noir hover:bg-white"
       }`}
       aria-current={active ? "page" : undefined}
     >
@@ -547,10 +547,10 @@ function Row({
         isActive
           ? "bg-noir text-white"
           : isOnActivePath
-          ? "bg-creme text-noir"
+          ? "bg-white text-noir"
           : focused
-          ? "bg-creme text-noir"
-          : "hover:bg-creme/60"
+          ? "bg-white text-noir"
+          : "hover:bg-white/60"
       } ${isOrphan ? "italic" : ""}`}
       style={{ paddingLeft: padLeft }}
     >

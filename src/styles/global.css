@@ -224,7 +224,6 @@
     padding-bottom: var(--space-section-sm);
   }
   .bg-blanc  { background: var(--color-blanc); }
-  .bg-creme  { background: var(--color-creme); }
   .bg-noir-section {
     background: var(--color-noir);
     color: var(--color-blanc);

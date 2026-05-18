@@ -11,6 +11,7 @@
  */
 import { RAYONS } from "@/lib/site";
 import type { ProduitVedette } from "@/lib/produits-vedettes";
+import { supabaseSrcSet } from "@/lib/image-cdn";
 
 interface Props {
   produit: ProduitVedette;
@@ -23,6 +24,18 @@ const rayonData = RAYONS[produit.rayon];
 const accent = rayonData?.accent ?? "#1C6B35";
 const href =
   linkTo === "rayon" ? `/rayons/${produit.rayon}` : `/produits/${produit.id}`;
+
+/* Responsive srcset : mobile grid renders these at ~160 px (2-col) to
+ * ~240 px (3-col), desktop grid at ~280 px (4-col) to ~360 px (3-col).
+ * Accounting for DPR 2-3, 400/600/800 covers 2× phones and 3× desktop
+ * retina cleanly. `sizes` mirrors the outer grid breakpoints. */
+const { src: produitSrc, srcset: produitSrcset } = supabaseSrcSet(
+  produit.image,
+  [400, 600, 800],
+  { quality: 72 },
+);
+const produitSizes =
+  "(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 22vw";
 ---
 
 <a
@@ -31,10 +44,12 @@ const href =
   data-tilt-max="3"
   class="group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1"
 >
-  <div class="relative aspect-square overflow-hidden bg-creme">
+  <div class="relative aspect-square overflow-hidden bg-white">
     {produit.image ? (
       <img
-        src={produit.image}
+        src={produitSrc}
+        srcset={produitSrcset}
+        sizes={produitSizes}
         alt={produit.nom}
         loading="lazy"
         decoding="async"
@@ -43,7 +58,7 @@ const href =
         class="w-full h-full object-cover group-hover:scale-[1.07] transition-transform duration-500"
       />
     ) : (
-      <div class="absolute inset-0 bg-gradient-to-br from-creme via-creme-warm to-[#EEEAE0] flex flex-col items-center justify-center p-5 text-center">
+      <div class="absolute inset-0 bg-gradient-to-br from-white via-neutral-100 to-[#EEEAE0] flex flex-col items-center justify-center p-5 text-center">
         <img
           src="/logos/favicon-marchedemo.png"
           alt=""

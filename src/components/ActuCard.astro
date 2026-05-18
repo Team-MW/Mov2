@@ -11,6 +11,7 @@
  */
 import type { ActuItem } from "@/lib/actus";
 import { actuBadgeLabel, actuBadgeColor } from "@/lib/actus";
+import { supabaseSrcSet } from "@/lib/image-cdn";
 
 interface Props {
   actu: ActuItem;
@@ -19,6 +20,17 @@ interface Props {
 const { actu } = Astro.props as Props;
 const badge = actuBadgeLabel(actu);
 const badgeColor = actuBadgeColor(actu);
+
+/* Responsive srcset : the stream is a horizontal carousel showing
+ * roughly 1.1 cards on mobile (~90vw), 2.2 on tablet (~45vw),
+ * 4.2 on desktop (~24vw at container width). 400/600/800 covers
+ * DPR 2–3 across that range. */
+const { src: actuSrc, srcset: actuSrcset } = supabaseSrcSet(
+  actu.image,
+  [400, 600, 800],
+  { quality: 72 },
+);
+const actuSizes = "(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 24vw";
 ---
 
 <a
@@ -27,9 +39,11 @@ const badgeColor = actuBadgeColor(actu);
   data-tilt-max="3"
   class="actu-card group block"
 >
-  <div class="relative overflow-hidden rounded-2xl bg-creme aspect-[5/4] ring-1 ring-black/5 shadow-sm group-hover:shadow-card-hover transition-all duration-400">
+  <div class="relative overflow-hidden rounded-2xl bg-white aspect-[5/4] ring-1 ring-black/5 shadow-sm group-hover:shadow-card-hover transition-all duration-400">
     <img
-      src={actu.image}
+      src={actuSrc}
+      srcset={actuSrcset}
+      sizes={actuSizes}
       alt={actu.imageAlt ?? actu.titre}
       loading="lazy"
       decoding="async"

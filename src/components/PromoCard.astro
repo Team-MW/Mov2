@@ -4,6 +4,7 @@
  * Layout : image dominante + infos tassées, badge rouge -X%.
  */
 import { RAYONS } from "@/lib/site";
+import { supabaseSrcSet } from "@/lib/image-cdn";
 
 interface Props {
   titre: string;
@@ -56,13 +57,26 @@ const fin = new Date(date_fin);
 const finStr = isNaN(fin.getTime())
   ? date_fin
   : fin.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+
+/* Responsive srcset : the promo card fills 1 column on mobile (~100vw),
+ * 2 cols on tablet (~50vw) and 3 cols on desktop (~33vw at container
+ * width). 600/900/1200 covers phones at DPR 2 through desktop retina. */
+const { src: promoSrc, srcset: promoSrcset } = supabaseSrcSet(
+  image,
+  [600, 900, 1200],
+  { quality: 75 },
+);
+const promoSizes =
+  "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw";
 ---
 
 <article class={`promo-card group ${featured ? "ring-2 ring-rouge/20" : ""}`}>
   <!-- Image -->
-  <a href={`/rayons/${rayonSlug}`} class="relative block aspect-[4/3] overflow-hidden bg-creme">
+  <a href={`/rayons/${rayonSlug}`} class="relative block aspect-[4/3] overflow-hidden bg-white">
     <img
-      src={image}
+      src={promoSrc}
+      srcset={promoSrcset}
+      sizes={promoSizes}
       alt={titre}
       loading="lazy"
       decoding="async"

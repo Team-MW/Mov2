@@ -1,0 +1,314 @@
+---
+export const prerender = false;
+import Layout from '../../../layouts/admin/InventaireLayout.astro';
+---
+<Layout title="Générer des codes-barres — Marché de Mo'">
+  <main class="max-w-7xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
+
+    <!-- Page header -->
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <div class="text-xs font-semibold text-vert uppercase tracking-wider">Inventaire</div>
+        <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Générer des codes-barres</h1>
+        <p class="text-sm text-slate-600 mt-1">Codes EAN-13 conformes au standard <strong>GS1 France</strong> (préfixe 300-379) avec checksum valide.</p>
+      </div>
+      <a href="/admin/inventaire/inventaire"
+        class="inline-flex items-center gap-1.5 rounded-lg bg-white border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        Retour
+      </a>
+    </div>
+
+    <!-- KPI strip -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
+      <div class="bg-white rounded-2xl ring-1 ring-slate-200 p-4 md:p-5">
+        <div class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total articles</div>
+        <div id="kpi-total" class="mt-1 text-2xl md:text-3xl font-extrabold text-slate-900 tabular-nums">—</div>
+      </div>
+      <div class="bg-white rounded-2xl ring-1 ring-slate-200 p-4 md:p-5">
+        <div class="text-xs font-medium text-slate-500 uppercase tracking-wider">Avec code-barres</div>
+        <div id="kpi-with" class="mt-1 text-2xl md:text-3xl font-extrabold text-vert tabular-nums">—</div>
+      </div>
+      <div class="bg-white rounded-2xl ring-1 ring-slate-200 p-4 md:p-5">
+        <div class="text-xs font-medium text-slate-500 uppercase tracking-wider">Sans code-barres</div>
+        <div id="kpi-without" class="mt-1 text-2xl md:text-3xl font-extrabold text-red-600 tabular-nums">—</div>
+      </div>
+    </section>
+
+    <!-- Action bar -->
+    <section class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-4 md:p-5">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="min-w-0">
+          <h2 class="text-base font-semibold text-slate-900">Gestion des codes-barres</h2>
+          <p id="missing-summary" class="text-sm text-slate-500 mt-0.5">Chargement…</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <select id="filter-status" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-vert focus:ring-2 focus:ring-vert/20 focus:outline-none">
+            <option value="missing">Sans code-barres</option>
+            <option value="with">Avec code-barres</option>
+            <option value="all">Tous les articles</option>
+          </select>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="btn-refresh" type="button"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+            Rafraîchir
+          </button>
+          <button id="btn-download-images" type="button" disabled
+            class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            <span id="btn-download-images-label">Télécharger Images</span>
+          </button>
+          <button id="btn-export-selected" type="button" disabled
+            class="inline-flex items-center gap-1.5 rounded-lg bg-vert px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-vert-800 disabled:bg-slate-300 disabled:cursor-not-allowed">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            Exporter PDF
+          </button>
+          <button id="btn-generate" type="button" disabled
+            class="inline-flex items-center gap-2 rounded-lg bg-vert px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-vert-800 disabled:bg-slate-300 disabled:cursor-not-allowed">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5v14"/><path d="M7 5v14"/><path d="M11 5v14"/><path d="M15 5v14"/><path d="M19 5v14"/></svg>
+            Générer
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Overlay de progression : génération en cours -->
+    <div id="gen-overlay" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl shadow-2xl ring-1 ring-slate-200 max-w-md w-full p-6 md:p-8">
+        <div class="h-12 w-12 mx-auto mb-3 rounded-full border-4 border-vert-100 border-t-vert animate-spin"></div>
+        <h3 class="text-center text-base font-bold text-slate-900">Génération en cours…</h3>
+        <p id="gen-current" class="mt-1 text-center text-xs text-slate-500 font-mono truncate">&nbsp;</p>
+
+        <!-- Barre de progression animée -->
+        <div class="mt-5">
+          <div class="flex items-center justify-between text-[11px] font-semibold text-slate-600 mb-1.5">
+            <span><span id="gen-done">0</span> / <span id="gen-total">0</span> articles</span>
+            <span id="gen-pct" class="tabular-nums">0 %</span>
+          </div>
+          <div class="h-3 rounded-full bg-slate-100 ring-1 ring-slate-200 overflow-hidden">
+            <div id="gen-bar" class="h-full w-0 rounded-full bg-gradient-to-r from-vert to-emerald-500 transition-[width] duration-300 ease-out"></div>
+          </div>
+        </div>
+
+        <p class="mt-4 text-[11px] text-center text-slate-400">Génération d'EAN-13 conformes <strong>GS1 France</strong> (300-379) avec checksum.</p>
+      </div>
+    </div>
+
+    <!-- Overlay PDF -->
+    <div id="pdf-overlay" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl shadow-2xl ring-1 ring-slate-200 max-w-sm w-full p-6 md:p-8 text-center">
+        <div class="h-12 w-12 mx-auto mb-3 rounded-full border-4 border-vert-100 border-t-vert animate-spin"></div>
+        <h3 class="text-base font-bold text-slate-900">Génération du PDF…</h3>
+        <p class="mt-1 text-xs text-slate-500">Encodage des étiquettes en cours.</p>
+      </div>
+    </div>
+
+    <!-- Barcode preview modal -->
+    <div id="barcode-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl shadow-2xl ring-1 ring-slate-200 max-w-lg w-full p-6 md:p-8 relative">
+        <button id="modal-close" type="button" class="absolute top-3 right-3 text-slate-400 hover:text-slate-700 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <h3 id="modal-title" class="text-lg font-bold text-slate-900 mb-1">Code-barres</h3>
+        <p id="modal-subtitle" class="text-sm text-slate-500 mb-4"></p>
+        <div id="modal-barcode-container" class="flex justify-center bg-white p-4 rounded-xl ring-1 ring-slate-100">
+          <svg id="modal-barcode-svg"></svg>
+        </div>
+        <div class="flex items-center justify-center gap-3 mt-5">
+          <button id="modal-download-png" type="button"
+            class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            Télécharger PNG
+          </button>
+          <button id="modal-download-pdf" type="button"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
+            Télécharger PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modale de choix post-génération -->
+    <div id="postgen-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div id="postgen-backdrop" class="absolute inset-0"></div>
+      <div class="relative bg-white rounded-2xl shadow-2xl ring-1 ring-slate-200 max-w-sm w-full p-6 md:p-8 text-center">
+        <button id="postgen-close" type="button" class="absolute top-3 right-3 text-slate-400 hover:text-slate-700 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <div class="mx-auto h-14 w-14 rounded-2xl bg-vert-50 ring-1 ring-vert-200 flex items-center justify-center text-vert mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5v14"/><path d="M7 5v14"/><path d="M11 5v14"/><path d="M15 5v14"/><path d="M19 5v14"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900 mb-1">Codes-barres générés !</h3>
+        <p class="text-sm text-slate-500 mb-6">
+          <span id="postgen-count">0</span> code(s)-barres ont été enregistrés. Que souhaitez-vous faire ?
+        </p>
+        <div class="flex flex-col gap-2">
+          <button id="postgen-btn-view" type="button"
+            class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-vert px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-vert-800">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            Visualiser les étiquettes
+          </button>
+          <button id="postgen-btn-print" type="button"
+            class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+            Imprimer maintenant
+          </button>
+          <button id="postgen-btn-pdf" type="button"
+            class="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            Télécharger PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state (no missing barcodes) -->
+    <section id="empty" class="hidden bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-10 md:p-14 text-center">
+      <div class="mx-auto h-16 w-16 rounded-2xl bg-emerald-50 ring-1 ring-emerald-200 flex items-center justify-center text-emerald-600 mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+      </div>
+      <h2 class="text-lg font-semibold text-slate-900">Tout est en ordre</h2>
+      <p class="text-sm text-slate-500 mt-1 max-w-md mx-auto">Tous vos articles ont déjà un code-barres. Rien à générer pour le moment.</p>
+    </section>
+
+    <!-- Table : articles à traiter -->
+    <section id="missing-section" class="hidden bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 overflow-hidden">
+      <div class="overflow-x-auto">
+        <table id="missing-table" class="min-w-full text-sm hidden">
+          <thead class="bg-slate-50 text-[11px] uppercase tracking-wider text-slate-500 border-b border-slate-200">
+            <tr>
+              <th class="px-3 py-2 text-left font-semibold w-12">
+                <input id="check-all" type="checkbox" class="rounded border-slate-300" checked />
+              </th>
+              <th class="px-3 py-2 text-left font-semibold">N° article (série)</th>
+              <th class="px-3 py-2 text-left font-semibold">Photo</th>
+              <th class="px-3 py-2 text-left font-semibold">Nom produit</th>
+              <th class="px-3 py-2 text-left font-semibold">Marque</th>
+              <th class="px-3 py-2 text-left font-semibold">Rayon</th>
+              <th class="px-3 py-2 text-left font-semibold">Code-barres</th>
+              <th class="px-3 py-2 text-right font-semibold">Qté</th>
+              <th class="px-3 py-2 text-center font-semibold">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="missing-tbody" class="divide-y divide-slate-100 bg-white"></tbody>
+        </table>
+        
+        <div id="missing-loading" class="hidden py-16 px-6 text-center text-slate-400">
+          <div class="h-10 w-10 mx-auto mb-3 rounded-full border-4 border-slate-200 border-t-vert animate-spin"></div>
+          <p class="text-sm font-medium">Recherche des articles sans code-barres…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Generated labels (after generation) -->
+    <section id="labels-section" class="hidden">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4 print:hidden">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">Étiquettes générées</h2>
+          <p class="text-sm text-slate-500 mt-0.5">Aperçu prêt pour l'impression (Imprimer) ou export individuel PDF taille normée (50x30mm).</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="btn-print" type="button"
+            class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+            Imprimer
+          </button>
+          <button id="btn-download-pdf" type="button"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            Télécharger PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Print-friendly grid of labels -->
+      <div id="labels-grid"
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4 bg-white p-4 md:p-6 rounded-2xl shadow-sm ring-1 ring-slate-200 print:rounded-none print:shadow-none print:ring-0 print:p-0 print:gap-0">
+        <!-- Filled by codes-barres.js -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Print stylesheet + animations -->
+  <style is:global>
+
+
+    /* Apparition progressive des étiquettes générées (cascade) */
+    @media print {
+      body { background: white !important; }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .label-card {
+      break-inside: avoid;
+      animation: fadeUp 350ms ease-out both;
+    }
+
+    /* Action buttons in table */
+    .barcode-action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      background: white;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+    .barcode-action-btn:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+      border-color: #cbd5e1;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .barcode-action-btn.view-btn:hover {
+      background: #ecfdf5;
+      color: #166534;
+      border-color: #bbf7d0;
+    }
+    .barcode-action-btn.download-btn:hover {
+      background: #fef2f2;
+      color: #991b1b;
+      border-color: #fecaca;
+    }
+
+    /* Modal animation */
+    #barcode-modal > div {
+      animation: fadeUp 200ms ease-out;
+    }
+
+    @media print {
+      @page { size: A4; margin: 8mm; }
+      body { background: white !important; }
+      header, footer, nav, .navbar, [data-no-print] { display: none !important; }
+      main { padding: 0 !important; max-width: 100% !important; }
+      #labels-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 4mm !important;
+      }
+      .label-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        border: 1px solid #cbd5e1 !important;
+        padding: 4mm !important;
+        text-align: center;
+        animation: none !important;     /* pas d'anim à l'impression */
+      }
+      .label-card svg { width: 100% !important; height: auto !important; }
+    }
+  </style>
+
+  <script>
+    import '../../../scripts/admin/inventaire/barcode-print.js';
+  </script>
+</Layout>

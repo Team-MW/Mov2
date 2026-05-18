@@ -33,6 +33,6 @@ Thumbs.db
 # Scratch / scraping
 .tmp/
 
-
+.project-store/
 plan/
 .commit-msg.tmp

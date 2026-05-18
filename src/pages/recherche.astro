@@ -149,7 +149,7 @@ const quickSuggestions = [
         <button
           type="button"
           id="q-clear"
-          class="hidden absolute right-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-full bg-creme hover:bg-black/5 text-[12px] font-pro font-bold"
+          class="hidden absolute right-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-full bg-white hover:bg-black/5 text-[12px] font-pro font-bold"
           aria-label="Effacer la recherche"
         >
           Effacer
@@ -163,7 +163,7 @@ const quickSuggestions = [
         {quickSuggestions.map((s) => (
           <button
             type="button"
-            class="q-chip px-3 py-1.5 rounded-full bg-creme hover:bg-vert hover:text-white text-[13px] font-pro font-bold transition-all"
+            class="q-chip px-3 py-1.5 rounded-full bg-white hover:bg-vert hover:text-white text-[13px] font-pro font-bold transition-all"
             data-q={s}
           >
             {s}
@@ -173,7 +173,7 @@ const quickSuggestions = [
     </div>
   </section>
 
-  <section class="section-sm bg-creme min-h-[60vh]">
+  <section class="section-sm bg-white min-h-[60vh]">
     <div class="container-mo max-w-5xl">
       {/* Empty state (rendered by default) */}
       <div id="q-empty" class="text-center py-10 md:py-16">
@@ -339,11 +339,11 @@ const quickSuggestions = [
       const rayonLabel = idx.rayons.find((r) => r.slug === p.rayon)?.title ?? p.rayon;
       return `
         <a href="${p.href}" class="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-0.5">
-          <div class="relative aspect-square overflow-hidden bg-creme">
+          <div class="relative aspect-square overflow-hidden bg-white">
             ${
               p.image
                 ? `<img src="${p.image}" alt="${escapeHtml(p.title)}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-[1.06] transition-transform duration-500" />`
-                : `<div class="absolute inset-0 bg-gradient-to-br from-creme to-[#EEEAE0] flex items-center justify-center p-3 text-center"><p class="font-soft font-bold text-[12px] text-neutral-500 uppercase tracking-wider line-clamp-3">${escapeHtml(p.title)}</p></div>`
+                : `<div class="absolute inset-0 bg-gradient-to-br from-white to-[#EEEAE0] flex items-center justify-center p-3 text-center"><p class="font-soft font-bold text-[12px] text-neutral-500 uppercase tracking-wider line-clamp-3">${escapeHtml(p.title)}</p></div>`
             }
           </div>
           <div class="p-3">

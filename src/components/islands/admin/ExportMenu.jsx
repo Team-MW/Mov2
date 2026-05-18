@@ -76,7 +76,7 @@ export default function ExportMenu({ rows, totalRows, kind = "produits" }) {
           <button
             type="button"
             onClick={() => exportAs("csv")}
-            className="block w-full text-left px-3 py-2 rounded-lg text-[13px] hover:bg-creme"
+            className="block w-full text-left px-3 py-2 rounded-lg text-[13px] hover:bg-white"
           >
             <span className="font-bold">CSV</span>
             <span className="block text-[11px] text-neutral-500">Excel · Numbers · Sheets</span>
@@ -84,7 +84,7 @@ export default function ExportMenu({ rows, totalRows, kind = "produits" }) {
           <button
             type="button"
             onClick={() => exportAs("json")}
-            className="block w-full text-left px-3 py-2 rounded-lg text-[13px] hover:bg-creme"
+            className="block w-full text-left px-3 py-2 rounded-lg text-[13px] hover:bg-white"
           >
             <span className="font-bold">JSON</span>
             <span className="block text-[11px] text-neutral-500">Réimportable tel quel</span>

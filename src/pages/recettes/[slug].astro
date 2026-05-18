@@ -90,11 +90,11 @@ const tempsLabel =
           </a>
         )}
         {recette.data.origine && (
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-pro font-bold uppercase tracking-wider bg-creme text-neutral-700">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-pro font-bold uppercase tracking-wider bg-white text-neutral-700">
             {recette.data.origine}
           </span>
         )}
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-pro font-bold uppercase tracking-wider bg-creme text-neutral-700">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-pro font-bold uppercase tracking-wider bg-white text-neutral-700">
           {recette.data.difficulte}
         </span>
       </div>
@@ -108,7 +108,7 @@ const tempsLabel =
 
     {/* Image hero + meta-infos en overlay */}
     <section class="container-mo max-w-5xl">
-      <div class="relative aspect-[16/9] md:aspect-[2/1] rounded-3xl overflow-hidden shadow-card bg-creme">
+      <div class="relative aspect-[16/9] md:aspect-[2/1] rounded-3xl overflow-hidden shadow-card bg-white">
         <img
           src={recette.data.image}
           alt={recette.data.imageAlt ?? recette.data.titre}
@@ -159,7 +159,7 @@ const tempsLabel =
 
     {/* Rayons liés — cross-linking */}
     {rayonSecondaires.length > 0 && (
-      <section class="bg-creme py-10 md:py-14">
+      <section class="bg-white py-10 md:py-14">
         <div class="container-mo max-w-3xl">
           <span class="eyebrow">Trouvez les ingrédients</span>
           <h2 class="font-soft font-bold text-[24px] md:text-[30px] mt-3 mb-6 text-balance">

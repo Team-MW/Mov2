@@ -654,7 +654,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
   return (
     <div className="pb-20 md:pb-0">
       {/* Sticky toolbar */}
-      <div id="produits-toolbar" className="sticky top-0 z-30 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 pt-2 pb-3 bg-creme/85 backdrop-blur-md">
+      <div id="produits-toolbar" className="sticky top-0 z-30 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 pt-2 pb-3 bg-white/85 backdrop-blur-md">
         <div className="bg-white rounded-3xl shadow-card p-4 md:p-5 flex flex-col md:flex-row gap-3 md:items-center">
           <div className="flex-1 flex flex-col sm:flex-row gap-2">
             <div className="flex-1 min-w-0 relative">
@@ -664,7 +664,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
                 placeholder="Rechercher nom, slug, origine…  (raccourci : /)"
                 value={filter.q}
                 onChange={(e) => setFilter({ q: e.target.value })}
-                className="w-full px-4 py-2 pr-9 rounded-full border border-black/10 text-[14px] focus:border-vert focus:outline-none bg-creme"
+                className="w-full px-4 py-2 pr-9 rounded-full border border-black/10 text-[14px] focus:border-vert focus:outline-none bg-white"
                 aria-label="Recherche"
               />
               {filter.q && (
@@ -912,7 +912,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
             const someRayonSelected = rayonIds.some((id) => selected.has(id));
             return (
             <section key={rayonSlug} className="bg-white rounded-3xl shadow-card overflow-hidden">
-              <header className="bg-creme px-5 py-3 border-b border-black/5 flex items-center justify-between gap-3">
+              <header className="bg-white px-5 py-3 border-b border-black/5 flex items-center justify-between gap-3">
                 <label className="flex items-center gap-3 cursor-pointer select-none">
                   <input
                     type="checkbox"
@@ -939,7 +939,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
                     onDrop={reorderMode ? () => onDropRow(p.id) : undefined}
                     className={[
                       "flex items-center gap-3 px-4 md:px-5 py-3 transition",
-                      isSel ? "bg-vert/5" : "hover:bg-creme/50",
+                      isSel ? "bg-vert/5" : "hover:bg-white/50",
                       isDragOver ? "outline outline-2 outline-vert -outline-offset-2" : "",
                     ].join(" ")}
                   >
@@ -1002,7 +1002,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
                         loading="lazy"
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-lg bg-creme flex items-center justify-center text-neutral-300 shrink-0">
+                      <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center text-neutral-300 shrink-0">
                         —
                       </div>
                     )}
@@ -1782,7 +1782,7 @@ function ImportModal({ currentProduits, onCancel, onImport }) {
         </div>
 
         <div className="p-6 space-y-4">
-          <div className="bg-creme rounded-2xl p-4 text-[13px] text-neutral-600 leading-relaxed">
+          <div className="bg-white rounded-2xl p-4 text-[13px] text-neutral-600 leading-relaxed">
             <strong>JSON :</strong> tableau <code className="bg-white px-1 rounded">[...]</code> ou <code className="bg-white px-1 rounded">{`{ produits: [...] }`}</code>.
             <br />
             <strong>CSV :</strong> une ligne d'en-tête puis une ligne par produit. Séparateur <code>,</code> ou <code>;</code> auto-détecté.
@@ -1830,7 +1830,7 @@ function ImportModal({ currentProduits, onCancel, onImport }) {
           <textarea
             value={text}
             onChange={(e) => onPaste(e.target.value)}
-            className="w-full min-h-[220px] font-mono text-[12px] px-4 py-3 border border-black/10 rounded-2xl bg-creme resize-y focus:outline-none focus:border-vert"
+            className="w-full min-h-[220px] font-mono text-[12px] px-4 py-3 border border-black/10 rounded-2xl bg-white resize-y focus:outline-none focus:border-vert"
             placeholder={
               'slug,nom,rayon,categorie,sous_categorie,origine\nriz-basmati,Riz basmati parfumé,produits-courants,"Céréales",,Inde\n\n-- ou JSON --\n[{"slug":"riz-basmati","nom":"Riz basmati","rayon":"produits-courants"}]'
             }
@@ -1845,7 +1845,7 @@ function ImportModal({ currentProduits, onCancel, onImport }) {
 
           {parsed && (
             <div className="bg-white border border-black/5 rounded-2xl overflow-hidden">
-              <div className="bg-creme px-4 py-2 text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
+              <div className="bg-white px-4 py-2 text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
                 Prévisualisation · {parsed.length} ligne(s)
               </div>
               <div className="max-h-64 overflow-y-auto">

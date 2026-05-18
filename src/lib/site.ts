@@ -174,7 +174,9 @@ export type RayonSlug =
   | "saveur-sud-amer"
   | "balkans-turques"
   | "produits-courants"
-  | "surgeles";
+  | "surgeles"
+  | "boulangerie"
+  | "produits-laitiers";
 
 export interface Rayon {
   slug: RayonSlug;
@@ -488,6 +490,40 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
       "plats surgelés halal Toulouse",
       "samoussa surgelé Toulouse",
     ],
+  },
+  "boulangerie": {
+    slug: "boulangerie",
+    nom: "Boulangerie",
+    nomCourt: "Boulangerie",
+    eyebrow: "Pains & viennoiseries",
+    tagline: "Pain frais cuit sur place.",
+    description: "Retrouvez tous nos pains traditionnels et spécialités du monde cuites sur place quotidiennement.",
+    longDescription: "Baguettes chaudes, pains traditionnels, galettes orientales, batbouts, msemmens et viennoiseries cuites chaque matin sur place pour vous offrir un produit d'une fraîcheur irréprochable.",
+    image: "/images/rayons/boulangerie.jpg",
+    imageAlt: "Rayon boulangerie Marché de Mo' Toulouse — baguettes et pains chauds",
+    culturel: false,
+    ordre: 11,
+    icone: "bread",
+    featured: ["Pain traditionnel", "Msemmen", "Batbout", "Viennoiseries"],
+    accent: "#E29B56",
+    keywords: ["boulangerie Toulouse", "pain chaud Toulouse", "galette orientale Toulouse"]
+  },
+  "produits-laitiers": {
+    slug: "produits-laitiers",
+    nom: "Produits Laitiers",
+    nomCourt: "Laitages",
+    eyebrow: "Fraîcheur & douceur",
+    tagline: "Les essentiels au rayon frais.",
+    description: "Sélection complète de yaourts, laits, beurres, crèmes et fromages traditionnels de tous horizons.",
+    longDescription: "Laits de vache, chèvre et brebis, yaourts classiques et brassés, beurres doux et demi-sel, fromages blancs et une large gamme de fromages traditionnels français et internationaux.",
+    image: "/images/rayons/produits-laitiers.jpg",
+    imageAlt: "Rayon produits laitiers Marché de Mo' — laits, fromages et yaourts",
+    culturel: false,
+    ordre: 12,
+    icone: "cheese",
+    featured: ["Lait frais", "Yaourt nature", "Fromage de brebis", "Beurre traditionnel"],
+    accent: "#4A90E2",
+    keywords: ["produits laitiers Toulouse", "fromage brebis Toulouse", "yaourt frais Toulouse"]
   },
 };
 

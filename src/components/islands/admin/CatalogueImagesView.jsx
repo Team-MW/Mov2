@@ -79,7 +79,7 @@ function ImageThumb({ src, alt, accent }) {
   }
   return (
     <div
-      className="aspect-square w-full rounded-2xl overflow-hidden bg-creme relative"
+      className="aspect-square w-full rounded-2xl overflow-hidden bg-white relative"
       style={{ "--accent": accent || "#1C6B35" }}
     >
       {!loaded && (
@@ -113,7 +113,7 @@ function ProductCard({ p, rayon }) {
   return (
     <a
       href={href}
-      className="group flex flex-col gap-2 rounded-2xl p-2 hover:bg-creme transition focus:outline-none focus:ring-2 focus:ring-vert/40"
+      className="group flex flex-col gap-2 rounded-2xl p-2 hover:bg-white transition focus:outline-none focus:ring-2 focus:ring-vert/40"
       title={`Ouvrir « ${p.nom} » dans le catalogue`}
     >
       <ImageThumb src={p.image_url} alt={p.nom} accent={rayon?.accent} />
@@ -150,7 +150,7 @@ function PromoCard({ p }) {
   return (
     <a
       href="/admin/promos"
-      className="group flex flex-col gap-2 rounded-2xl p-2 hover:bg-creme transition focus:outline-none focus:ring-2 focus:ring-rouge/40"
+      className="group flex flex-col gap-2 rounded-2xl p-2 hover:bg-white transition focus:outline-none focus:ring-2 focus:ring-rouge/40"
       title={`Ouvrir « ${p.titre} » dans les promos`}
     >
       <ImageThumb src={img} alt={p.titre} accent="#8B1919" />
@@ -319,7 +319,7 @@ export default function CatalogueImagesView({ initialPromos, initialProduits, ra
   return (
     <div className="flex flex-col gap-5">
       {/* ----- Toolbar : search + filter chips + quick-jump ----- */}
-      <div className="sticky top-[64px] md:top-[72px] z-20 bg-creme/90 backdrop-blur-sm -mx-4 md:mx-0 px-4 md:px-0 py-3 border-b border-black/5 md:border-0">
+      <div className="sticky top-[64px] md:top-[72px] z-20 bg-white/90 backdrop-blur-sm -mx-4 md:mx-0 px-4 md:px-0 py-3 border-b border-black/5 md:border-0">
         <div className="flex flex-col md:flex-row md:items-center gap-3">
           {/* Search */}
           <div className="relative flex-1 max-w-md">

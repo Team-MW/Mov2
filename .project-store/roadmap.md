@@ -5,7 +5,7 @@
 > Cascade works autonomously through its items; check-in at phase
 > boundary or on unresolvable ambiguity.
 
-Last updated : 2026-05-04 (Phases A-D shipped; D.1 hotfixes landed; Phase E audit drafted)
+Last updated : 2026-05-06 (Phases A-D shipped; D.1 hotfixes landed; Phase E audit drafted; Phase 3 perf-fixes batch 1 landed — Supabase image transforms + viewport prefetch + branded PageLoader overlay)
 
 > Ordering. Admin phases A-D run FIRST because admin is daily-ops
 > critical and blocks the owner's ability to manage the catalog
@@ -171,7 +171,7 @@ Last updated : 2026-05-04 (Phases A-D shipped; D.1 hotfixes landed; Phase E audi
 
 ## Phase 3 - Performance fixes
 
-- **status**   : planned
+- **status**   : batch 1 DONE (delivered 2026-05-06) — image weight + nav perceived-speed
 - **dod**      :
   - Targets from dossier section 10 met (LCP <= 2.5s, CLS <= 0.1, TBT <= 200ms, Lighthouse mobile >= 90/95/95/95, main chunk <= 250 KB gzip).
   - Before/after Lighthouse delta logged.
@@ -182,6 +182,14 @@ Last updated : 2026-05-04 (Phases A-D shipped; D.1 hotfixes landed; Phase E audi
   - Below-fold images lazy-loaded (already partially done in Layout.astro).
   - Split-reveal observer: audit for long-tasks on mobile.
   - Animation script defer / idle-load.
+- **batch 1 verified** : `npx astro check` clean. Shipped :
+  1. **`src/lib/image-cdn.ts`** — `supabaseImage(src, opts)` + `supabaseSrcSet(src, widths, opts)` rewrite Supabase Storage `object/public/...` URLs to the `render/image/public/...?width=…&quality=…&format=webp` endpoint. Helper is env-gated (`PUBLIC_SUPABASE_IMAGE_TRANSFORMS=on|off`, default `on`) and gracefully passes through non-Supabase URLs / malformed input. Typical savings on the bananas hero : 1.4 MB JPEG → 38 KB WebP at 960 px.
+  2. **Responsive `srcset` + `sizes`** wired into the 5 hot image components : `PromoHero` (widths 800/1200/1600/2400, sizes 100vw, q78), `PromoCard` (600/900/1200, q75), `ProduitCard` (400/600/800, q72), `RecetteCard` (400/600/800, q74), `ActuCard` (400/600/800, q72). Sizes mirror each grid's actual breakpoints ; phones at DPR 2-3 now download the smallest variant that still fits their slot.
+  3. **`<head>` preconnect + dns-prefetch to the Supabase Storage origin** in `src/layouts/Layout.astro`, derived from `SUPABASE_URL` at build time. Saves the cold-TLS handshake (100-300 ms) on the first card image.
+  4. **`astro.config.mjs prefetch.defaultStrategy: 'viewport'`** (was `'hover'`). Mobile users now get "tap = instant page" because the target HTML is in the cache before the click commits. Astro auto-throttles + respects `Save-Data` so 3G stays sane.
+  5. **`RayonCard` slideshow defer** : slides 0+1 load normally (slide 0 is the LCP frame, slide 1 needs to be ready for the 4 s fade) ; slides 2+3 use `data-defer-src` and a page-level IntersectionObserver promotes them via `requestIdleCallback` once the card enters the viewport with a 200 px early-load margin. Cuts /rayons first paint from up to 48 parallel image requests to ~24 above-fold.
+  6. **`#pageloader` interstitial** — branded overlay driven by `astro:before-preparation` → `astro:after-swap`. Three states by latency : nav < 80 ms invisible (no flash on cached prefetch hits), nav ≥ 80 ms shows a 2 px vert progress bar, nav ≥ 380 ms surfaces a centered logo card on a soft creme backdrop with a 1.6 s breathe pulse. `transition:persist="pageloader"` keeps the same DOM node across swaps so animation state isn't reset. Respects `prefers-reduced-motion` (no pulse, no scale). Brand-strict : vert + creme + Filson, no beige / ocre.
+- **batch 2 candidates** (not yet scheduled) : Typekit subset audit, Vercel Image Service migration for `/images/**` static rayon photos, route-level Lighthouse pass to validate gains, optional service-worker cache for repeat visits.
 - **verified** :
 
 ## Phase 4 - Animation enhancements

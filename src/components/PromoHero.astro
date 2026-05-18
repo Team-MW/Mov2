@@ -26,6 +26,7 @@
  *               card promo, new store opening, app download, etc.
  */
 import type { PromoEntry } from "@/lib/promos-repo";
+import { supabaseSrcSet } from "@/lib/image-cdn";
 
 /* Local magasinLabel helper (pas encore extrait dans un lib/) */
 const magasinLabel = (m: string): string =>
@@ -90,6 +91,16 @@ const editorialSlides = extraSlides.map((s) => ({
 
 const slides = [...promoSlides, ...editorialSlides].slice(0, 6);
 const hasSlides = slides.length > 0;
+
+/* Hero is full-bleed (100vw). Widths cover : mobile portrait DPR 3
+ * (≈ 1290 px), tablet landscape DPR 2 (≈ 2048 px), desktop 1920 DPR 1.
+ * Above 2400 px the file cost (> 250 KB even as WebP) outweighs the
+ * extra sharpness at the distance a user views a hero photo. */
+const heroWidths = [800, 1200, 1600, 2400];
+const heroSizes = "100vw";
+const heroSources = slides.map((s) =>
+  supabaseSrcSet(s.image, heroWidths, { quality: 78 }),
+);
 ---
 
 {hasSlides && (
@@ -111,7 +122,9 @@ const hasSlides = slides.length > 0;
         >
           <div class="promo-hero-slide-image-wrap">
             <img
-              src={slide.image}
+              src={heroSources[i].src || slide.image}
+              srcset={heroSources[i].srcset}
+              sizes={heroSizes}
               alt={slide.imageAlt}
               loading={i === 0 ? "eager" : "lazy"}
               fetchpriority={i === 0 ? "high" : undefined}

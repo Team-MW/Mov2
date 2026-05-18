@@ -66,6 +66,26 @@ function inferImageType(path?: string): string | undefined {
 }
 const heroType = heroImageType ?? inferImageType(heroImage);
 
+/* Supabase Storage hostname — extracted from SUPABASE_URL at build time
+ * so we can emit a `<link rel="preconnect">` in the <head>. Images served
+ * from Storage (`<project>.supabase.co`) otherwise pay a cold-TLS
+ * handshake on the very first `<img>` that shows up in the viewport,
+ * which can add 100–300 ms of blank time on the LCP. Preconnect warms
+ * the TCP/TLS socket alongside the HTML fetch, so the first image
+ * starts downloading immediately. Falls back to `null` if the env var
+ * is missing (e.g. preview-deploy without Supabase) — in that case we
+ * simply skip the hint rather than emit a broken URL. */
+function supabaseStorageOrigin(): string | null {
+  try {
+    const raw = import.meta.env.SUPABASE_URL;
+    if (!raw || typeof raw !== "string") return null;
+    return new URL(raw).origin;
+  } catch {
+    return null;
+  }
+}
+const supabaseOrigin = supabaseStorageOrigin();
+
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, SITE.url).toString();
 
 /* OG image resolution priority :
@@ -95,6 +115,19 @@ const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
     <link rel="preconnect" href="https://use.typekit.net" crossorigin />
     <link rel="preconnect" href="https://p.typekit.net" crossorigin />
     <link rel="stylesheet" href="https://use.typekit.net/tci0qgy.css" />
+
+    {/* Supabase Storage — warm the TLS socket before the first <img>.
+        Every promo/produit/rayon card served from Supabase saves
+        100–300 ms of "blank time" vs. a cold connection. `dns-prefetch`
+        is a no-op for browsers that honour `preconnect` but a cheap
+        safety net for old Firefox + privacy-mode cases where the
+        preconnect gets discarded. */}
+    {supabaseOrigin && (
+      <>
+        <link rel="preconnect" href={supabaseOrigin} crossorigin />
+        <link rel="dns-prefetch" href={supabaseOrigin} />
+      </>
+    )}
 
     <!-- Preload du logo du header pour le premier paint.
          Skipped quand hideChrome est actif (admin / login) parce que le
@@ -178,6 +211,36 @@ const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
     {/* Scroll progress bar — always at the very top of viewport.
         Width driven by `--scroll-progress` CSS variable updated from scroll handler. */}
     <div class="scroll-progress" aria-hidden="true"></div>
+
+    {/*
+      Page loader — branded interstitial for navigation between pages.
+      Visible states :
+        • nav < 150 ms  → nothing (instant nav, avoids flash).
+        • nav ≥ 150 ms  → thin vert progress bar at the very top.
+        • nav ≥ 380 ms  → centered logo card over a soft white backdrop.
+      Driven by Astro View Transition events (astro:before-preparation →
+      astro:after-swap). `transition:persist` keeps the DOM node stable
+      across swaps so its animation state isn't reset mid-navigation.
+      Respects prefers-reduced-motion (no pulse, no scale transform).
+    */}
+    <div
+      id="pageloader"
+      class="pageloader-shell"
+      aria-hidden="true"
+      transition:persist="pageloader"
+    >
+      <div class="pageloader-bar" id="pageloader-bar"></div>
+      <div class="pageloader-card" role="status" aria-live="polite">
+        <img
+          src="/logos/logo-marchedemo-rond-contourgreen.png"
+          alt=""
+          width="72"
+          height="72"
+          class="pageloader-logo"
+        />
+        <span class="pageloader-label">Chargement…</span>
+      </div>
+    </div>
 
     {!hideChrome && (
       <>
@@ -494,6 +557,295 @@ const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
         window.addEventListener("resize", onScrollFrame, { passive: true });
         document.addEventListener("astro:page-load", mount);
 
+        if (document.readyState !== "loading") mount();
+        else document.addEventListener("DOMContentLoaded", mount);
+      })();
+    </script>
+
+    {/*
+      Page loader styles + driver. Styles are scoped via unique class
+      names (`.pageloader-*`) so `is:global` is safe here — we want
+      them to apply to the persisted DOM node across every page.
+    */}
+    <style is:global>
+      .pageloader-shell {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483646;
+        pointer-events: none;
+        visibility: hidden;
+      }
+      .pageloader-shell.is-active { visibility: visible; }
+
+      /* Thin vert progress bar anchored to the top edge. Grows in
+         three pre-scripted steps then snaps to 100 % on swap. This
+         mimics the "indeterminate but reassuring" pattern popularised
+         by YouTube / NYT / NProgress. */
+      .pageloader-bar {
+        position: absolute;
+        top: 0; left: 0;
+        height: 2px;
+        width: 0;
+        background: linear-gradient(
+          90deg,
+          var(--color-vert, #1C6B35) 0%,
+          var(--color-vert, #1C6B35) 55%,
+          #4CAF66 100%
+        );
+        box-shadow: 0 0 10px rgba(28, 107, 53, 0.55);
+        opacity: 0;
+        transition:
+          width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+          opacity 0.2s ease;
+      }
+      .pageloader-shell.is-active .pageloader-bar { opacity: 1; }
+
+      /* Centered card with logo + label — only surfaces on slow
+         navigations (≥ 380 ms) so fast cached swaps stay invisible. */
+      .pageloader-card {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%) scale(0.92);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        padding: 26px 40px 20px;
+        background: color-mix(in srgb, var(--color-blanc, #FFFFFF) 95%, transparent);
+        backdrop-filter: blur(10px) saturate(1.05);
+        -webkit-backdrop-filter: blur(10px) saturate(1.05);
+        border-radius: 24px;
+        box-shadow:
+          0 10px 40px rgba(28, 107, 53, 0.14),
+          0 2px 6px rgba(0, 0, 0, 0.06),
+          0 0 0 1px rgba(28, 107, 53, 0.08);
+        opacity: 0;
+        transition:
+          opacity 0.25s ease,
+          transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .pageloader-shell.is-slow .pageloader-card {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      /* Soft dim over the page content so the card reads clearly even
+         on busy photo-heavy pages (homepage, rayons). Only active when
+         the card is shown. */
+      .pageloader-shell.is-slow {
+        background: color-mix(in srgb, var(--color-blanc, #FFFFFF) 55%, transparent);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        transition: backdrop-filter 0.25s ease;
+      }
+
+      .pageloader-logo {
+        width: 68px;
+        height: 68px;
+        display: block;
+        animation: pageloader-breathe 1.6s ease-in-out infinite;
+        will-change: transform, opacity;
+      }
+      @keyframes pageloader-breathe {
+        0%, 100% { transform: scale(1);     opacity: 0.88; }
+        50%      { transform: scale(1.08);  opacity: 1;    }
+      }
+      .pageloader-label {
+        font-family: var(--font-body, system-ui);
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--color-vert-dark, #0f4c21);
+        opacity: 0.82;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .pageloader-logo { animation: none; }
+        .pageloader-bar { transition: opacity 0.2s ease; }
+        .pageloader-card {
+          transform: translate(-50%, -50%);
+          transition: opacity 0.2s ease;
+        }
+        .pageloader-shell.is-slow .pageloader-card {
+          transform: translate(-50%, -50%);
+        }
+      }
+    </style>
+
+    <script is:inline>
+      /*
+        Drive the page loader from Astro's View Transitions lifecycle.
+        Lifecycle events fire in this order on every client-side nav :
+          astro:before-preparation → astro:before-swap → astro:after-swap → astro:page-load
+        We start the bar on preparation and resolve it on after-swap,
+        which is the moment the new DOM is live and visible. The card
+        (heavier visual treatment) only surfaces if the nav is slow
+        enough to warrant it — on a warm-cached prefetched page, this
+        entire module renders nothing.
+
+        Guard : we install the listeners exactly once per document via
+        the __pageLoaderMounted flag. The loader DOM element is
+        persisted across swaps (transition:persist), so the SAME node
+        stays hooked up.
+      */
+      (() => {
+        if (document.__pageLoaderMounted) return;
+        document.__pageLoaderMounted = true;
+
+        const shell = document.getElementById("pageloader");
+        const bar = document.getElementById("pageloader-bar");
+        if (!shell || !bar) return;
+
+        /* Tunables — picked to match perception literature
+           (Nielsen : "< 100 ms feels instant, < 1 s keeps flow"). */
+        const SHOW_BAR_AFTER_MS  = 80;   /* start bar immediately-ish */
+        const SHOW_CARD_AFTER_MS = 380;  /* only reveal logo card on slow navs */
+
+        let active = false;
+        let barTimer = 0;
+        let cardTimer = 0;
+        let barStartTimer = 0;
+
+        const runBarSteps = () => {
+          /* Three asymptotic steps : 22 % → 58 % → 82 %. The final
+             100 % is driven by finishLoading() on astro:after-swap. */
+          const steps = [22, 58, 82];
+          let i = 0;
+          clearInterval(barTimer);
+          bar.style.width = "0%";
+          barTimer = setInterval(() => {
+            if (!active || i >= steps.length) {
+              clearInterval(barTimer);
+              return;
+            }
+            bar.style.width = steps[i] + "%";
+            i++;
+          }, 160);
+        };
+
+        const startLoading = () => {
+          active = true;
+          /* Reset residual state from any previous nav. */
+          shell.classList.remove("is-slow");
+          clearTimeout(cardTimer);
+          clearTimeout(barStartTimer);
+
+          /* Delayed activation : skip the flash on fast cached navs. */
+          barStartTimer = setTimeout(() => {
+            if (!active) return;
+            shell.classList.add("is-active");
+            runBarSteps();
+          }, SHOW_BAR_AFTER_MS);
+
+          cardTimer = setTimeout(() => {
+            if (active) shell.classList.add("is-slow");
+          }, SHOW_CARD_AFTER_MS);
+        };
+
+        const finishLoading = () => {
+          active = false;
+          clearTimeout(cardTimer);
+          clearTimeout(barStartTimer);
+          clearInterval(barTimer);
+
+          /* Only animate completion if the loader was ever actually
+             shown (otherwise a fast nav would flicker in a 100 % bar
+             just to fade it out). */
+          const wasActive = shell.classList.contains("is-active");
+          if (!wasActive) {
+            shell.classList.remove("is-slow");
+            return;
+          }
+          bar.style.width = "100%";
+          window.setTimeout(() => {
+            shell.classList.remove("is-slow");
+            shell.classList.remove("is-active");
+            /* Fade bar to 0 then snap width back so the next nav
+               starts from a clean slate. */
+            window.setTimeout(() => { bar.style.width = "0%"; }, 250);
+          }, 140);
+        };
+
+        /* Astro View Transitions hooks. */
+        document.addEventListener("astro:before-preparation", startLoading);
+        document.addEventListener("astro:after-swap", finishLoading);
+
+        /* Safety net : if the transition path is somehow bypassed
+           (bfcache restore, anchor-only nav, JS error), clear the
+           overlay on page-load / pageshow. */
+        document.addEventListener("astro:page-load", () => {
+          if (active) finishLoading();
+        });
+        window.addEventListener("pageshow", (e) => {
+          if (e.persisted) finishLoading();
+        });
+      })();
+    </script>
+
+    <!--
+      Deferred image loader — promotes `data-defer-src` → `src` when
+      the element enters the viewport, on the idle callback. Powers
+      the RayonCard slideshow's slides 2-3 (they only become visible
+      at +8 s / +12 s of the CSS animation, so there's no need to
+      download them during the initial page paint).
+
+      Saves, on /rayons with 12 cards : 24 image requests during the
+      first 2 seconds. The browser can use that bandwidth on above-
+      fold imagery instead.
+
+      Idempotent across Astro View Transitions via the `__deferImgMounted`
+      flag on `document` — rebinds the IntersectionObserver once per
+      `astro:page-load` to pick up cards that appeared in the new DOM.
+    -->
+    <script is:inline>
+      (() => {
+        const SRC_ATTR = "data-defer-src";
+        const DONE_ATTR = "data-defer-done";
+
+        const promote = (img) => {
+          if (img.getAttribute(DONE_ATTR)) return;
+          const target = img.getAttribute(SRC_ATTR);
+          if (!target) return;
+          /* `requestIdleCallback` is the right primitive here : we only
+             swap when the browser has spare CPU budget, avoiding
+             contention with scroll / reveal animations. Fall back to a
+             100 ms timeout on Safari (still ships no rIC). */
+          const run = () => {
+            img.src = target;
+            img.setAttribute(DONE_ATTR, "1");
+            img.removeAttribute(SRC_ATTR);
+          };
+          if ("requestIdleCallback" in window) {
+            window.requestIdleCallback(run, { timeout: 2000 });
+          } else {
+            setTimeout(run, 100);
+          }
+        };
+
+        const mount = () => {
+          const imgs = document.querySelectorAll("img[" + SRC_ATTR + "]");
+          if (!imgs.length) return;
+          if (!("IntersectionObserver" in window)) {
+            /* Ancient browser path : load everything immediately. */
+            imgs.forEach(promote);
+            return;
+          }
+          const io = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((e) => {
+                if (!e.isIntersecting) return;
+                promote(e.target);
+                io.unobserve(e.target);
+              });
+            },
+            /* 200 px early-load margin so the image is ready slightly
+               before the slide becomes the active frame. */
+            { rootMargin: "200px 0px", threshold: 0.01 }
+          );
+          imgs.forEach((img) => io.observe(img));
+        };
+
+        document.addEventListener("astro:page-load", mount);
         if (document.readyState !== "loading") mount();
         else document.addEventListener("DOMContentLoaded", mount);
       })();

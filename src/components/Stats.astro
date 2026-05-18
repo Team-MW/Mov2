@@ -27,7 +27,7 @@ const { items = defaultStats, variant = "light" } = Astro.props as Props;
 const isDark = variant === "dark";
 ---
 
-<section class={`section-sm ${isDark ? "bg-noir text-white" : "bg-creme"}`}>
+<section class={`section-sm ${isDark ? "bg-noir text-white" : "bg-white"}`}>
   <div class="container-mo">
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-8">
       {items.map((stat, i) => {

@@ -1,0 +1,63 @@
+// CSV export — alignement schema MCD
+const HEADERS = [
+  { key: 'numero_article',     label: 'Numero article' },
+  { key: 'nom_produit',        label: 'Nom produit' },
+  { key: 'rayon',              label: 'Rayon' },
+  { key: 'marque',             label: 'Marque' },
+  { key: 'dlc',                label: 'DLC' },
+  { key: 'format',             label: 'Format' },
+  { key: 'magasin',            label: 'Magasin' },
+  { key: 'description',        label: 'Description' },
+  { key: 'prix_vente',         label: 'Prix vente' },
+  { key: 'code_barres',        label: 'Code-barres' },
+  { key: 'quantite_initiale',  label: 'Quantite initiale' },
+  { key: 'quantite',           label: 'Quantite' },
+  { key: 'seuil',              label: 'Seuil' },
+  { key: 'statut',             label: 'Statut' },
+];
+
+const STATUT_LABELS = {
+  en_stock: 'En stock',
+  stock_faible: 'Stock faible',
+  rupture: 'Rupture',
+};
+
+function escape(val) {
+  if (val === null || val === undefined) return '';
+  const s = String(val);
+  if (/[",;\n\r]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+  return s;
+}
+
+function fmtNumber(n) {
+  if (n === null || n === undefined || n === '') return '';
+  if (Number.isNaN(Number(n))) return '';
+  return String(Number(n).toFixed(2)).replace('.', ',');
+}
+
+export function articlesToCSV(articles) {
+  const head = HEADERS.map((h) => escape(h.label)).join(';');
+  const rows = articles.map((a) =>
+    HEADERS.map((h) => {
+      const raw = a[h.key];
+      if (h.key === 'prix_vente') return escape(fmtNumber(raw));
+      if (h.key === 'statut') return escape(STATUT_LABELS[raw] || '');
+      return escape(raw ?? '');
+    }).join(';')
+  );
+  return '\uFEFF' + [head, ...rows].join('\r\n');
+}
+
+export function downloadCSV(articles, { filename = null } = {}) {
+  const csv = articlesToCSV(articles);
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const ts = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+  a.href = url;
+  a.download = filename || `inventaire-marchedemo-${ts}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}

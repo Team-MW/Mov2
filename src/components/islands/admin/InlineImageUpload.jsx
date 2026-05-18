@@ -187,7 +187,7 @@ export default function InlineImageUpload({
         ref={dropRef}
         className={[
           "relative rounded-2xl border-2 border-dashed transition overflow-hidden",
-          dragging ? "border-vert bg-vert/5" : "border-black/15 bg-creme/50",
+          dragging ? "border-vert bg-vert/5" : "border-black/15 bg-white/50",
           uploading ? "opacity-70 pointer-events-none" : "",
         ].join(" ")}
       >

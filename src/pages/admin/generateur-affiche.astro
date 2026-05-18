@@ -1,0 +1,152 @@
+---
+export const prerender = false;
+
+import Layout from "@layouts/Layout.astro";
+import AdminTopbar from "@components/admin/AdminTopbar.astro";
+import AfficheGenerator from "@components/islands/admin/AfficheGenerator.jsx";
+import { SITE } from "@/lib/site";
+import { isAuthenticated } from "@/lib/auth";
+import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseInventaire } from "@/lib/inventaire-bridge";
+import "@styles/poster.css";
+
+// 1. Guard route with admin authentication cookie
+if (!(await isAuthenticated(Astro.cookies))) {
+  return Astro.redirect("/admin/login");
+}
+
+let initialProduits: any[] = [];
+let initialPromos: any[] = [];
+let initialArticles: any[] = [];
+let errorMsg: string | null = null;
+
+// 2. Fetch V2 Catalog products & promos from Supabase (Marketing Database)
+if (supabaseAdmin) {
+  try {
+    const { data: prodData, error: prodErr } = await supabaseAdmin
+      .from("produits")
+      .select("slug, nom, description, image_url, prix_indicatif, rayon, origine, badge")
+      .order("nom", { ascending: true });
+
+    const { data: promoData, error: promoErr } = await supabaseAdmin
+      .from("promos")
+      .select("slug, titre, description, image_url, prix_original, prix_promo, reduction_pct, rayon")
+      .eq("actif", true)
+      .order("titre", { ascending: true });
+
+    if (prodErr) console.warn("Supabase Catalog fetch error:", prodErr.message);
+    else initialProduits = prodData ?? [];
+
+    if (promoErr) console.warn("Supabase Promos fetch error:", promoErr.message);
+    else initialPromos = promoData ?? [];
+  } catch (err: any) {
+    console.warn("Marketing database connection failed:", err.message || err);
+  }
+} else {
+  errorMsg = "SUPABASE_SERVICE_ROLE_KEY non configurée dans V2.";
+}
+
+// 3. Fetch all articles from physical Inventory database (Trio Bridge)
+if (supabaseInventaire) {
+  try {
+    let artData: any[] | null = null;
+    let artErr: any = null;
+
+    // Try primary select query (assuming migration 003 is applied)
+    const { data: primaryData, error: primaryErr } = await supabaseInventaire
+      .from("articles")
+      .select("slug, nom_produit, description, marque, rayon, format, origine, photo_url, prix_vente")
+      .order("nom_produit", { ascending: true });
+
+    artData = primaryData;
+    artErr = primaryErr;
+
+    // If query fails because slug does not exist in active database schema, fall back to id!
+    if (primaryErr?.message?.includes("column articles.slug does not exist")) {
+      console.warn("[generateur-affiche] La colonne 'slug' n'existe pas dans l'inventaire. Utilisation de 'id' comme fallback.");
+      const { data: fallbackData, error: fallbackErr } = await supabaseInventaire
+        .from("articles")
+        .select("id, nom_produit, description, marque, rayon, format, origine, photo_url, prix_vente")
+        .order("nom_produit", { ascending: true });
+
+      if (!fallbackErr && fallbackData) {
+        artData = fallbackData.map((a: any) => ({ ...a, slug: a.id }));
+        artErr = null;
+      } else {
+        artErr = fallbackErr;
+      }
+    }
+
+    if (artErr) {
+      console.warn("Supabase Inventory bridge fetch error:", artErr.message);
+    } else if (artData) {
+      // Map bridge database columns to the React component expected format
+      initialArticles = artData.map((a: any) => ({
+        slug: a.slug || a.id,
+        nom: a.nom_produit,
+        description: a.description,
+        marque: a.marque,
+        rayon: a.rayon,
+        format: a.format,
+        origine: a.origine,
+        image: a.photo_url,
+        prix_vente: a.prix_vente
+      }));
+    }
+  } catch (err: any) {
+    console.warn("Inventory database bridge failed:", err.message || err);
+  }
+} else {
+  console.info("Pont d'inventaire non disponible ou non configuré pour le générateur d'affiches.");
+}
+---
+
+<Layout
+  title={`Générateur d'affiches · ${SITE.name} — Admin`}
+  description="Générateur d'affiches A4 paysage et étiquettes pour les produits et promotions du Marché de Mo'."
+  noIndex
+  hideChrome
+>
+  <div class="min-h-screen bg-white">
+    <AdminTopbar current="affiches" />
+
+    <main class="container-mo py-8 md:py-12">
+      
+      {/* Title Section */}
+      <section class="mb-8 no-print">
+        <span class="eyebrow">Marketing</span>
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mt-3">
+          <div>
+            <h1 class="display-sm leading-tight font-black text-neutral-900">
+              Générateur d'affiches A4
+            </h1>
+            <p class="text-[14px] text-neutral-500 mt-1.5">
+              Concevez et imprimez de magnifiques étiquettes de rayon et affiches promotionnelles A4 aux couleurs du Marché de Mo'.
+            </p>
+          </div>
+          <div class="text-[13px] text-neutral-400 max-w-sm md:text-right">
+            Impression physique directe via le raccourci navigateur <kbd class="bg-neutral-50 border border-neutral-100 rounded px-1 text-[11px] font-bold text-neutral-600">Ctrl + P</kbd>.
+          </div>
+        </div>
+      </section>
+
+      {errorMsg && (
+        <div class="bg-rouge/5 border border-rouge/30 text-rouge rounded-3xl p-6 mb-6 no-print">
+          <p class="font-bold text-[15px]">⚠ Supabase indisponible</p>
+          <p class="text-[14px] mt-2 whitespace-pre-line">{errorMsg}</p>
+        </div>
+      )}
+
+      {/* Main Interactive React Island */}
+      <AfficheGenerator
+        client:load
+        initialProduits={initialProduits}
+        initialPromos={initialPromos}
+        initialArticles={initialArticles}
+      />
+    </main>
+  </div>
+</Layout>
+
+{/* Global QRCode Library CDN Call inside HEAD (non-blocking, fast cache) */}
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js" is:inline></script>

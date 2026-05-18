@@ -7,6 +7,7 @@
  */
 import { RAYONS } from "@/lib/site";
 import type { Recette } from "@/lib/recettes";
+import { supabaseSrcSet } from "@/lib/image-cdn";
 
 interface Props {
   recette: Recette;
@@ -17,6 +18,17 @@ const rayonData = RAYONS[recette.rayon];
 const accent = rayonData?.accent ?? "#1C6B35";
 
 const href = recette.lien ?? `/rayons/${recette.rayon}`;
+
+/* Responsive srcset : card in a 3-col grid on desktop (~33vw),
+ * 2-col on tablet (~50vw), full-width on mobile (~100vw, cropped to
+ * 16/10). 400/600/800 covers DPR 2–3 without overshooting. */
+const { src: recetteSrc, srcset: recetteSrcset } = supabaseSrcSet(
+  recette.image,
+  [400, 600, 800],
+  { quality: 74 },
+);
+const recetteSizes =
+  "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw";
 const heures = Math.floor(recette.tempsMin / 60);
 const minutes = recette.tempsMin % 60;
 const tempsLabel =
@@ -29,9 +41,11 @@ const tempsLabel =
   href={href}
   class="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1"
 >
-  <div class="relative aspect-[16/10] overflow-hidden bg-creme">
+  <div class="relative aspect-[16/10] overflow-hidden bg-white">
     <img
-      src={recette.image}
+      src={recetteSrc}
+      srcset={recetteSrcset}
+      sizes={recetteSizes}
       alt={recette.titre}
       loading="lazy"
       decoding="async"

@@ -82,7 +82,7 @@ function relTime(iso: string): string {
       const href = entityHref(r);
       const Inner = (
         <li class="py-2.5 flex items-start gap-3">
-          <span class="w-7 h-7 rounded-full bg-creme flex items-center justify-center text-[12px] shrink-0" aria-hidden="true">
+          <span class="w-7 h-7 rounded-full bg-white flex items-center justify-center text-[12px] shrink-0" aria-hidden="true">
             {entityIcon(r)}
           </span>
           <div class="min-w-0 flex-1">
@@ -102,7 +102,7 @@ function relTime(iso: string): string {
         </li>
       );
       return href ? (
-        <a href={href} class="block hover:bg-creme/40 -mx-2 px-2 rounded-lg transition">
+        <a href={href} class="block hover:bg-white/40 -mx-2 px-2 rounded-lg transition">
           {Inner}
         </a>
       ) : (

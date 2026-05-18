@@ -1,0 +1,522 @@
+/* ============================================================
+   Marché de Mo' — Millimeter-precise A4 Landscape Poster Styles
+   Artistic Direction: Vert #1C6B35, Rouge #8B1919, Noir #0F0F0F, Blanc #FFFFFF
+   Font: filson-pro / filson-soft loaded via Typekit
+   ============================================================ */
+
+:root {
+  --mo-green:       #1C6B35;
+  --mo-green-dark:  #0f4c21;
+  --mo-red:         #8B1919;
+  --mo-gold:        #FACC15;
+  --mo-black:       #0F0F0F;
+  --mo-white:       #FFFFFF;
+  --mo-gray:        #71717A;
+  --mo-border:      #E4E4E7;
+  
+  --font-mo-display: "filson-pro", system-ui, -apple-system, sans-serif;
+  --font-mo-body:    "filson-soft", system-ui, -apple-system, sans-serif;
+  --font-mo-cond:    "filson-pro", Impact, sans-serif; /* Condensed feel */
+}
+
+/* ============================================================
+   PREVIEW WRAP : Keep 297:210 ratio and overflow hid
+   ============================================================ */
+.mo-preview-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 297 / 210;
+  background: var(--mo-white);
+  border: 2px dashed var(--mo-border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+}
+
+.mo-preview-wrap .mo-poster {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  /* Transform: scale() is dynamically calculated in JS based on container width */
+}
+
+/* ============================================================
+   A4 LANDSCAPE POSTER (297mm x 210mm)
+   Millimeter units guarantee perfect layout matching at print-time
+   ============================================================ */
+.mo-poster {
+  width: 297mm;
+  height: 210mm;
+  background: var(--mo-white);
+  color: var(--mo-black);
+  font-family: var(--font-mo-body);
+  display: grid;
+  grid-template-rows: 32mm 1fr 22mm;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.mo-poster *, .mo-poster *::before, .mo-poster *::after {
+  box-sizing: border-box;
+}
+
+/* ---- TOP BAR (Brand Identity) ---------------------------- */
+.mo-poster__top {
+  background: var(--mo-green);
+  color: var(--mo-white);
+  padding: 0 14mm;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  border-bottom: 2mm solid var(--mo-gold);
+}
+
+.mo-poster__brand {
+  display: flex;
+  align-items: center;
+  gap: 4mm;
+}
+
+.mo-poster__brand-logo {
+  flex: 0 0 auto;
+  width: 24mm;
+  height: 24mm;
+  object-fit: contain;
+}
+
+.mo-poster__brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.mo-poster__brand-name {
+  font-family: var(--font-mo-display);
+  font-weight: 800;
+  font-size: 8.5mm;
+  letter-spacing: 0.5px;
+}
+
+.mo-poster__brand-city {
+  font-size: 2.8mm;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  margin-top: 1.2mm;
+  color: var(--mo-gold);
+  font-weight: 700;
+}
+
+.mo-poster__top-badge {
+  background: var(--mo-red);
+  color: var(--mo-white);
+  padding: 2.2mm 6mm;
+  border-radius: 6px;
+  font-family: var(--font-mo-display);
+  font-weight: 800;
+  font-size: 4.5mm;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 1mm 3mm rgba(0, 0, 0, 0.15);
+  border: 0.4mm solid rgba(255, 255, 255, 0.2);
+}
+
+/* ---- MAIN AREA (Split Left Content / Right Price) --------- */
+.mo-poster__main {
+  display: grid;
+  grid-template-columns: 62% 38%;
+  position: relative;
+}
+
+/* LEFT SECTION : Product details */
+.mo-poster__content {
+  padding: 10mm 10mm 10mm 14mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--mo-white);
+  position: relative;
+  z-index: 1;
+}
+
+.mo-poster__content-top {
+  display: flex;
+  flex-direction: column;
+  gap: 4.5mm;
+}
+
+.mo-poster__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  font-family: var(--font-mo-display);
+  font-weight: 800;
+  font-size: 3.8mm;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--mo-white);
+  padding: 1.5mm 4mm;
+  background: var(--mo-green);
+  border-radius: 4px;
+}
+
+/* Highlight eyebrow for promotions */
+.mo-poster[data-promo="true"] .mo-poster__eyebrow {
+  background: var(--mo-red);
+}
+
+.mo-poster__name {
+  font-family: var(--font-mo-display);
+  font-weight: 800;
+  font-size: 17mm;
+  line-height: 1.05;
+  margin: 0;
+  color: var(--mo-black);
+  word-break: break-word;
+}
+
+/* Small adjustments if product name is very long */
+.mo-poster__name[data-length="long"] {
+  font-size: 13.5mm;
+  line-height: 1.1;
+}
+.mo-poster__name[data-length="xlarge"] {
+  font-size: 10.5mm;
+  line-height: 1.15;
+}
+
+.mo-poster__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3mm;
+  font-size: 4.2mm;
+  color: var(--mo-gray);
+  font-weight: 700;
+}
+
+.mo-poster__meta-item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.mo-poster__meta-item:not(:last-child)::after {
+  content: '·';
+  margin-left: 3mm;
+  color: var(--mo-border);
+}
+
+.mo-poster__pitch {
+  font-size: 4.5mm;
+  line-height: 1.4;
+  color: var(--mo-black);
+  max-width: 95%;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* QR Code Section at the bottom left */
+.mo-poster__qr {
+  display: flex;
+  align-items: center;
+  gap: 5mm;
+  padding-top: 4mm;
+  border-top: 0.4mm solid var(--mo-border);
+}
+
+.mo-poster__qr-code {
+  flex: 0 0 auto;
+  width: 28mm;
+  height: 28mm;
+  background: var(--mo-white);
+  padding: 1.2mm;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.3mm solid var(--mo-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.mo-poster__qr-code img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.mo-poster__qr-code:empty::before {
+  content: 'QR';
+  font-family: var(--font-mo-display);
+  font-size: 10mm;
+  font-weight: 800;
+  color: var(--mo-border);
+}
+
+.mo-poster__qr-label {
+  display: flex;
+  flex-direction: column;
+  gap: 1mm;
+  max-width: 90mm;
+}
+
+.mo-poster__qr-label strong {
+  font-family: var(--font-mo-display);
+  font-weight: 800;
+  font-size: 3.8mm;
+  text-transform: uppercase;
+  color: var(--mo-green);
+  letter-spacing: 0.02em;
+}
+
+.mo-poster[data-promo="true"] .mo-poster__qr-label strong {
+  color: var(--mo-red);
+}
+
+.mo-poster__qr-label span {
+  font-size: 3mm;
+  color: var(--mo-gray);
+  line-height: 1.3;
+}
+
+/* RIGHT SECTION : Hero price block */
+.mo-poster__price-block {
+  background: var(--mo-green);
+  color: var(--mo-white);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 8mm 4mm;
+  position: relative;
+  text-align: center;
+  z-index: 1;
+}
+
+/* Switch price block to red for promotions */
+.mo-poster[data-promo="true"] .mo-poster__price-block {
+  background: var(--mo-red);
+}
+
+.mo-poster__old {
+  font-family: var(--font-mo-cond);
+  font-weight: 800;
+  font-size: 13mm;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: line-through;
+  text-decoration-thickness: 1.2mm;
+  text-decoration-color: var(--mo-gold);
+  margin-bottom: 2mm;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5mm;
+}
+
+.mo-poster__old-currency {
+  font-size: 8mm;
+}
+
+.mo-poster:not([data-promo="true"]) .mo-poster__old {
+  display: none;
+}
+
+.mo-poster__price {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5mm;
+  font-family: var(--font-mo-cond);
+  font-weight: 900;
+  line-height: 0.85;
+  color: var(--mo-white);
+  white-space: nowrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.mo-poster__price-integer {
+  font-size: 45mm;
+  letter-spacing: -2px;
+}
+
+.mo-poster__price-decimal {
+  font-size: 18mm;
+  align-self: flex-start;
+  margin-top: 6mm;
+}
+
+.mo-poster__price-currency {
+  font-size: 18mm;
+}
+
+/* Auto-scale price fonts if extremely large (to prevent container overflow) */
+.mo-poster__price-block[data-digits="4"] .mo-poster__old { font-size: 11mm; }
+.mo-poster__price-block[data-digits="4"] .mo-poster__price-integer { font-size: 38mm; letter-spacing: -1.5px; }
+.mo-poster__price-block[data-digits="4"] .mo-poster__price-decimal,
+.mo-poster__price-block[data-digits="4"] .mo-poster__price-currency { font-size: 15mm; }
+.mo-poster__price-block[data-digits="4"] .mo-poster__price-decimal { margin-top: 4.5mm; }
+
+.mo-poster__price-block[data-digits="5"] .mo-poster__old { font-size: 9.5mm; }
+.mo-poster__price-block[data-digits="5"] .mo-poster__price-integer { font-size: 32mm; letter-spacing: -1px; }
+.mo-poster__price-block[data-digits="5"] .mo-poster__price-decimal,
+.mo-poster__price-block[data-digits="5"] .mo-poster__price-currency { font-size: 13mm; }
+.mo-poster__price-block[data-digits="5"] .mo-poster__price-decimal { margin-top: 3.5mm; }
+
+.mo-poster__price-block[data-digits="6"] .mo-poster__old { font-size: 7.5mm; }
+.mo-poster__price-block[data-digits="6"] .mo-poster__price-integer { font-size: 24mm; letter-spacing: -0.5px; }
+.mo-poster__price-block[data-digits="6"] .mo-poster__price-decimal,
+.mo-poster__price-block[data-digits="6"] .mo-poster__price-currency { font-size: 10mm; }
+.mo-poster__price-block[data-digits="6"] .mo-poster__price-decimal { margin-top: 2.5mm; }
+
+.mo-poster__price-block[data-digits="7"] .mo-poster__old { font-size: 6mm; }
+.mo-poster__price-block[data-digits="7"] .mo-poster__price-integer { font-size: 18mm; letter-spacing: 0; }
+.mo-poster__price-block[data-digits="7"] .mo-poster__price-decimal,
+.mo-poster__price-block[data-digits="7"] .mo-poster__price-currency { font-size: 8mm; }
+.mo-poster__price-block[data-digits="7"] .mo-poster__price-decimal { margin-top: 2mm; }
+
+.mo-poster__price-block[data-digits="8"] .mo-poster__old { font-size: 5mm; }
+.mo-poster__price-block[data-digits="8"] .mo-poster__price-integer { font-size: 14mm; letter-spacing: 0; }
+.mo-poster__price-block[data-digits="8"] .mo-poster__price-decimal,
+.mo-poster__price-block[data-digits="8"] .mo-poster__price-currency { font-size: 6mm; }
+.mo-poster__price-block[data-digits="8"] .mo-poster__price-decimal { margin-top: 1.5mm; }
+
+.mo-poster__price-label {
+  margin-top: 4mm;
+  font-family: var(--font-mo-display);
+  font-size: 3.5mm;
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--mo-gold);
+}
+
+/* Promo ribbon diagonal in upper right corner */
+.mo-poster__promo-ribbon {
+  display: none;
+  position: absolute;
+  top: -24mm;
+  right: -42mm;
+  background: var(--mo-gold);
+  color: var(--mo-black);
+  padding: 3.5mm 45mm;
+  transform: rotate(40deg);
+  font-family: var(--font-mo-display);
+  font-weight: 900;
+  font-size: 8.5mm;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  box-shadow: 0 2mm 6mm rgba(0, 0, 0, 0.2);
+  z-index: 3;
+  white-space: nowrap;
+}
+
+.mo-poster[data-promo="true"] .mo-poster__promo-ribbon {
+  display: inline-block;
+}
+
+/* Rotating Discount pastille (-XX%) */
+.mo-poster__discount {
+  display: none;
+  position: absolute;
+  bottom: 6mm;
+  left: -12mm; /* Overlap content section nicely */
+  background: var(--mo-gold);
+  color: var(--mo-black);
+  border: 1.2mm solid var(--mo-white);
+  width: 25mm;
+  height: 25mm;
+  border-radius: 50%;
+  font-family: var(--font-mo-cond);
+  font-weight: 900;
+  font-size: 11mm;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-10deg);
+  box-shadow: 0 2mm 6mm rgba(0, 0, 0, 0.15);
+  z-index: 2;
+}
+
+.mo-poster[data-promo="true"] .mo-poster__discount:not(:empty) {
+  display: flex;
+}
+
+/* ---- BOTTOM BAR (Footer info) ---------------------------- */
+.mo-poster__bottom {
+  background: var(--mo-green-dark);
+  color: var(--mo-white);
+  padding: 0 14mm;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 3.4mm;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-top: 1mm solid var(--mo-gold);
+}
+
+.mo-poster__bottom strong {
+  color: var(--mo-gold);
+  font-weight: 800;
+}
+
+.mo-poster__bottom-left, .mo-poster__bottom-right {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+/* ============================================================
+   IMPRESSION RULES (A4 Landscape, perfect centering)
+   ============================================================ */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
+  html, body {
+    width: 297mm;
+    height: 210mm;
+    margin: 0;
+    padding: 0;
+    background: var(--mo-white);
+    overflow: hidden;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide all UI Chrome completely */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Only make the poster area visible */
+  .mo-preview-wrap, .mo-preview-wrap * {
+    visibility: visible;
+  }
+
+  .mo-preview-wrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 297mm;
+    height: 210mm;
+    aspect-ratio: auto;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .mo-preview-wrap .mo-poster {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: none !important; /* Cancel CSS live scaling transform */
+    box-shadow: none;
+  }
+}

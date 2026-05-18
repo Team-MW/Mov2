@@ -158,7 +158,7 @@ export default function ProductImageSearchModal({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Ex. riz basmati parfumé, dattes medjool, pois chiches…"
-            className="flex-1 px-4 py-2 border border-black/10 rounded-full text-[14px] bg-creme focus:outline-none focus:border-vert"
+            className="flex-1 px-4 py-2 border border-black/10 rounded-full text-[14px] bg-white focus:outline-none focus:border-vert"
           />
           <button
             type="submit"
@@ -181,7 +181,7 @@ export default function ProductImageSearchModal({
 
         {/* Current image preview */}
         {produit?.image_url && (
-          <div className="px-6 py-3 flex items-center gap-3 bg-creme border-b border-black/5">
+          <div className="px-6 py-3 flex items-center gap-3 bg-white border-b border-black/5">
             <img
               src={produit.image_url}
               alt=""
@@ -207,7 +207,7 @@ export default function ProductImageSearchModal({
               {Array.from({ length: 8 }).map((_, i) => (
                 <div
                   key={i}
-                  className="aspect-square rounded-2xl bg-creme animate-pulse"
+                  className="aspect-square rounded-2xl bg-white animate-pulse"
                 />
               ))}
             </div>
@@ -237,7 +237,7 @@ export default function ProductImageSearchModal({
                       isSaving ? "opacity-60 cursor-wait" : ""
                     } ${saving && !isSaving ? "opacity-40 cursor-not-allowed" : ""}`}
                   >
-                    <div className="aspect-square bg-creme flex items-center justify-center">
+                    <div className="aspect-square bg-white flex items-center justify-center">
                       <img
                         src={r.thumbUrl || r.imageUrl}
                         alt={r.name}
@@ -284,7 +284,7 @@ export default function ProductImageSearchModal({
         <div className="sticky bottom-0 bg-white border-t border-black/5 px-6 py-3 flex items-center justify-between flex-wrap gap-2">
           <p className="text-[11px] text-neutral-500">
             Les images proviennent d'OpenFoodFacts sous licence CC-BY-SA 3.0.
-            Attribution déjà déclarée dans <code className="bg-creme px-1 rounded">CREDITS.md</code>.
+            Attribution déjà déclarée dans <code className="bg-white px-1 rounded">CREDITS.md</code>.
           </p>
           <button
             type="button"

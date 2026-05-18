@@ -137,7 +137,7 @@ const isOnline = !!supabaseAdmin && !promosError;
   noIndex
   hideChrome
 >
-  <div class="min-h-screen bg-creme">
+  <div class="min-h-screen bg-white">
     <AdminTopbar current="dashboard" subtitle="Tableau de bord" />
 
     <main class="container-mo py-6 md:py-10">
@@ -333,7 +333,7 @@ const isOnline = !!supabaseAdmin && !promosError;
         <div class="flex items-center justify-between mb-3">
           <h2 class="eyebrow">Actions rapides</h2>
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
           <QuickAction
             href="/admin/promos#new"
             icon="➕"
@@ -349,11 +349,25 @@ const isOnline = !!supabaseAdmin && !promosError;
             tone="vert"
           />
           <QuickAction
+            href="/admin/inventaire/inventaire"
+            icon="📦"
+            label="Gestion Inventaire"
+            sublabel="Scanner & Codes-barres"
+            tone="vert"
+          />
+          <QuickAction
             href="/admin/medias"
             icon="📤"
             label="Uploader des images"
             sublabel="Drag & drop"
             tone="orange"
+          />
+          <QuickAction
+            href="/admin/generateur-affiche"
+            icon="🖨"
+            label="Créer Affiches"
+            sublabel="A4 & Étiquettes"
+            tone="vert"
           />
           <QuickAction
             href="/admin/produits#import"
@@ -479,9 +493,9 @@ const isOnline = !!supabaseAdmin && !promosError;
           <div>
             <p class="font-bold text-noir mb-1.5">✎ Via Git (déploiement)</p>
             <ul class="space-y-1 text-[12.5px]">
-              <li>• <strong>Offres d'emploi</strong> ({activePostes}/{postes.length}) : <code class="bg-creme px-1.5 py-0.5 rounded text-[12px]">src/content/postes/*.md</code></li>
-              <li>• <strong>Vidéos TikTok</strong> : <code class="bg-creme px-1.5 py-0.5 rounded text-[12px]">src/content/videos/*.json</code></li>
-              <li>• <strong>Articles blog</strong> ({activeArticles}/{articles.length}) : <code class="bg-creme px-1.5 py-0.5 rounded text-[12px]">src/content/articles/*.md</code></li>
+              <li>• <strong>Offres d'emploi</strong> ({activePostes}/{postes.length}) : <code class="bg-white px-1.5 py-0.5 rounded text-[12px]">src/content/postes/*.md</code></li>
+              <li>• <strong>Vidéos TikTok</strong> : <code class="bg-white px-1.5 py-0.5 rounded text-[12px]">src/content/videos/*.json</code></li>
+              <li>• <strong>Articles blog</strong> ({activeArticles}/{articles.length}) : <code class="bg-white px-1.5 py-0.5 rounded text-[12px]">src/content/articles/*.md</code></li>
             </ul>
           </div>
         </div>

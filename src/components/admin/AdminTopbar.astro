@@ -19,7 +19,7 @@ import { SITE } from "@/lib/site";
 import KeyboardHelpOverlay from "@components/islands/admin/KeyboardHelpOverlay.jsx";
 
 interface Props {
-  current?: "dashboard" | "catalogue" | "promos" | "produits" | "medias" | "images-gap";
+  current?: "dashboard" | "inventaire" | "catalogue" | "promos" | "produits" | "medias" | "images-gap" | "affiches";
   subtitle?: string;
 }
 
@@ -27,11 +27,13 @@ const { current, subtitle } = Astro.props as Props;
 
 const navItems = [
   { id: "dashboard",  label: "Tableau de bord", href: "/admin",            icon: "📊" },
+  { id: "inventaire", label: "Inventaire",       href: "/admin/inventaire/inventaire", icon: "📦" },
   { id: "catalogue",  label: "Catalogue",        href: "/admin/catalogue", icon: "🌳" },
   { id: "promos",     label: "Promos",           href: "/admin/promos",     icon: "🏷" },
   { id: "produits",   label: "Produits",         href: "/admin/produits",   icon: "🛒" },
   { id: "medias",     label: "Images",           href: "/admin/medias",     icon: "🖼" },
   { id: "images-gap", label: "Manquantes",       href: "/admin/images-gap", icon: "⚠" },
+  { id: "affiches",   label: "Affiches A4",      href: "/admin/generateur-affiche", icon: "🖨" },
 ] as const;
 
 /* Environment badge.
@@ -121,24 +123,30 @@ const showSubtitle = !!subtitle;
             </svg>
           </summary>
           <div class="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-card border border-black/5 p-2 z-50">
-            <a href="/admin" class="block px-3 py-2 rounded-lg text-[13px] font-bold hover:bg-creme">
+            <a href="/admin" class="block px-3 py-2 rounded-lg text-[13px] font-bold hover:bg-white">
               Tableau de bord
             </a>
-            <a href="/admin/medias" class="block px-3 py-2 rounded-lg text-[13px] hover:bg-creme">
+            <a href="/admin/inventaire/inventaire" class="block px-3 py-2 rounded-lg text-[13px] font-bold text-vert hover:bg-white">
+              Gestion Inventaire 📦
+            </a>
+            <a href="/admin/medias" class="block px-3 py-2 rounded-lg text-[13px] hover:bg-white">
               Images
             </a>
-            <a href="/admin/images-gap" class="block px-3 py-2 rounded-lg text-[13px] hover:bg-creme">
+            <a href="/admin/generateur-affiche" class="block px-3 py-2 rounded-lg text-[13px] hover:bg-white">
+              Générateur d'affiches A4
+            </a>
+            <a href="/admin/images-gap" class="block px-3 py-2 rounded-lg text-[13px] hover:bg-white">
               Produits sans image
             </a>
             <button
               type="button"
               data-kb-help-open
-              class="block w-full text-left px-3 py-2 rounded-lg text-[13px] hover:bg-creme"
+              class="block w-full text-left px-3 py-2 rounded-lg text-[13px] hover:bg-white"
             >
               Raccourcis clavier
               <span class="float-right text-[11px] text-neutral-400 font-mono">?</span>
             </button>
-            <a href="/" class="block px-3 py-2 rounded-lg text-[13px] hover:bg-creme md:hidden">
+            <a href="/" class="block px-3 py-2 rounded-lg text-[13px] hover:bg-white md:hidden">
               Voir le site public
             </a>
             <hr class="my-1 border-black/5" />
@@ -165,7 +173,7 @@ const showSubtitle = !!subtitle;
             "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-bold whitespace-nowrap transition",
             current === n.id
               ? "bg-noir text-white shadow-card"
-              : "text-neutral-600 hover:bg-creme hover:text-noir",
+              : "text-neutral-600 hover:bg-white hover:text-noir",
           ]}
           aria-current={current === n.id ? "page" : undefined}
         >

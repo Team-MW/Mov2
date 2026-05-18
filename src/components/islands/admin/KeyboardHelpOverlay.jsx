@@ -102,7 +102,7 @@ export default function KeyboardHelpOverlay() {
           </Section>
         </div>
 
-        <footer className="px-6 py-3 border-t border-black/5 bg-creme/50 text-[11px] text-neutral-500 sticky bottom-0">
+        <footer className="px-6 py-3 border-t border-black/5 bg-white/50 text-[11px] text-neutral-500 sticky bottom-0">
           Astuce : tapez <Kbd>?</Kbd> n'importe où (sauf dans un champ de texte) pour rouvrir cette aide.
         </footer>
       </div>

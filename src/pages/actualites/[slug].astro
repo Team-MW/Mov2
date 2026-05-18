@@ -85,7 +85,7 @@ const catMeta = CATEGORIE_META[article.data.categorie] ?? {
           <span class="w-1.5 h-1.5 rounded-full" style={`background: ${catMeta.color}`}></span>
           {catMeta.label}
         </span>
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-pro font-bold uppercase tracking-wider bg-creme text-neutral-700">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-pro font-bold uppercase tracking-wider bg-white text-neutral-700">
           {readingMin} min de lecture
         </span>
       </div>
@@ -101,7 +101,7 @@ const catMeta = CATEGORIE_META[article.data.categorie] ?? {
 
     {/* Image hero */}
     <section class="container-mo max-w-5xl">
-      <div class="aspect-[16/9] md:aspect-[2/1] rounded-3xl overflow-hidden shadow-card bg-creme">
+      <div class="aspect-[16/9] md:aspect-[2/1] rounded-3xl overflow-hidden shadow-card bg-white">
         <img
           src={article.data.image}
           alt={article.data.titre}
@@ -129,7 +129,7 @@ const catMeta = CATEGORIE_META[article.data.categorie] ?? {
 
     {/* Articles liés */}
     {related.length > 0 && (
-      <section class="section bg-creme">
+      <section class="section bg-white">
         <div class="container-mo">
           <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div class="max-w-xl">

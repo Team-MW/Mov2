@@ -44,18 +44,32 @@ const slideCount = Math.min(uniqueSlides.length, 4);
         data-slides={slideCount}
         transition:name={`rayon-card-${rayon.slug}`}
       >
-        {uniqueSlides.slice(0, 4).map((src, i) => (
-          <img
-            src={src}
-            alt={i === 0 ? rayon.imageAlt : ""}
-            aria-hidden={i > 0 ? "true" : undefined}
-            loading="lazy"
-            decoding="async"
-            width="1280"
-            height="1600"
-            class="rayon-slide"
-          />
-        ))}
+        {uniqueSlides.slice(0, 4).map((src, i) => {
+          /* Slides 0 + 1 load normally (slide 0 is the LCP frame of
+             the card, slide 1 needs to be ready for the 4-second fade).
+             Slides 2 + 3 are deferred : only the url goes into
+             `data-defer-src`, and a page-level script promotes them
+             to real `src` once the card enters the viewport + idle.
+             Avoids 12 cards × 4 slides = 48 parallel image requests
+             on /rayons first paint ; we only pay for the two frames
+             the user actually sees in the first 8 seconds. */
+          const defer = i >= 2;
+          return (
+            <img
+              src={defer
+                ? "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                : src}
+              data-defer-src={defer ? src : undefined}
+              alt={i === 0 ? rayon.imageAlt : ""}
+              aria-hidden={i > 0 ? "true" : undefined}
+              loading="lazy"
+              decoding="async"
+              width="1280"
+              height="1600"
+              class="rayon-slide"
+            />
+          );
+        })}
       </div>
     ) : (
       <img

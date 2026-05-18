@@ -558,7 +558,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
   return (
     <div className="pb-20 md:pb-0">
       {/* Sticky toolbar */}
-      <div id="promos-toolbar" className="sticky top-0 z-30 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 pt-2 pb-3 bg-creme/85 backdrop-blur-md">
+      <div id="promos-toolbar" className="sticky top-0 z-30 -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 pt-2 pb-3 bg-white/85 backdrop-blur-md">
         <div className="bg-white rounded-3xl shadow-card p-4 md:p-5 flex flex-col md:flex-row gap-3 md:items-center">
           <div className="flex-1 flex flex-col sm:flex-row gap-2">
             <div className="flex-1 min-w-0 relative">
@@ -568,7 +568,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
                 placeholder="Rechercher titre, slug…  (raccourci : /)"
                 value={filter.q}
                 onChange={(e) => setFilter({ q: e.target.value })}
-                className="w-full px-4 py-2 pr-9 rounded-full border border-black/10 text-[14px] focus:border-vert focus:outline-none bg-creme"
+                className="w-full px-4 py-2 pr-9 rounded-full border border-black/10 text-[14px] focus:border-vert focus:outline-none bg-white"
                 aria-label="Recherche"
               />
               {filter.q && (
@@ -751,7 +751,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
         <div className="overflow-x-auto">
           <table className="w-full text-[13px]">
             <thead>
-              <tr className="bg-creme text-neutral-500 text-left text-[11px] uppercase tracking-wider">
+              <tr className="bg-white text-neutral-500 text-left text-[11px] uppercase tracking-wider">
                 <th scope="col" className="px-3 py-3 w-10">
                   <input
                     type="checkbox"
@@ -808,7 +808,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
                     onDrop={reorderMode ? () => onDropRow(p.id) : undefined}
                     className={[
                       "border-t border-black/5 transition",
-                      isSel ? "bg-vert/5" : "hover:bg-creme/50",
+                      isSel ? "bg-vert/5" : "hover:bg-white/50",
                       isDragOver ? "outline outline-2 outline-vert -outline-offset-2" : "",
                     ].join(" ")}
                   >
@@ -874,7 +874,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
                           loading="lazy"
                         />
                       ) : (
-                        <div className="w-12 h-12 rounded-lg bg-creme flex items-center justify-center text-neutral-400">
+                        <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center text-neutral-400">
                           —
                         </div>
                       )}
@@ -1548,7 +1548,7 @@ function ImportModal({ currentPromos, onCancel, onImport }) {
         </div>
 
         <div className="p-6 space-y-4">
-          <div className="bg-creme rounded-2xl p-4 text-[13px] text-neutral-600 leading-relaxed">
+          <div className="bg-white rounded-2xl p-4 text-[13px] text-neutral-600 leading-relaxed">
             Collez un tableau JSON d'objets promos ou <code className="bg-white px-1 rounded">{`{ promos: [...] }`}</code>.
             Les slugs existants seront mis à jour, les nouveaux seront créés.
             <br/>
@@ -1558,7 +1558,7 @@ function ImportModal({ currentPromos, onCancel, onImport }) {
           <textarea
             value={text}
             onChange={(e) => onPaste(e.target.value)}
-            className="w-full min-h-[220px] font-mono text-[12px] px-4 py-3 border border-black/10 rounded-2xl bg-creme resize-y focus:outline-none focus:border-vert"
+            className="w-full min-h-[220px] font-mono text-[12px] px-4 py-3 border border-black/10 rounded-2xl bg-white resize-y focus:outline-none focus:border-vert"
             placeholder={
               '[{"slug":"agneau","titre":"Épaule d agneau","prix_original":18.90,"prix_promo":12.90,"reduction_pct":32,"rayon":"boucherie-halal","date_debut":"2026-04-21","date_fin":"2026-04-27"}]'
             }
@@ -1573,7 +1573,7 @@ function ImportModal({ currentPromos, onCancel, onImport }) {
 
           {parsed && (
             <div className="bg-white border border-black/5 rounded-2xl overflow-hidden">
-              <div className="bg-creme px-4 py-2 text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
+              <div className="bg-white px-4 py-2 text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
                 Prévisualisation · {parsed.length} ligne(s)
               </div>
               <div className="max-h-64 overflow-y-auto">

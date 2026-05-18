@@ -31,7 +31,7 @@ import { SITE, RAYONS_LIST } from "@/lib/site";
         <p class="eyebrow !justify-center">Rayons populaires</p>
         <div class="mt-5 flex flex-wrap justify-center gap-2">
           {RAYONS_LIST.slice(0, 6).map((r) => (
-            <a href={`/rayons/${r.slug}`} class="pill bg-creme hover:bg-vert hover:text-white transition-colors">
+            <a href={`/rayons/${r.slug}`} class="pill bg-white hover:bg-vert hover:text-white transition-colors">
               {r.nomCourt}
             </a>
           ))}

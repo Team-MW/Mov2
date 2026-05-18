@@ -413,7 +413,7 @@ export default function MassImageMatchModal({ onClose, onApplied, rayonsOptions 
                 onDragLeave={() => setDragging(false)}
                 onDrop={onDrop}
                 className={`border-2 border-dashed rounded-3xl p-8 md:p-12 text-center transition ${
-                  dragging ? "border-vert bg-vert/5" : "border-black/15 bg-creme/40"
+                  dragging ? "border-vert bg-vert/5" : "border-black/15 bg-white/40"
                 }`}
               >
                 <svg className="w-12 h-12 mx-auto text-neutral-400 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -441,7 +441,7 @@ export default function MassImageMatchModal({ onClose, onApplied, rayonsOptions 
               </div>
 
               {/* Options */}
-              <div className="bg-creme rounded-2xl p-4 flex flex-wrap gap-4 items-center">
+              <div className="bg-white rounded-2xl p-4 flex flex-wrap gap-4 items-center">
                 <label className="inline-flex items-center gap-2 text-[13px]">
                   <input
                     type="checkbox"
@@ -597,7 +597,7 @@ export default function MassImageMatchModal({ onClose, onApplied, rayonsOptions 
 
               <div className="border border-black/10 rounded-2xl overflow-hidden">
                 <table className="w-full text-[13px]">
-                  <thead className="bg-creme text-left text-neutral-500">
+                  <thead className="bg-white text-left text-neutral-500">
                     <tr>
                       <th className="px-3 py-2 font-bold w-16">Fichier</th>
                       <th className="px-3 py-2 font-bold">Nom</th>
@@ -746,7 +746,7 @@ function ReviewRow({ file, match, choice, onChoose }) {
             className="w-12 h-12 rounded-lg object-cover ring-1 ring-black/10"
           />
         ) : (
-          <div className="w-12 h-12 rounded-lg bg-creme" />
+          <div className="w-12 h-12 rounded-lg bg-white" />
         )}
       </td>
       <td className="px-3 py-2 font-mono text-[11px] text-neutral-600 max-w-xs truncate">

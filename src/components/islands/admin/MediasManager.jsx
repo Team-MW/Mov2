@@ -307,7 +307,7 @@ export default function MediasManager({ initialFolder, initialFiles, folders }) 
                   key={f.path}
                   className="relative bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition group"
                 >
-                  <div className="relative aspect-square bg-creme">
+                  <div className="relative aspect-square bg-white">
                     {isImage ? (
                       <img
                         src={f.publicUrl}
@@ -350,14 +350,14 @@ export default function MediasManager({ initialFolder, initialFiles, folders }) 
                           href={f.publicUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="block px-3 py-2 rounded-lg hover:bg-creme transition"
+                          className="block px-3 py-2 rounded-lg hover:bg-white transition"
                         >
                           Ouvrir ↗
                         </a>
                         <button
                           type="button"
                           onClick={() => copyRelativePath(f.path)}
-                          className="w-full text-left px-3 py-2 rounded-lg hover:bg-creme transition"
+                          className="w-full text-left px-3 py-2 rounded-lg hover:bg-white transition"
                         >
                           Copier le chemin
                         </button>

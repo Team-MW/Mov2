@@ -15,8 +15,9 @@
   --color-noir:         #0F0F0F;
   --color-noir-soft:    #1A1A1A;
   --color-blanc:        #FFFFFF;
-  --color-creme:        #F4F4F2;        /* fond discret alternance home */
-  --color-creme-warm:   #F7F5F0;        /* alt subtle */
+  /* Backgrounds neutres (anciennement creme — retiré mai 2026, cf. PROMPT-MAITRE). */
+  --color-neutral-50:   #FAFAFA;
+  --color-neutral-100:  #F5F5F5;
   --color-texte:        #111111;
   --color-texte-soft:   #3A3A3A;
   --color-texte-muted:  #6B6B6B;
@@ -55,7 +56,7 @@
 :root {
   --rayon-accent:       var(--color-vert);
   --rayon-accent-dark:  var(--color-vert-dark);
-  --rayon-fond-section: var(--color-creme);
+  --rayon-fond-section: var(--color-blanc);
   --rayon-texte-hero:   var(--color-blanc);
   --rayon-font-deco:    var(--font-display);
   --rayon-motif-opacity: 0.05;

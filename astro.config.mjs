@@ -30,7 +30,14 @@ export default defineConfig({
       filter: (page) => !page.includes('/admin'),
     }),
   ],
-  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
+  /* Prefetch every internal link the moment it scrolls into view.
+     Astro auto-throttles requests (2 concurrent) and respects the
+     Save-Data header, so mobile users on 3G are not penalised. The
+     viewport strategy gives "tap = instant page" on mobile, where
+     `hover` events don't exist. Works hand-in-hand with the
+     <ViewTransitions /> wiring in Layout.astro : the target HTML is
+     already in the browser cache when the user commits the click. */
+  prefetch: { prefetchAll: true, defaultStrategy: 'viewport' },
   image: {
     // Hostnames acceptés par <Image> et <Picture>. Tout `<img>` raw n'est
     // pas concerné — uniquement les composants Astro Image.

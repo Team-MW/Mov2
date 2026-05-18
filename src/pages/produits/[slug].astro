@@ -108,7 +108,7 @@ const tagline = produit.description?.trim() || rayon?.tagline || "";
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-start">
         {/* Image side */}
         <div
-          class="relative rounded-3xl overflow-hidden bg-creme shadow-card aspect-square"
+          class="relative rounded-3xl overflow-hidden bg-white shadow-card aspect-square"
           style={`--rayon-accent: ${accent}`}
         >
           {produit.image ? (
@@ -122,7 +122,7 @@ const tagline = produit.description?.trim() || rayon?.tagline || "";
               data-parallax="0.04"
             />
           ) : (
-            <div class="absolute inset-0 bg-gradient-to-br from-creme via-creme-warm to-[#EEEAE0] flex flex-col items-center justify-center p-10 text-center">
+            <div class="absolute inset-0 bg-gradient-to-br from-white via-neutral-100 to-[#EEEAE0] flex flex-col items-center justify-center p-10 text-center">
               <img
                 src="/logos/favicon-marchedemo.png"
                 alt=""
@@ -176,7 +176,7 @@ const tagline = produit.description?.trim() || rayon?.tagline || "";
           {/* Meta pills */}
           <dl class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl">
             {produit.origine && (
-              <div class="flex items-start gap-3 bg-creme rounded-2xl px-4 py-3">
+              <div class="flex items-start gap-3 bg-white rounded-2xl px-4 py-3">
                 <svg
                   class="w-5 h-5 mt-0.5 text-neutral-500 shrink-0"
                   viewBox="0 0 24 24"
@@ -198,7 +198,7 @@ const tagline = produit.description?.trim() || rayon?.tagline || "";
               </div>
             )}
             {produit.categorie && (
-              <div class="flex items-start gap-3 bg-creme rounded-2xl px-4 py-3">
+              <div class="flex items-start gap-3 bg-white rounded-2xl px-4 py-3">
                 <svg
                   class="w-5 h-5 mt-0.5 text-neutral-500 shrink-0"
                   viewBox="0 0 24 24"
@@ -223,7 +223,7 @@ const tagline = produit.description?.trim() || rayon?.tagline || "";
           </dl>
 
           {/* CTA bloc */}
-          <div class="mt-10 p-6 md:p-8 rounded-3xl border border-black/8 bg-gradient-to-br from-white to-creme">
+          <div class="mt-10 p-6 md:p-8 rounded-3xl border border-black/8 bg-gradient-to-br from-white to-neutral-100">
             <p class="text-[13px] font-pro font-bold uppercase tracking-wider text-neutral-500">
               Où le trouver
             </p>
@@ -271,7 +271,7 @@ const tagline = produit.description?.trim() || rayon?.tagline || "";
 
   {/* ---------- RELATED ---------- */}
   {relatedCards.length > 0 && (
-    <section class="section-sm bg-creme">
+    <section class="section-sm bg-white">
       <div class="container-mo">
         <div class="flex items-end justify-between gap-4 mb-8">
           <div>
