@@ -1,6 +1,6 @@
 ---
 titre: "Boucher·ère halal"
-magasin: "tous"
+magasin: "toulouse-sud"
 type_contrat: "CDI"
 temps: "Temps plein"
 resume: "Travail direct sur carcasse — agneau, bœuf, volaille. Équipe passionnée, environnement familial."

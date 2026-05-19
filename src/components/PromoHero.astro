@@ -28,11 +28,8 @@
 import type { PromoEntry } from "@/lib/promos-repo";
 import { supabaseSrcSet } from "@/lib/image-cdn";
 
-/* Local magasinLabel helper (pas encore extrait dans un lib/) */
 const magasinLabel = (m: string): string =>
-  m === "tous" ? "Les 2 magasins" :
-  m === "portet" ? "Portet-sur-Garonne" :
-  m === "toulouse-sud" ? "Toulouse Sud — Cépière" : m;
+  m === "tous" || m === "toulouse-sud" ? "Toulouse Sud — Cépière" : m;
 
 export interface ExtraSlide {
   kind: "editorial";

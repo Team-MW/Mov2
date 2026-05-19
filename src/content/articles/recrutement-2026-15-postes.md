@@ -1,14 +1,14 @@
 ---
-titre: "15 nouveaux postes à pourvoir en 2026 sur nos 2 magasins"
+titre: "15 nouveaux postes à pourvoir en 2026 sur notre magasin"
 categorie: "engagements"
-resume: "Bouchers halal, conseillers rayon, chauffeur-livreur, responsable de rayon : 15 postes ouverts à Portet et Toulouse Sud. Pas de CV requis — seulement une motivation."
+resume: "Bouchers halal, conseillers rayon, chauffeur-livreur, responsable de rayon : 15 postes ouverts à Toulouse Sud Cépière. Pas de CV requis — seulement une motivation."
 image: "/images/rayons/saveur-mediterranee/ouvrier-d-x27-epicerie.jpg"
 auteur: "L'équipe Marché de Mo'"
 date_publication: 2026-03-25
 actif: true
 ---
 
-Depuis notre ouverture à Portet en 2024, notre philosophie de recrutement
+Depuis notre ouverture en 2024, notre philosophie de recrutement
 n'a pas changé : **pas de CV formel demandé, pas de diplôme minimum, pas de
 limite d'âge**. Ce qui compte pour nous : la **motivation**, le **contact
 client**, et l'envie d'apprendre un métier.
@@ -19,13 +19,13 @@ changeaient radicalement de métier, d'autres encore étaient en insertion.
 Nous formons en interne, et nous accompagnons vers le CDI.
 
 En 2026, avec la montée en puissance du magasin de Toulouse Sud — Cépière,
-nous ouvrons **15 nouveaux postes** sur nos deux magasins.
+nous ouvrons **15 nouveaux postes** sur notre supermarché.
 
 ## Les 15 postes ouverts
 
 ### Boucherie halal (5 postes)
 
-- **3 bouchers** expérimentés en boucherie sur carcasse (Portet)
+- **3 bouchers** expérimentés en boucherie sur carcasse (Toulouse Sud)
 - **2 apprentis bouchers** (Toulouse Sud) — formation en alternance avec
   le CFA de la Haute-Garonne, contrat en apprentissage (16–29 ans)
 
@@ -41,8 +41,7 @@ nous ouvrons **15 nouveaux postes** sur nos deux magasins.
 
 ### Logistique & support (3 postes)
 
-- **1 chauffeur-livreur permis B** (navette inter-magasins + livraisons
-  professionnels)
+- **1 chauffeur-livreur permis B** (livraisons clients professionnels)
 - **1 responsable de rayon** (profil confirmé, évolution interne ou
   externe, management équipe de 4–6 personnes)
 - **1 agent de maintenance / propreté** (temps plein)
@@ -82,7 +81,7 @@ imposées — 2 jours de repos consécutifs par semaine minimum.
 
 Notre processus est volontairement **simple** :
 
-1. **Passez en magasin** à l'accueil (Portet ou Toulouse Sud), demandez
+1. **Passez en magasin** à l'accueil (Toulouse Sud Cépière), demandez
    à parler à un responsable ou à remplir le formulaire "envie de
    rejoindre l'équipe".
 2. **Ou envoyez un email** à recrutement@marchedemo.com avec simplement

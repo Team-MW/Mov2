@@ -11,8 +11,8 @@ const bc = breadcrumbSchema([{ name: "Magasins", url: "/magasins" }]);
 ---
 
 <Layout
-  title={`Nos 2 magasins à Toulouse — Portet & Cépière · ${SITE.name}`}
-  description="Nos 2 magasins à Toulouse : Portet-sur-Garonne (8 Allée Pablo Picasso) et Toulouse Sud — Cépière (centre commercial L'Hippodrome). Ouverts 7j/7, parking gratuit."
+  title={`Votre supermarché à Toulouse Sud Cépière · ${SITE.name}`}
+  description="Notre supermarché Marché de Mo' à Toulouse : Toulouse Sud — Cépière (centre commercial L'Hippodrome). Ouvert 7j/7, parking gratuit."
   faqItems={FAQ_HOME}
   schema={[bc, ...allMagasinsSchema()]}
 >
@@ -21,25 +21,25 @@ const bc = breadcrumbSchema([{ name: "Magasins", url: "/magasins" }]);
   <!-- Hero -->
   <section class="bg-blanc pb-8">
     <div class="container-mo">
-      <span class="eyebrow">Nos magasins</span>
+      <span class="eyebrow">Notre magasin</span>
       <h1 class="display-xl mt-4 text-balance max-w-4xl">
-        2 magasins.<br/>
+        Votre supermarché.<br/>
         <span class="text-vert">Une seule</span> philosophie.
       </h1>
       <p class="mt-6 max-w-2xl text-[17px] text-neutral-600 leading-relaxed">
-        Portet-sur-Garonne et Toulouse Sud — Cépière. Deux adresses, deux ambiances,
-        un même engagement sur la qualité, le halal certifié et les saveurs du monde.
+        Toulouse Sud — Cépière (centre commercial L'Hippodrome). Une adresse unique et conviviale,
+        un engagement total sur la qualité, le halal certifié et les saveurs du monde.
       </p>
     </div>
   </section>
 
-  <!-- Grille 2 magasins -->
+  <!-- Grille 1 magasin -->
   <section class="section-sm bg-blanc">
-    <div class="container-mo grid lg:grid-cols-2 gap-6 lg:gap-8">
+    <div class="container-mo max-w-3xl">
       {Object.values(MAGASINS).map((m) => (
         <a
           href={`/magasins/${m.slug}`}
-          class="group relative overflow-hidden rounded-3xl bg-noir text-white shadow-xl hover:shadow-2xl transition-all duration-500"
+          class="group block relative overflow-hidden rounded-3xl bg-noir text-white shadow-xl hover:shadow-2xl transition-all duration-500"
         >
           <div class="aspect-[16/11] relative overflow-hidden bg-noir-softer">
             <img

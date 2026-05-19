@@ -1,6 +1,6 @@
 ---
 titre: "Employé·e polyvalent·e"
-magasin: "tous"
+magasin: "toulouse-sud"
 type_contrat: "CDI"
 temps: "Temps plein"
 resume: "Mise en rayon, accueil client, caisse. Avec ou sans expérience — formation assurée."
@@ -33,4 +33,4 @@ nos meilleurs atouts.
 ## Pour postuler
 
 Envoyez votre CV ou appelez-nous directement au **05 82 95 82 52**. Nous
-recevons sans RDV tous les mercredis après-midi à Portet-sur-Garonne.
+Rejoignez-nous tous les mercredis après-midi à Toulouse Sud Cépière sans rendez-vous.

@@ -34,9 +34,7 @@ const jp = jobPostingSchema({
   slug: poste.slug,
 });
 
-const magasinLabel =
-  poste.data.magasin === "tous" ? "Les 2 magasins" :
-  poste.data.magasin === "portet" ? "Portet-sur-Garonne" : "Toulouse Sud — Cépière";
+const magasinLabel = "Toulouse Sud — Cépière";
 ---
 
 <Layout

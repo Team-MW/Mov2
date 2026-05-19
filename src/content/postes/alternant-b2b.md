@@ -1,6 +1,6 @@
 ---
 titre: "Alternant·e commercial·e B2B"
-magasin: "tous"
+magasin: "toulouse-sud"
 type_contrat: "Alternance"
 temps: "Temps plein"
 resume: "Développement du portefeuille restaurateurs & épiceries. Alternance BAC+2 à BAC+5."

@@ -90,7 +90,7 @@ const tagline = produit.description?.trim() || rayon?.tagline || "";
   title={`${produit.nom} · ${rayon?.nom ?? "Produits"} — ${SITE.name}`}
   description={
     produit.description ||
-    `${produit.nom} — disponible au rayon ${rayon?.nom ?? produit.rayon} du Marché de Mo' à Toulouse et Portet-sur-Garonne.`
+    `${produit.nom} — disponible au rayon ${rayon?.nom ?? produit.rayon} du Marché de Mo' à Toulouse Sud — Cépière.`
   }
   ogImage={produit.image || undefined}
   schema={combinedSchema}
@@ -229,24 +229,18 @@ const tagline = produit.description?.trim() || rayon?.tagline || "";
               Où le trouver
             </p>
             <h2 class="mt-2 font-soft font-bold text-[22px] md:text-[26px] leading-tight">
-              Disponible en magasin dans nos 2 adresses
+              Disponible dans votre supermarché
             </h2>
             <p class="mt-3 text-[14px] text-neutral-600 leading-relaxed">
-              Produits frais, rotations quotidiennes. Appelez ou passez pour
-              confirmer l'arrivage du jour.
+              Produits frais, arrivages quotidiens. Appelez ou passez au magasin pour
+              confirmer la disponibilité du jour.
             </p>
             <div class="mt-5 flex flex-wrap gap-3">
               <a
-                href={`/magasins/${MAGASINS.portet.slug}`}
+                href={`/magasins/${MAGASINS["toulouse-sud"].slug}`}
                 class="btn btn-primary btn-sheen"
               >
-                Magasin Portet →
-              </a>
-              <a
-                href={`/magasins/${MAGASINS["toulouse-sud"].slug}`}
-                class="btn btn-secondary"
-              >
-                Magasin Toulouse Sud →
+                Notre magasin →
               </a>
               <a
                 href={`tel:${SITE.phoneE164}`}

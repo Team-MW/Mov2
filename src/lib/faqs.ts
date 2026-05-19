@@ -13,12 +13,12 @@ export const FAQ_HOME: FAQItem[] = [
     r: "Le plus grand supermarché ethnique d'Occitanie. 10 000+ références, boucherie halal, fruits et légumes exotiques, épices du monde, saveurs d'Afrique, d'Asie, de Méditerranée et bien plus. Ouvert 7j/7 à Toulouse.",
   },
   {
-    q: "Où se trouvent les magasins Marché de Mo' ?",
-    r: "Deux magasins dans l'agglomération toulousaine — Portet-sur-Garonne (8 Allée Pablo Picasso) et Toulouse Sud Cépière (5 rue Joachim du Bellay, sortie 27).",
+    q: "Où se trouve le magasin Marché de Mo' ?",
+    r: "Notre magasin se trouve à Toulouse Sud Cépière (5 rue Joachim du Bellay, sortie 27).",
   },
   {
     q: "Les magasins sont-ils ouverts le dimanche ?",
-    r: "Oui, 7 jours sur 7 dont le dimanche de 8h30 à 13h.",
+    r: "Oui, notre magasin est ouvert 7 jours sur 7 dont le dimanche de 8h30 à 13h.",
   },
   {
     q: "Quels moyens de paiement acceptez-vous ?",
@@ -41,7 +41,7 @@ export const FAQ_BOUCHERIE: FAQItem[] = [
   },
   {
     q: "Où trouver de la viande halal à Toulouse ?",
-    r: "Marché de Mo' propose la boucherie halal la plus complète de Toulouse, dans nos magasins de Portet-sur-Garonne et Toulouse Sud.",
+    r: "Marché de Mo' propose la boucherie halal la plus complète de Toulouse, dans notre magasin de Toulouse Sud Cépière.",
   },
   {
     q: "Vendez-vous de l'agneau halal sans électronarcose ?",
@@ -67,11 +67,11 @@ export const FAQ_RAYONS_GENERAL: FAQItem[] = [
 export const FAQ_MAGASINS: FAQItem[] = [
   {
     q: "Y a-t-il un parking ?",
-    r: "Oui, 600 places de parking dans nos deux magasins.",
+    r: "Oui, un grand parking gratuit de 600 places est à votre disposition.",
   },
   {
     q: "Les magasins sont-ils accessibles PMR ?",
-    r: "Oui, nos magasins sont adaptés aux personnes à mobilité réduite.",
+    r: "Oui, notre magasin est entièrement adapté aux personnes à mobilité réduite.",
   },
   {
     q: "Comment venir au magasin de Toulouse Sud ?",
@@ -82,11 +82,11 @@ export const FAQ_MAGASINS: FAQItem[] = [
 export const FAQ_PROMOS: FAQItem[] = [
   {
     q: "Comment sont choisies les promotions ?",
-    r: "Nos équipes mettent à jour les offres chaque semaine selon les rayons et les magasins. Consultez /promos pour voir toutes les offres actives.",
+    r: "Nos équipes mettent à jour les offres chaque semaine selon les rayons. Consultez /promos pour voir toutes les offres actives.",
   },
   {
-    q: "Les promos sont-elles différentes selon les magasins ?",
-    r: "Certaines promos sont communes aux deux magasins, d'autres sont exclusives à Portet ou à Toulouse Sud. La fiche promo indique toujours le(s) magasin(s) concerné(s).",
+    q: "Les promos sont-elles valables en magasin ?",
+    r: "Oui, toutes nos promotions sont applicables directement en caisse dans notre magasin de Toulouse Sud Cépière.",
   },
 ];
 

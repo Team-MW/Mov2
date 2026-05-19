@@ -918,7 +918,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
             {/* 3. BOTTOM BAR */}
             <footer className="mo-poster__bottom">
               <div className="mo-poster__bottom-left">
-                Vos magasins : <strong>Portet-sur-Garonne & Toulouse Cépière</strong>
+                Votre magasin : <strong>Toulouse Cépière (Hippodrome)</strong>
               </div>
               <div className="mo-poster__bottom-right">
                 Le plein de saveurs du monde

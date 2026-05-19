@@ -257,7 +257,7 @@ const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
 
     {!hideChrome && (
       <ChatMo
-        client:idle
+        client:only="react"
         phoneE164={SITE.phoneE164}
         phoneDisplay={SITE.phone}
         email={SITE.email}

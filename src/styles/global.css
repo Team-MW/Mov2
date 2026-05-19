@@ -886,3 +886,15 @@ img {
     image-rendering: crisp-edges;
   }
 }
+
+/* Active click state tactile feedback for buttons and cards */
+.btn:active,
+.burger-btn:active,
+.promo-card:active,
+.produit-card:active,
+a.group:active,
+a.reveal:active,
+button:active {
+  transform: scale(0.96) translateY(1px) !important;
+  transition: transform 0.1s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}

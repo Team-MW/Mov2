@@ -13,13 +13,13 @@ const faqFidelite: FAQItem[] = [
   { q: "Comment rejoindre le programme fidélité ?", r: "C'est gratuit et sans engagement. Inscrivez-vous en caisse ou en ligne via ce formulaire — vous recevez immédiatement votre carte numérique." },
   { q: "Comment gagner des points ?", r: "1 € dépensé = 1 point. Les promotions de la semaine rapportent des points bonus. Les points se cumulent sur votre compte." },
   { q: "Comment utiliser mes points ?", r: "Échangez vos points en caisse contre des remises immédiates : 100 points = 5 € de réduction. Aucun plafond — les points ne périment pas tant que votre compte reste actif." },
-  { q: "Les 2 magasins partagent-ils la carte fidélité ?", r: "Oui — votre compte est valable dans nos 2 magasins Portet-sur-Garonne et Toulouse Sud Cépière." },
+  { q: "Où ma carte de fidélité est-elle utilisable ?", r: "Votre compte est valable dans notre magasin de Toulouse Sud Cépière, ainsi que sur toutes nos offres." },
 ];
 ---
 
 <Layout
   title={`Programme fidélité — gagnez des points à chaque achat · ${SITE.name}`}
-  description="Carte fidélité gratuite : 1 € = 1 point. 100 points = 5 € de remise. Valable dans nos 2 magasins toulousains. Adhésion en 30 secondes."
+  description="Carte fidélité gratuite : 1 € = 1 point. 100 points = 5 € de remise. Valable dans notre magasin toulousain. Adhésion en 30 secondes."
   faqItems={faqFidelite}
   schema={bc}
 >
@@ -35,7 +35,7 @@ const faqFidelite: FAQItem[] = [
           <span class="text-vert">1 point gagné</span>.
         </h1>
         <p class="mt-6 max-w-xl text-[17px] text-neutral-600 leading-relaxed">
-          Gratuite, sans engagement, valable dans nos 2 magasins. Cumulez des points
+          Gratuite, sans engagement, valable dans notre magasin. Cumulez des points
           à chaque passage en caisse — <strong>100 points = 5 € de remise immédiate</strong>.
         </p>
         <div class="mt-8">
@@ -116,9 +116,7 @@ const faqFidelite: FAQItem[] = [
           </div>
           <div>
             <label for="fid-magasin" class="block text-[13px] font-bold mb-1.5">Magasin favori</label>
-            <select id="fid-magasin" name="magasin" class="input-sc">
-              <option value="tous">Peu importe</option>
-              <option value="portet">Portet-sur-Garonne</option>
+            <select id="fid-magasin" name="magasin" class="input-sc" defaultValue="toulouse-sud">
               <option value="toulouse-sud">Toulouse Sud — Cépière</option>
             </select>
           </div>

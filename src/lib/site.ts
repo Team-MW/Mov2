@@ -36,7 +36,7 @@ export const SOCIAL = {
 /* ------------------------------------------------------------
    Magasins
    ------------------------------------------------------------ */
-export type MagasinSlug = "portet" | "toulouse-sud";
+export type MagasinSlug = "toulouse-sud";
 
 export interface Magasin {
   slug: MagasinSlug;
@@ -71,50 +71,6 @@ export interface Magasin {
 }
 
 export const MAGASINS: Record<MagasinSlug, Magasin> = {
-  portet: {
-    slug: "portet",
-    nom: "Marché de Mo' — Portet-sur-Garonne",
-    nomCourt: "Portet-sur-Garonne",
-    adresseLigne1: "8 Allée Pablo Picasso",
-    ville: "Portet-sur-Garonne",
-    codePostal: "31120",
-    departement: "Haute-Garonne",
-    surface: "1 200 m²",
-    parking: "600 places",
-    horaires: {
-      lundiJeudi: "8h30 – 20h30",
-      vendredi: "8h30 – 13h & 14h – 21h",
-      samedi: "8h30 – 21h",
-      dimanche: "8h30 – 13h",
-    },
-    openingHoursSchema: [
-      "Mo-Th 08:30-20:30",
-      "Fr 08:30-13:00",
-      "Fr 14:00-21:00",
-      "Sa 08:30-21:00",
-      "Su 08:30-13:00",
-    ],
-    telephone: "05 82 95 82 52",
-    telE164: "+33582958252",
-    coords: { lat: 43.5377, lon: 1.4094 },
-    mapsEmbed:
-      "https://www.openstreetmap.org/export/embed.html?bbox=1.4044%2C43.5347%2C1.4144%2C43.5407&layer=mapnik&marker=43.5377%2C1.4094",
-    mapsLink:
-      "https://maps.google.com/?q=8+All%C3%A9e+Pablo+Picasso+31120+Portet-sur-Garonne",
-    photo: "/images/magasins/portet.jpg",
-    badge: "Magasin historique",
-    accroche: "Le magasin fondateur — 1 200 m² de saveurs du monde à Portet-sur-Garonne.",
-    dateOuverture: "Août 2024",
-    description:
-      "Notre magasin fondateur, ouvert en août 2024 dans la zone commerciale de Portet-sur-Garonne. 1 200 m² dédiés aux saveurs du monde — boucherie halal, fruits et légumes exotiques, épicerie ethnique complète.",
-    atouts: [
-      "Boucherie halal sur carcasse — agneau, bœuf, volaille",
-      "120+ références fruits & légumes exotiques",
-      "600 places de parking gratuites",
-      "Accès direct depuis la sortie Portet de la rocade",
-      "Ouvert 7j/7 y compris le dimanche matin",
-    ],
-  },
   "toulouse-sud": {
     slug: "toulouse-sud",
     nom: "Marché de Mo' — Toulouse Sud Cépière",
@@ -146,11 +102,11 @@ export const MAGASINS: Record<MagasinSlug, Magasin> = {
     mapsLink:
       "https://maps.google.com/?q=5+rue+Joachim+du+Bellay+31100+Toulouse",
     photo: "/images/magasins/toulouse-sud.jpg",
-    badge: "Dernier-né du groupe",
-    accroche: "Le second magasin du Groupe, au cœur de Toulouse Sud Cépière.",
+    badge: "Supermarché",
+    accroche: "Votre grand supermarché au cœur de Toulouse Sud Cépière.",
     dateOuverture: "Avril 2026",
     description:
-      "Le dernier-né du Groupe Marché de Mo', déjà référence incontournable. Situé à l'entrée de la sortie périphérique Cépière, 1 200 m² d'espace de vente pour répondre à tous vos besoins.",
+      "Votre supermarché Marché de Mo' à Toulouse. Situé à l'entrée de la sortie périphérique Cépière, 1 200 m² d'espace de vente pour répondre à tous vos besoins.",
     atouts: [
       "Centre commercial L'Hippodrome — accès rocade",
       "Parking couvert gratuit — 600 places",
@@ -234,7 +190,7 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
       "boucherie halal Toulouse",
       "viande halal Toulouse",
       "halal sans électronarcose",
-      "boucher halal Portet",
+      "boucher halal Toulouse Sud",
     ],
   },
   "fruits-legumes": {
@@ -461,7 +417,7 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
     keywords: [
       "discount Toulouse",
       "produits courants pas chers Toulouse",
-      "supermarché discount Portet",
+      "supermarché discount Toulouse",
     ],
   },
   surgeles: {

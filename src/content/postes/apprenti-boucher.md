@@ -1,6 +1,6 @@
 ---
 titre: "Apprenti·e boucher·ère"
-magasin: "tous"
+magasin: "toulouse-sud"
 type_contrat: "Apprentissage"
 temps: "Temps plein"
 resume: "Formation en boucherie halal au sein de notre équipe toulousaine. Alternance CFA."

@@ -130,6 +130,7 @@ export function supabaseSrcSet(
 ): { src: string; srcset: string } {
   const empty = { src: src ?? "", srcset: "" };
   if (!src || typeof src !== "string") return empty;
+  if (!isSupabaseStorageUrl(src)) return { src, srcset: "" };
   if (!widths.length) return { src, srcset: "" };
 
   const sorted = [...widths].filter((w) => Number.isFinite(w) && w > 0).sort((a, b) => a - b);
