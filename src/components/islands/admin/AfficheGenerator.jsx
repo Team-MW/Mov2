@@ -34,6 +34,8 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
   const [expo, setExpo] = useState(false);
   const [productUrl, setProductUrl] = useState('https://www.marchedemo.com');
   const [qrUrlGenerated, setQrUrlGenerated] = useState('');
+  const [showImage, setShowImage] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
 
   // ----- UI State -----
   const [searchQuery, setSearchQuery] = useState('');
@@ -141,6 +143,8 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
         if (d.productUrl) setProductUrl(d.productUrl);
         if (d.qrUrlGenerated) setQrUrlGenerated(d.qrUrlGenerated);
         if (d.selectedChip) setSelectedChip(d.selectedChip);
+        if (d.showImage !== undefined) setShowImage(d.showImage);
+        if (d.imageUrl !== undefined) setImageUrl(d.imageUrl);
       }
     } catch (_) {}
   }, []);
@@ -149,12 +153,13 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
   useEffect(() => {
     const state = {
       name, eyebrow, pitch, rayon, format, origine, marque,
-      price, oldPrice, promo, expo, productUrl, qrUrlGenerated, selectedChip
+      price, oldPrice, promo, expo, productUrl, qrUrlGenerated, selectedChip,
+      showImage, imageUrl
     };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch (_) {}
-  }, [name, eyebrow, pitch, rayon, format, origine, marque, price, oldPrice, promo, expo, productUrl, qrUrlGenerated, selectedChip]);
+  }, [name, eyebrow, pitch, rayon, format, origine, marque, price, oldPrice, promo, expo, productUrl, qrUrlGenerated, selectedChip, showImage, imageUrl]);
 
   // ----- Resize / Scale Preview -----
   useEffect(() => {
@@ -240,6 +245,14 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
       setMarque('');
     }
 
+    if (item.image) {
+      setImageUrl(item.image);
+      setShowImage(true);
+    } else {
+      setImageUrl('');
+      setShowImage(false);
+    }
+
     setSearchQuery('');
     setSearchResults([]);
   };
@@ -262,6 +275,8 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
     setQrCodeDataUrl('');
     setSelectedChip(null);
     setSearchQuery('');
+    setImageUrl('');
+    setShowImage(false);
   };
 
   // ----- Print Action -----
@@ -584,6 +599,52 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
             />
           </div>
 
+          {/* Product Image Section */}
+          <div className="bg-neutral-50/50 border border-neutral-100 rounded-2xl p-4 flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <label htmlFor="f-show-image" className="text-[13px] font-bold text-neutral-700 cursor-pointer flex items-center gap-2">
+                <input
+                  id="f-show-image"
+                  type="checkbox"
+                  className="w-4 h-4 accent-mo-green rounded"
+                  checked={showImage}
+                  onChange={(e) => setShowImage(e.target.checked)}
+                />
+                Afficher l'image du produit
+              </label>
+              {imageUrl && (
+                <button
+                  type="button"
+                  onClick={() => setImageUrl('')}
+                  className="text-neutral-400 hover:text-rouge text-[11px] font-bold"
+                >
+                  Effacer
+                </button>
+              )}
+            </div>
+            {showImage && (
+              <div className="flex flex-col gap-1.5 mt-1">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    className="flex-1 bg-white border border-neutral-200 rounded-xl px-3 py-2 text-[12.5px] text-neutral-800 focus:outline-none focus:border-mo-green"
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    placeholder="URL de l'image (Supabase, external...)"
+                  />
+                </div>
+                <span className="text-[10px] text-neutral-400 leading-normal">
+                  💡 *Privilégiez les formats transparents (PNG détouré) ou sur fond blanc pur pour économiser l'encre.*
+                </span>
+                {imageUrl && (
+                  <div className="mt-2 w-16 h-16 rounded-xl border border-neutral-200 bg-white p-1 flex items-center justify-center overflow-hidden">
+                    <img src={imageUrl} className="max-w-full max-h-full object-contain rounded" alt="Preview" />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
           {/* Expo & QR Target */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-center gap-3 border border-neutral-200 rounded-xl p-3 bg-neutral-50">
@@ -684,6 +745,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
           <div 
             className="mo-poster" 
             data-promo={promo ? "true" : "false"}
+            data-has-image={showImage && !!imageUrl ? "true" : "false"}
             style={{ transform: `scale(${scale})` }}
           >
             
@@ -710,41 +772,89 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
             <main className="mo-poster__main">
               
               {/* Left Column Content */}
-              <div className="mo-poster__content">
-                <div className="mo-poster__content-top">
-                  
-                  {/* Eyebrow Label */}
-                  {eyebrow && (
-                    <span className="mo-poster__eyebrow">
-                      {eyebrow}
-                    </span>
-                  )}
+              <div className="mo-poster__content" data-has-image={showImage && !!imageUrl ? "true" : "false"}>
+                {showImage && imageUrl ? (
+                  <div className="mo-poster__content-body-grid">
+                    {/* Left Column: Details */}
+                    <div className="mo-poster__content-text-side">
+                      <div className="mo-poster__content-top">
+                        {eyebrow && (
+                          <span className="mo-poster__eyebrow">
+                            {eyebrow}
+                          </span>
+                        )}
 
-                  {/* Product Title */}
-                  <h1 className="mo-poster__name" data-length={nameLengthClass}>
-                    {name || 'Nom du Produit'}
-                  </h1>
+                        <h1 className="mo-poster__name" data-length={nameLengthClass}>
+                          {name || 'Nom du Produit'}
+                        </h1>
 
-                  {/* Product Metadata (Format, Origin, Brand) */}
-                  <div className="mo-poster__meta">
-                    {marque && (
-                      <span className="mo-poster__meta-item">Marque : <strong>{marque}</strong></span>
+                        <div className="mo-poster__meta">
+                          {marque && (
+                            <span className="mo-poster__meta-item">Marque : <strong>{marque}</strong></span>
+                          )}
+                          {origine && (
+                            <span className="mo-poster__meta-item">Origine : <strong>{origine}</strong></span>
+                          )}
+                          {format && (
+                            <span className="mo-poster__meta-item">Format : <strong>{format}</strong></span>
+                          )}
+                        </div>
+
+                        {pitch && (
+                          <p className="mo-poster__pitch">
+                            {pitch}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Right Column: Image Frame */}
+                    <div className="mo-poster__content-image-side">
+                      <div className="mo-poster__image-frame">
+                        <img 
+                          src={imageUrl} 
+                          className="mo-poster__product-image" 
+                          crossOrigin="anonymous"
+                          alt={name} 
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mo-poster__content-top">
+                    {/* Eyebrow Label */}
+                    {eyebrow && (
+                      <span className="mo-poster__eyebrow">
+                        {eyebrow}
+                      </span>
                     )}
-                    {origine && (
-                      <span className="mo-poster__meta-item">Origine : <strong>{origine}</strong></span>
-                    )}
-                    {format && (
-                      <span className="mo-poster__meta-item">Format : <strong>{format}</strong></span>
+
+                    {/* Product Title */}
+                    <h1 className="mo-poster__name" data-length={nameLengthClass}>
+                      {name || 'Nom du Produit'}
+                    </h1>
+
+                    {/* Product Metadata (Format, Origin, Brand) */}
+                    <div className="mo-poster__meta">
+                      {marque && (
+                        <span className="mo-poster__meta-item">Marque : <strong>{marque}</strong></span>
+                      )}
+                      {origine && (
+                        <span className="mo-poster__meta-item">Origine : <strong>{origine}</strong></span>
+                      )}
+                      {format && (
+                        <span className="mo-poster__meta-item">Format : <strong>{format}</strong></span>
+                      )}
+                    </div>
+
+                    {/* Short Pitch description */}
+                    {pitch && (
+                      <p className="mo-poster__pitch">
+                        {pitch}
+                      </p>
                     )}
                   </div>
-
-                  {/* Short Pitch description */}
-                  {pitch && (
-                    <p className="mo-poster__pitch">
-                      {pitch}
-                    </p>
-                  )}
-                </div>
+                )}
 
                 {/* QR Code Section */}
                 <div className="mo-poster__qr">

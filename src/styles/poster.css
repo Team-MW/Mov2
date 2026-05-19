@@ -200,6 +200,7 @@
 .mo-poster__meta-item {
   display: inline-flex;
   align-items: center;
+  gap: 1.2mm;
 }
 
 .mo-poster__meta-item:not(:last-child)::after {
@@ -477,46 +478,127 @@
   }
 
   html, body {
-    width: 297mm;
-    height: 210mm;
-    margin: 0;
-    padding: 0;
-    background: var(--mo-white);
-    overflow: hidden;
+    width: 297mm !important;
+    height: 210mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: var(--mo-white) !important;
+    overflow: hidden !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
+  /* Reset layout effects on parents to avoid clipping or bad positioning contexts */
+  body, main, .min-h-screen, .container-mo {
+    transform: none !important;
+    filter: none !important;
+    perspective: none !important;
+    clip-path: none !important;
+    mask: none !important;
+  }
+
   /* Hide all UI Chrome completely */
   body * {
-    visibility: hidden;
+    visibility: hidden !important;
   }
 
-  /* Only make the poster area visible */
-  .mo-preview-wrap, .mo-preview-wrap * {
-    visibility: visible;
+  /* Only make the poster area and all its children/pseudo-elements visible */
+  .mo-preview-wrap, 
+  .mo-preview-wrap *,
+  .mo-preview-wrap *::before,
+  .mo-preview-wrap *::after {
+    visibility: visible !important;
   }
 
+  /* Fixed position bypasses all nesting, scroll offset, and grid container layouts */
   .mo-preview-wrap {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 297mm;
-    height: 210mm;
-    aspect-ratio: auto;
-    border: 0;
-    border-radius: 0;
-    overflow: visible;
-    box-shadow: none;
-    padding: 0;
-    margin: 0;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 297mm !important;
+    height: 210mm !important;
+    aspect-ratio: auto !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    z-index: 9999999 !important;
+    background: var(--mo-white) !important;
   }
 
   .mo-preview-wrap .mo-poster {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 297mm !important;
+    height: 210mm !important;
     transform: none !important; /* Cancel CSS live scaling transform */
-    box-shadow: none;
+    box-shadow: none !important;
   }
+}
+
+/* ============================================================
+   PRODUCT IMAGE ADAPTIVE GRID LAYOUT
+   ============================================================ */
+
+/* Main layout grid for Left Column when image is active */
+.mo-poster__content-body-grid {
+  display: grid;
+  grid-template-columns: 58% 42%;
+  gap: 4mm;
+  flex: 1;
+  align-items: start;
+  min-height: 0; /* Prevents flex box overflow quirks */
+}
+
+.mo-poster__content-text-side {
+  display: flex;
+  flex-direction: column;
+  gap: 3mm;
+}
+
+.mo-poster__content-image-side {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* Premium transparent container, no box boundary, floating image style */
+.mo-poster__image-frame {
+  width: 100%;
+  height: 76mm; /* Generous Grand-Frais vertical scale! */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+.mo-poster__product-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  /* Multi-stage premium drop-shadow for incredibly realistic depth, matching professional French supermarket promo tags! */
+  filter: drop-shadow(0 3mm 6mm rgba(0, 0, 0, 0.14)) drop-shadow(0 1mm 2mm rgba(0, 0, 0, 0.08));
+}
+
+/* Dynamic Font Auto-Shrinking when image is present */
+.mo-poster[data-has-image="true"] .mo-poster__name {
+  font-size: 13.5mm;
+  margin-bottom: 2mm;
+}
+.mo-poster[data-has-image="true"] .mo-poster__name[data-length="long"] {
+  font-size: 10.5mm;
+}
+.mo-poster[data-has-image="true"] .mo-poster__name[data-length="xlarge"] {
+  font-size: 8.5mm;
+}
+.mo-poster[data-has-image="true"] .mo-poster__pitch {
+  font-size: 4mm;
+  line-height: 1.3;
+  max-height: 16mm;
+  overflow: hidden;
 }
