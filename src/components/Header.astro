@@ -30,7 +30,7 @@ const BUTTON_COLORS: Record<string, string> = {
 
 <header
   id="site-header"
-  class="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-black/5 transition-all duration-300"
+  class="sticky top-0 z-50 w-full border-b border-black/5 transition-all duration-300 bg-white/95 backdrop-blur-sm"
 >
   <!-- 0. Row 0: Top bar discrete (Desktop only, slides up on scroll) -->
   <div id="header-top-bar" class="header-top-bar border-b border-black/5 bg-white overflow-hidden">
@@ -53,7 +53,7 @@ const BUTTON_COLORS: Record<string, string> = {
   </div>
 
   <!-- 1. Row 1: Sticky Navigation Bar (Search, Burger, Promos & Magasins) -->
-  <div class="container-mo py-3 relative z-10">
+  <div id="header-row-1" class="container-mo py-3 relative z-10">
     <!-- Desktop Layout (Hidden on Mobile/Tablet) -->
     <div class="hidden lg:flex items-center justify-between gap-6">
       <!-- Left: Scrolled Logo & Burger Menu -->
@@ -68,7 +68,7 @@ const BUTTON_COLORS: Record<string, string> = {
             alt="Marché de Mo'"
             width="50"
             height="50"
-            class="w-[50px] h-[50px] object-contain shrink-0"
+            class="w-[50px] h-[50px] object-contain shrink-0 bg-white rounded-full shadow-sm p-0.5"
           />
           <div class="flex flex-col text-left font-soft shrink-0 ml-2.5">
             <span class="text-[16px] font-black text-vert-dark leading-none">Marché de Mo'</span>
@@ -210,7 +210,7 @@ const BUTTON_COLORS: Record<string, string> = {
         width="110"
         height="110"
         fetchpriority="high"
-        class="w-24 h-24 lg:w-28 lg:h-28 object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300"
+        class="w-24 h-24 lg:w-28 lg:h-28 object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300 bg-white rounded-full shadow-sm p-0.5"
       />
     </a>
   </div>
@@ -303,11 +303,13 @@ const BUTTON_COLORS: Record<string, string> = {
   .header-top-bar {
     max-height: 40px;
     opacity: 1;
+    overflow: hidden;
     transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, border-color 0.4s ease;
   }
   .header-logo-row {
     max-height: 160px;
     opacity: 1;
+    overflow: hidden;
     transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, padding 0.4s ease;
   }
 
@@ -438,6 +440,17 @@ const BUTTON_COLORS: Record<string, string> = {
       display: flex !important;
     }
   }
+
+  /* Hide categories row dynamically when the mobile menu is open */
+  .menu-is-open #header-categories-row {
+    max-height: 0px !important;
+    opacity: 0 !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    border-top-width: 0px !important;
+    pointer-events: none;
+    overflow: hidden;
+  }
 </style>
 
 <script>
@@ -447,6 +460,15 @@ const BUTTON_COLORS: Record<string, string> = {
     const drawer = document.getElementById("mobile-drawer");
     const header = document.getElementById("site-header");
     const scrolledLinks = document.getElementById("header-scrolled-links");
+    const row1 = document.getElementById("header-row-1");
+
+    const updateDrawerPosition = () => {
+      if (!drawer || !row1 || !header) return;
+      const row1Rect = row1.getBoundingClientRect();
+      const headerRect = header.getBoundingClientRect();
+      const drawerTop = Math.max(0, row1Rect.bottom - headerRect.top);
+      drawer.style.top = `${drawerTop}px`;
+    };
 
     const toggleMenu = (e: MouseEvent) => {
       e.stopPropagation();
@@ -454,9 +476,12 @@ const BUTTON_COLORS: Record<string, string> = {
       if (isOpen) {
         burger?.classList.add("is-active");
         burgerMobile?.classList.add("is-active");
+        header?.classList.add("menu-is-open");
+        updateDrawerPosition();
       } else {
         burger?.classList.remove("is-active");
         burgerMobile?.classList.remove("is-active");
+        header?.classList.remove("menu-is-open");
       }
     };
     
@@ -482,6 +507,7 @@ const BUTTON_COLORS: Record<string, string> = {
             drawer.classList.remove("is-open");
             burger?.classList.remove("is-active");
             burgerMobile?.classList.remove("is-active");
+            header?.classList.remove("menu-is-open");
           }
         }
       });
@@ -496,16 +522,25 @@ const BUTTON_COLORS: Record<string, string> = {
           
           if (window.scrollY > 40) {
             header.classList.add("is-scrolled", "shadow-[0_4px_20px_rgba(0,0,0,0.06)]");
+            header.style.backdropFilter = "blur(18px)";
+            header.style.webkitBackdropFilter = "blur(18px)";
+            header.style.backgroundColor = "rgba(255, 255, 255, 0.82)";
             if (scrolledLinks) {
               scrolledLinks.classList.remove("opacity-0", "translate-x-5", "pointer-events-none");
               scrolledLinks.classList.add("opacity-100", "translate-x-0");
             }
           } else {
             header.classList.remove("is-scrolled", "shadow-[0_4px_20px_rgba(0,0,0,0.06)]");
+            header.style.backdropFilter = "blur(8px)";
+            header.style.webkitBackdropFilter = "blur(8px)";
+            header.style.backgroundColor = "rgba(255, 255, 255, 0.96)";
             if (scrolledLinks) {
               scrolledLinks.classList.add("opacity-0", "translate-x-5", "pointer-events-none");
               scrolledLinks.classList.remove("opacity-100", "translate-x-0");
             }
+          }
+          if (drawer && drawer.classList.contains("is-open")) {
+            updateDrawerPosition();
           }
           ticking = false;
         });
@@ -514,6 +549,11 @@ const BUTTON_COLORS: Record<string, string> = {
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", () => {
+      if (drawer && drawer.classList.contains("is-open")) {
+        updateDrawerPosition();
+      }
+    }, { passive: true });
     onScroll();
   };
 

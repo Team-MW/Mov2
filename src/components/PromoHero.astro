@@ -69,6 +69,7 @@ const promoSlides = promos.slice(0, 5).map((p) => ({
   prixPromo: p.data.prix_promo,
   prixOriginal: p.data.prix_original,
   reductionPct: p.data.reduction_pct,
+  videoUrl: null as string | null,
 }));
 
 const editorialSlides = extraSlides.map((s) => ({
@@ -84,9 +85,33 @@ const editorialSlides = extraSlides.map((s) => ({
   prixPromo: null as number | null,
   prixOriginal: null as number | null,
   reductionPct: null as number | null,
+  videoUrl: null as string | null,
 }));
 
-const slides = [...promoSlides, ...editorialSlides].slice(0, 6);
+const initialSlides = [...promoSlides, ...editorialSlides];
+const videoSlide = {
+  kind: "video" as const,
+  titre: "Votre supermarché du monde à Toulouse",
+  description: "Boucherie halal sur carcasse, fruits & légumes exotiques, épices du monde. Ouvert 7j/7.",
+  eyebrow: "Vidéo · Marché de Mo'",
+  image: "/images/home/hero.jpg",
+  imageAlt: "Vidéo Marché de Mo'",
+  ctaLabel: "Voir nos rayons",
+  ctaHref: "/rayons",
+  accent: "#1C6B35",
+  prixPromo: null as number | null,
+  prixOriginal: null as number | null,
+  reductionPct: null as number | null,
+  videoUrl: "/videos/marchedemo-promo.mp4",
+};
+
+if (initialSlides.length > 0) {
+  initialSlides.splice(1, 0, videoSlide);
+} else {
+  initialSlides.push(videoSlide);
+}
+
+const slides = initialSlides.slice(0, 7);
 const hasSlides = slides.length > 0;
 
 /* Hero is full-bleed (100vw). Widths cover : mobile portrait DPR 3
@@ -109,65 +134,118 @@ const heroSources = slides.map((s) =>
   >
     {/* Track : horizontal scroll with snap */}
     <div class="promo-hero-track" data-promo-hero-track tabindex="0" role="region">
-      {slides.map((slide, i) => (
-        <article
-          class="promo-hero-slide"
-          role="group"
-          aria-roledescription="diapositive"
-          aria-label={`${i + 1} sur ${slides.length} : ${slide.titre}`}
-          data-slide-index={i}
-        >
-          <div class="promo-hero-slide-image-wrap">
-            <img
-              src={heroSources[i].src || slide.image}
-              srcset={heroSources[i].srcset}
-              sizes={heroSizes}
-              alt={slide.imageAlt}
-              loading={i === 0 ? "eager" : "lazy"}
-              fetchpriority={i === 0 ? "high" : undefined}
-              decoding="async"
-              class="promo-hero-slide-image"
-              width="1920"
-              height="820"
-            />
-            <div
-              class="promo-hero-slide-overlay"
-              style={`--accent: ${slide.accent}`}
-            ></div>
-          </div>
-
-          <div class="promo-hero-slide-content">
-            <div class="container-mo promo-hero-slide-inner">
-              <span class="promo-hero-eyebrow">{slide.eyebrow}</span>
-              <h2 class="promo-hero-title text-balance">{slide.titre}</h2>
-              <p class="promo-hero-desc">{slide.description}</p>
-
-              {slide.kind === "promo" && slide.prixPromo != null && (
-                <div class="promo-hero-price">
-                  <span class="promo-hero-price-now">{slide.prixPromo}€</span>
-                  {slide.prixOriginal != null && (
-                    <span class="promo-hero-price-before">{slide.prixOriginal}€</span>
-                  )}
-                  {slide.reductionPct != null && (
-                    <span class="promo-hero-price-pct">−{slide.reductionPct}%</span>
-                  )}
+      {slides.map((slide, i) => {
+        const isVideo = slide.kind === "video";
+        return (
+          <article
+            class={`promo-hero-slide ${isVideo ? 'promo-hero-slide-video-layout' : ''}`}
+            role="group"
+            aria-roledescription="diapositive"
+            aria-label={`${i + 1} sur ${slides.length} : ${slide.titre}`}
+            data-slide-index={i}
+          >
+            {isVideo ? (
+              /* Split Screen Layout for Video Slide */
+              <div class="promo-video-layout-container w-full h-full flex flex-col-reverse md:flex-row relative">
+                <!-- Background decorative wave grid for the video slide -->
+                <div class="absolute inset-0 bg-transparent z-0"></div>
+                <div 
+                  class="absolute inset-0 opacity-[0.035] pointer-events-none z-0" 
+                  style="background-image: radial-gradient(circle at center, rgba(46, 139, 74, 0.4) 0%, rgba(0,0,0,0) 80%), url('data:image/svg+xml,%3Csvg width=\'120\' height=\'24\' viewBox=\'0 0 120 24\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 12 Q 30 0, 60 12 T 120 12\' fill=\'none\' stroke=\'%231c6b35\' stroke-width=\'1.5\'/%3E%3C/svg%3E');"
+                ></div>
+                
+                <!-- Left text column -->
+                <div class="promo-video-left flex-1 flex flex-col justify-end md:justify-center p-6 md:p-12 lg:p-20 z-10 text-white">
+                  <div class="promo-hero-slide-inner">
+                    <span class="promo-hero-eyebrow" style={`--accent: ${slide.accent}`}>{slide.eyebrow}</span>
+                    <h2 class="promo-hero-title text-balance text-white mt-3">{slide.titre}</h2>
+                    <p class="promo-hero-desc text-white/90 mt-4 max-w-xl">{slide.description}</p>
+                    <a
+                      href={slide.ctaHref}
+                      class="promo-hero-cta btn-sheen mt-6 inline-flex"
+                      style={`--accent: ${slide.accent}`}
+                    >
+                      {slide.ctaLabel}
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                        <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
+                  </div>
                 </div>
-              )}
+                
+                <!-- Right video player card column -->
+                <div class="promo-video-right flex-1 flex items-center justify-center p-6 md:p-12 z-10 relative">
+                  <div class="w-full max-w-[540px] aspect-video md:aspect-[16/10] rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-neutral-900 relative">
+                    <video
+                      src={slide.videoUrl}
+                      muted
+                      playsinline
+                      loop
+                      autoplay
+                      class="w-full h-full object-cover"
+                    ></video>
+                    <!-- Glowing frame overlay -->
+                    <div class="absolute inset-0 ring-1 ring-inset ring-white/10 pointer-events-none rounded-2xl"></div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Original Full-Bleed Image/Video Promo Slide */
+              <>
+                <div class="promo-hero-slide-image-wrap">
+                  <img
+                    src={heroSources[i].src || slide.image}
+                    srcset={heroSources[i].srcset}
+                    sizes={heroSizes}
+                    alt={slide.imageAlt}
+                    loading={i === 0 ? "eager" : "lazy"}
+                    fetchpriority={i === 0 ? "high" : undefined}
+                    decoding="async"
+                    class="promo-hero-slide-image"
+                    width="1920"
+                    height="820"
+                  />
+                  <div
+                    class="promo-hero-slide-overlay"
+                    style={`--accent: ${slide.accent}`}
+                  ></div>
+                </div>
 
-              <a
-                href={slide.ctaHref}
-                class="promo-hero-cta btn-sheen"
-                style={`--accent: ${slide.accent}`}
-              >
-                {slide.ctaLabel}
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                  <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </a>
-            </div>
-          </div>
-        </article>
-      ))}
+                <div class="promo-hero-slide-content">
+                  <div class="container-mo promo-hero-slide-inner">
+                    <span class="promo-hero-eyebrow">{slide.eyebrow}</span>
+                    <h2 class="promo-hero-title text-balance">{slide.titre}</h2>
+                    <p class="promo-hero-desc">{slide.description}</p>
+
+                    {slide.kind === "promo" && slide.prixPromo != null && (
+                      <div class="promo-hero-price">
+                        <span class="promo-hero-price-now">{slide.prixPromo}€</span>
+                        {slide.prixOriginal != null && (
+                          <span class="promo-hero-price-before">{slide.prixOriginal}€</span>
+                        )}
+                        {slide.reductionPct != null && (
+                          <span class="promo-hero-price-pct">−{slide.reductionPct}%</span>
+                        )}
+                      </div>
+                    )}
+
+                    <a
+                      href={slide.ctaHref}
+                      class="promo-hero-cta btn-sheen"
+                      style={`--accent: ${slide.accent}`}
+                    >
+                      {slide.ctaLabel}
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                        <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </>
+            )}
+          </article>
+        );
+      })}
     </div>
 
     {/* Prev / Next buttons */}
@@ -493,6 +571,45 @@ const heroSources = slides.map((s) =>
     white-space: nowrap;
     border: 0;
   }
+
+  /* Video slide split layout styles */
+  .promo-hero-slide-video-layout {
+    background: #0A0A0A;
+    transition: background-color 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  }
+  @media (max-width: 768px) {
+    .promo-video-left {
+      padding: 20px 24px 32px !important;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+    }
+    .promo-video-right {
+      padding: 32px 24px 0 !important;
+      flex: 1.1 1 0% !important;
+    }
+    .promo-video-left .promo-hero-title {
+      font-size: 26px !important;
+      margin-bottom: 8px !important;
+      text-align: center;
+    }
+    .promo-video-left .promo-hero-desc {
+      font-size: 13px !important;
+      margin-bottom: 14px !important;
+      text-align: center;
+    }
+    .promo-video-left .promo-hero-cta {
+      padding: 10px 22px !important;
+      font-size: 13px !important;
+      margin-top: 6px !important;
+      align-self: center;
+    }
+    .promo-video-left .promo-hero-eyebrow {
+      margin-bottom: 8px !important;
+      padding: 4px 10px !important;
+      font-size: 10px !important;
+    }
+  }
 </style>
 
 <script>
@@ -531,6 +648,90 @@ const heroSources = slides.map((s) =>
           const slide = slides[idx];
           status.textContent = slide?.getAttribute("aria-label") ?? "";
         }
+
+      const setupVideoBgSync = (video: HTMLVideoElement, slideElement: HTMLElement) => {
+        if ((video as any).__bgSyncSetup) return;
+        (video as any).__bgSyncSetup = true;
+
+        const canvas = document.createElement("canvas");
+        canvas.width = 1;
+        canvas.height = 1;
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        if (!ctx) return;
+
+        let animFrameId: number;
+
+        const updateColor = () => {
+          if (video.paused || video.ended) return;
+          try {
+            ctx.drawImage(video, 0, 0, 1, 1);
+            const pixel = ctx.getImageData(0, 0, 1, 1).data;
+            const r = pixel[0];
+            const g = pixel[1];
+            const b = pixel[2];
+
+            // Convert RGB to HSL
+            let rNorm = r / 255, gNorm = g / 255, bNorm = b / 255;
+            let max = Math.max(rNorm, gNorm, bNorm), min = Math.min(rNorm, gNorm, bNorm);
+            let h = 0, s = 0, l = (max + min) / 2;
+
+            if (max !== min) {
+              let d = max - min;
+              s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+              switch (max) {
+                case rNorm: h = (gNorm - bNorm) / d + (gNorm < bNorm ? 6 : 0); break;
+                case gNorm: h = (bNorm - rNorm) / d + 2; break;
+                case bNorm: h = (rNorm - gNorm) / d + 4; break;
+              }
+              h /= 6;
+            }
+
+            h = Math.round(h * 360);
+
+            // Visible dark premium colors: targetL = 14%
+            let targetL = 14;
+            let targetS = Math.min(Math.max(Math.round(s * 100), 25), 45);
+
+            slideElement.style.setProperty("background-color", `hsl(${h}, ${targetS}%, ${targetL}%)`, "important");
+          } catch (e) {
+            // Silently swallow canvas errors
+          }
+          animFrameId = requestAnimationFrame(updateColor);
+        };
+
+        video.addEventListener("play", () => {
+          updateColor();
+        });
+        video.addEventListener("pause", () => {
+          cancelAnimationFrame(animFrameId);
+        });
+
+        // Trigger initially if already playing
+        if (!video.paused) {
+          updateColor();
+        }
+      };
+
+      // Handle video playback and custom timing
+      slides.forEach((s, i) => {
+        const video = s.querySelector<HTMLVideoElement>("video");
+        if (video) {
+          if (i === idx) {
+            video.currentTime = 0;
+            setupVideoBgSync(video, s);
+            video.play().catch(() => {});
+            paused = true; // Pause auto-advance timer while video plays
+            
+            // Remove old ended listener if any, and add a clean one
+            video.onended = () => {
+              paused = reduced;
+              goTo(idx + 1);
+            };
+          } else {
+            video.pause();
+          }
+        }
+      });
       };
       markActive(0);
 

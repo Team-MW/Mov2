@@ -94,7 +94,10 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, SITE.url).toString
                                         for rayons, recettes, actus)
    3. default logo                   — fallback for pages without hero */
 const resolvedOgImage =
-  ogImage ?? heroImage ?? "/logos/logo-marchedemo-rond-contourgreen.png";
+  ogImage ??
+  (Astro.url.pathname === "/" || Astro.url.pathname === ""
+    ? "/logos/logo-marchedemo-rond-contourgreen.png"
+    : (heroImage ?? "/logos/logo-marchedemo-rond-contourgreen.png"));
 const absoluteOgImage = resolvedOgImage.startsWith("http")
   ? resolvedOgImage
   : `${SITE.url}${resolvedOgImage}`;
@@ -208,9 +211,7 @@ const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
     class={`min-h-screen flex flex-col bg-white text-[color:var(--color-texte)] font-pro antialiased ${bodyClass}`}
     data-rayon={bodyDataRayon}
   >
-    {/* Scroll progress bar — always at the very top of viewport.
-        Width driven by `--scroll-progress` CSS variable updated from scroll handler. */}
-    <div class="scroll-progress" aria-hidden="true"></div>
+
 
     {/*
       Page loader — branded interstitial for navigation between pages.
@@ -329,6 +330,13 @@ const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
             { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
           );
           els.forEach((el) => io.observe(el));
+
+          // Safety fallback: force visibility after a delay in case IntersectionObserver fails to trigger
+          setTimeout(() => {
+            document.querySelectorAll(".reveal:not(.is-visible)").forEach((el) => {
+              el.classList.add("is-visible");
+            });
+          }, 1500);
         };
 
         document.addEventListener("astro:page-load", mount);
@@ -357,15 +365,7 @@ const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
           window.matchMedia &&
           window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-        /* ---------------------- SCROLL PROGRESS BAR ---------------------- */
-        const progressEl = document.querySelector(".scroll-progress");
-        const onScrollProgress = () => {
-          if (!progressEl) return;
-          const h = document.documentElement;
-          const max = h.scrollHeight - h.clientHeight;
-          const p = max > 0 ? (h.scrollTop / max) * 100 : 0;
-          progressEl.style.setProperty("--scroll-progress", p + "%");
-        };
+
 
         /* ---------------------- PARALLAX (scroll-linked) ---------------------- */
         /* Single rAF tick updates all [data-parallax] elements based on
@@ -396,7 +396,6 @@ const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
           if (rafScheduled) return;
           rafScheduled = true;
           requestAnimationFrame(() => {
-            onScrollProgress();
             updateParallax();
             rafScheduled = false;
           });
@@ -488,6 +487,11 @@ const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
               { threshold: 0.2 }
             );
             io.observe(el);
+
+            // Safety fallback: force visibility of words after a delay
+            setTimeout(() => {
+              words.forEach((w) => w.classList.add("is-revealed"));
+            }, 2000);
           });
         };
 

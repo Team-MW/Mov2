@@ -17,21 +17,18 @@ import NewsletterInline from "@components/NewsletterInline.astro";
 import { RAYONS, MAGASINS, SITE } from "@/lib/site";
 import type { RayonSlug } from "@/lib/site";
 import {
-  getAllProduitSlugs,
+  getAllProduits,
   getProduitBySlug,
   getProduitsByRayon,
 } from "@/lib/produits-repo";
 import { breadcrumbSchema } from "@/lib/schema";
 
 export async function getStaticPaths() {
-  const slugs = await getAllProduitSlugs();
-  const paths = [] as Array<{ params: { slug: string }; props: any }>;
-  for (const slug of slugs) {
-    const produit = await getProduitBySlug(slug);
-    if (!produit) continue;
-    paths.push({ params: { slug }, props: { produit } });
-  }
-  return paths;
+  const produits = await getAllProduits();
+  return produits.map((produit) => ({
+    params: { slug: produit.slug },
+    props: { produit },
+  }));
 }
 
 const { produit } = Astro.props as {
