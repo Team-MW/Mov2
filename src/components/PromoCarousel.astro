@@ -153,7 +153,8 @@ const { promos } = Astro.props as Props;
 
   /* Card sizing : 1.3 on mobile, 2 on tablet, 3-4 on desktop. */
   .promo-card-slot {
-    width: 260px;
+    width: 82vw;
+    max-width: 290px;
     scroll-snap-align: start;
   }
   @media (min-width: 640px) { .promo-card-slot { width: 280px; } }

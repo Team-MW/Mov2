@@ -7,12 +7,21 @@ import type { APIRoute } from "astro";
  *
  * `prerender = false` required in hybrid mode (cf login.ts).
  */
+import { isRateLimited } from "../../lib/rate-limit";
+
 export const prerender = false;
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, clientAddress }) => {
   if (!request.headers.get("content-type")?.includes("multipart/form-data") &&
       !request.headers.get("content-type")?.includes("application/x-www-form-urlencoded")) {
     return jsonError("Format attendu : multipart/form-data", 415);
+  }
+
+  // 1. Get client IP and rate-limit
+  const ip = request.headers.get("x-real-ip") || request.headers.get("x-forwarded-for") || clientAddress || "127.0.0.1";
+  const limitCheck = isRateLimited(ip, 3, 60000); // max 3 per minute
+  if (limitCheck.limited) {
+    return jsonError("Trop de tentatives de candidature. Veuillez réessayer plus tard.", 429);
   }
 
   let form: FormData;
@@ -20,6 +29,17 @@ export const POST: APIRoute = async ({ request }) => {
     form = await request.formData();
   } catch {
     return jsonError("Impossible de lire le formulaire", 400);
+  }
+
+  // 2. Honeypot check
+  const honeypot = String(form.get("phone_confirm") ?? "");
+  if (honeypot) {
+    console.log("[candidature] Spam detected (honeypot filled):", honeypot);
+    // Silent success for bots
+    return new Response(JSON.stringify({ ok: true, spam: true }), {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    });
   }
 
   const data = {

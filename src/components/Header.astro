@@ -33,7 +33,7 @@ const BUTTON_COLORS: Record<string, string> = {
   class="sticky top-0 z-50 w-full border-b border-black/5 transition-all duration-300 bg-white/95 backdrop-blur-sm"
 >
   <!-- 0. Row 0: Top bar discrete (Desktop only, slides up on scroll) -->
-  <div id="header-top-bar" class="header-top-bar border-b border-black/5 bg-white overflow-hidden">
+  <div id="header-top-bar" class="header-top-bar border-b border-black/5 bg-white overflow-hidden hidden lg:block">
     <div class="container-mo flex items-center justify-between py-2 text-[12px] text-neutral-500 font-pro">
       <span class="flex items-center gap-2">
         <span class="inline-block w-1.5 h-1.5 rounded-full bg-vert animate-pulse"></span>
@@ -89,22 +89,32 @@ const BUTTON_COLORS: Record<string, string> = {
         </button>
       </div>
 
-      <!-- Center: Search Bar -->
-      <form action="/recherche" method="get" class="flex-1 max-w-[620px] relative">
-        <input
-          type="text"
-          name="q"
-          placeholder="Rechercher un produit, une saveur, une recette..."
-          class="w-full pl-12 pr-20 py-3 bg-neutral-100 focus:bg-white text-[14px] text-neutral-800 rounded-full border border-black/10 focus:border-vert/30 focus:ring-4 focus:ring-vert/5 outline-none transition-all placeholder-neutral-400"
-        />
-        <svg class="w-5 h-5 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.35-4.35" stroke-linecap="round" />
-        </svg>
-        <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 px-4 py-1.5 bg-vert hover:bg-vert-dark text-white text-[12px] font-bold rounded-full transition-colors">
-          Valider
-        </button>
-      </form>
+      <!-- Center: Search Bar with Autocomplete Dropdown -->
+      <div class="flex-1 max-w-[620px] relative" id="desktop-search-container">
+        <form action="/recherche" method="get" class="w-full relative">
+          <input
+            id="desktop-search-input"
+            type="text"
+            name="q"
+            placeholder="Rechercher un produit, une saveur, une recette..."
+            class="w-full pl-12 pr-20 py-3 bg-neutral-100 focus:bg-white text-[14px] text-neutral-800 rounded-full border border-black/10 focus:border-vert/30 focus:ring-4 focus:ring-vert/5 outline-none transition-all placeholder-neutral-400"
+            autocomplete="off"
+          />
+          <svg class="w-5 h-5 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" stroke-linecap="round" />
+          </svg>
+          <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 px-4 py-1.5 bg-vert hover:bg-vert-dark text-white text-[12px] font-bold rounded-full transition-colors">
+            Valider
+          </button>
+        </form>
+        <!-- Desktop suggestions list dropdown -->
+        <div
+          id="desktop-search-suggestions"
+          class="absolute top-full left-0 right-0 mt-2 bg-white border border-black/10 rounded-3xl shadow-xl max-h-[480px] overflow-y-auto opacity-0 scale-95 pointer-events-none transition-all duration-200 z-50 p-4"
+        >
+        </div>
+      </div>
 
       <!-- Right: Promos & Magasins -->
       <div class="flex items-center gap-3 shrink-0">
@@ -139,7 +149,7 @@ const BUTTON_COLORS: Record<string, string> = {
           <button
             id="burger-btn-mobile"
             aria-label="Ouvrir le menu"
-            class="burger-btn p-3 rounded-full hover:bg-black/5 transition text-neutral-800 border border-black/10 bg-white shadow-sm flex items-center justify-center shrink-0"
+            class="burger-btn w-10 h-10 rounded-full hover:bg-black/5 transition text-neutral-800 border border-black/10 bg-white shadow-sm flex items-center justify-center shrink-0"
           >
             <div class="burger-icon relative w-5 h-3.5 flex flex-col justify-between shrink-0">
               <span class="bar bar-1 w-full h-[2px] bg-neutral-800 rounded transition-all duration-300"></span>
@@ -155,45 +165,44 @@ const BUTTON_COLORS: Record<string, string> = {
               height="40"
               class="w-9 h-9 object-contain"
             />
-            <span class="font-soft font-bold text-[15px] text-vert-dark">Marché de Mo'</span>
+            <span class="font-soft font-bold text-[15px] text-vert-dark hidden md:inline whitespace-nowrap">Marché de Mo'</span>
           </a>
         </div>
-        <!-- Promos & Magasins icons -->
+        <!-- Promos, Magasins & Search icons -->
         <div class="flex items-center gap-1.5">
+          <button
+            id="mobile-search-trigger"
+            class="w-10 h-10 border border-black/10 text-neutral-700 hover:bg-neutral-100 rounded-full transition bg-white shadow-sm flex items-center justify-center shrink-0"
+            title="Rechercher"
+            aria-label="Rechercher"
+          >
+            <svg class="w-5 h-5 shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+          </button>
           <a
             href="/promos"
-            class="px-3 py-1.5 bg-rouge text-white rounded-full font-soft font-bold text-[11px] flex items-center gap-1 shadow-sm"
+            class="h-10 px-4 bg-rouge text-white rounded-full font-soft font-bold text-[13px] flex items-center justify-center gap-1.5 shadow-sm shrink-0 hover:bg-rouge-dark transition"
           >
+            <span class="relative flex h-1.5 w-1.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
+            </span>
             Promos
           </a>
           <a
             href="/magasins"
-            class="p-1.5 border border-vert text-vert hover:bg-vert hover:text-white rounded-full transition"
+            class="w-10 h-10 border border-vert text-vert hover:bg-vert hover:text-white rounded-full transition bg-white shadow-sm flex items-center justify-center shrink-0"
             title="Magasins"
           >
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="w-5 h-5 shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
               <circle cx="12" cy="10" r="3" />
             </svg>
           </a>
         </div>
       </div>
-      <!-- Search bar full width on mobile -->
-      <form action="/recherche" method="get" class="w-full relative">
-        <input
-          type="text"
-          name="q"
-          placeholder="Rechercher un produit, une saveur, une recette..."
-          class="w-full pl-10 pr-16 py-2 bg-neutral-100 focus:bg-white text-[13.5px] text-neutral-800 rounded-full border border-black/5 outline-none transition-all placeholder-neutral-400"
-        />
-        <svg class="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.35-4.35" stroke-linecap="round" />
-        </svg>
-        <button type="submit" class="absolute right-1 top-1/2 -translate-y-1/2 px-3 py-1 bg-vert text-white text-[11px] font-bold rounded-full">
-          Valider
-        </button>
-      </form>
     </div>
   </div>
 
@@ -257,6 +266,20 @@ const BUTTON_COLORS: Record<string, string> = {
     class="absolute top-full left-0 w-full bg-white border-b border-t border-black/10 shadow-2xl max-h-[85vh] overflow-y-auto z-45"
   >
     <nav class="container-mo py-6 space-y-1.5 font-pro font-semibold text-[15px]">
+      <!-- Highlighted Mobile Tagline Card Banner -->
+      <div class="p-4 bg-vert/5 border border-vert/10 rounded-2xl mb-4 text-left">
+        <span class="flex items-center gap-1.5 text-[11px] font-bold text-vert-dark uppercase tracking-wider">
+          <span class="w-1.5 h-1.5 rounded-full bg-vert animate-pulse"></span>
+          Marché de Mo'
+        </span>
+        <h4 class="font-soft font-bold text-[15px] mt-1 text-neutral-900 leading-tight">
+          Le plus grand supermarché ethnique d'Occitanie
+        </h4>
+        <p class="text-[12px] font-normal text-neutral-500 mt-1 leading-normal">
+          Plus de 10 000 références et 12 rayons thématiques à Toulouse Sud. Ouvert 7j/7.
+        </p>
+      </div>
+
       <a href="/" class="block py-2.5 border-b border-black/5">Accueil</a>
       <a href="/notre-enseigne" class="block py-2.5 border-b border-black/5">Notre enseigne</a>
 
@@ -287,14 +310,53 @@ const BUTTON_COLORS: Record<string, string> = {
       <a href="/programme-fidelite" class="block py-2.5 border-b border-black/5">Programme fidélité</a>
       <a href="/actualites" class="block py-2.5 border-b border-black/5">Actualités</a>
       <a href="/service-client" class="block py-2.5 border-b border-black/5">Service client</a>
-      <a href="/recherche" class="block py-2.5 border-b border-black/5 text-vert">
-        🔍 Rechercher
-      </a>
 
       <a href={`tel:0582958252`} class="mt-4 btn btn-primary w-full">
         Nous appeler — 05 82 95 82 52
       </a>
     </nav>
+  </div>
+
+  <!-- Full-screen Mobile Search Overlay -->
+  <div
+    id="mobile-search-overlay"
+    class="fixed inset-0 bg-white/98 z-[60] backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300 flex flex-col"
+  >
+    <!-- Overlay Header -->
+    <div class="container-mo py-4 flex items-center gap-4 border-b border-black/5">
+      <button
+        id="mobile-search-close"
+        class="p-2 rounded-full hover:bg-black/5 text-neutral-700 transition"
+        aria-label="Fermer la recherche"
+      >
+        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <div class="flex-1 relative">
+        <input
+          id="mobile-search-input"
+          type="text"
+          placeholder="Rechercher rayon, produit, recette..."
+          class="w-full pl-10 pr-4 py-2.5 bg-neutral-100 text-[15px] font-medium text-neutral-900 rounded-full border border-black/5 outline-none focus:bg-white focus:border-vert/30 transition-all placeholder-neutral-400"
+          autocomplete="off"
+        />
+        <svg class="w-5 h-5 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" stroke-linecap="round" />
+        </svg>
+      </div>
+    </div>
+    <!-- Results list scrollable -->
+    <div class="flex-1 overflow-y-auto container-mo py-6 animate-pulse" id="mobile-search-results">
+      <div class="text-center py-10 text-neutral-400 text-[14px]">
+        <svg class="w-12 h-12 mx-auto mb-3 text-neutral-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" stroke-linecap="round" />
+        </svg>
+        Saisissez un mot pour rechercher...
+      </div>
+    </div>
   </div>
 </header>
 
@@ -454,6 +516,46 @@ const BUTTON_COLORS: Record<string, string> = {
 </style>
 
 <script>
+  let searchIndex: any = null;
+  let isFetchingIndex = false;
+
+  const ensureSearchIndex = async () => {
+    if (searchIndex || isFetchingIndex) return;
+    isFetchingIndex = true;
+    try {
+      const res = await fetch("/api/search");
+      if (res.ok) {
+        searchIndex = await res.json();
+      }
+    } catch (err) {
+      console.error("Error loading search index:", err);
+    } finally {
+      isFetchingIndex = false;
+    }
+  };
+
+  const normalizeString = (str: string): string => {
+    return str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  };
+
+  const matchQuery = (item: any, queryWords: string[]): boolean => {
+    let searchText = "";
+    if (item.type === "produit") {
+      searchText = `${item.title} ${item.rayon} ${item.origine} ${item.badge}`;
+    } else if (item.type === "rayon") {
+      searchText = `${item.title} ${item.tagline}`;
+    } else if (item.type === "actu") {
+      searchText = `${item.title} ${item.categorie}`;
+    } else if (item.type === "recette") {
+      searchText = `${item.title} ${item.rayon}`;
+    }
+    const normText = normalizeString(searchText);
+    return queryWords.every((word) => normText.includes(word));
+  };
+
   const setupHeader = () => {
     const burger = document.getElementById("burger-btn");
     const burgerMobile = document.getElementById("burger-btn-mobile");
@@ -461,6 +563,16 @@ const BUTTON_COLORS: Record<string, string> = {
     const header = document.getElementById("site-header");
     const scrolledLinks = document.getElementById("header-scrolled-links");
     const row1 = document.getElementById("header-row-1");
+
+    // Search elements
+    const desktopSearchInput = document.getElementById("desktop-search-input") as HTMLInputElement | null;
+    const desktopSearchSuggestions = document.getElementById("desktop-search-suggestions") as HTMLElement | null;
+    const desktopSearchContainer = document.getElementById("desktop-search-container") as HTMLElement | null;
+    const mobileSearchTrigger = document.getElementById("mobile-search-trigger") as HTMLElement | null;
+    const mobileSearchClose = document.getElementById("mobile-search-close") as HTMLElement | null;
+    const mobileSearchInput = document.getElementById("mobile-search-input") as HTMLInputElement | null;
+    const mobileSearchOverlay = document.getElementById("mobile-search-overlay") as HTMLElement | null;
+    const mobileSearchResults = document.getElementById("mobile-search-results") as HTMLElement | null;
 
     const updateDrawerPosition = () => {
       if (!drawer || !row1 || !header) return;
@@ -508,6 +620,273 @@ const BUTTON_COLORS: Record<string, string> = {
             burger?.classList.remove("is-active");
             burgerMobile?.classList.remove("is-active");
             header?.classList.remove("menu-is-open");
+          }
+        }
+      });
+    }
+
+    const showDesktopSuggestions = () => {
+      if (desktopSearchSuggestions) {
+        desktopSearchSuggestions.classList.remove("opacity-0", "scale-95", "pointer-events-none");
+        desktopSearchSuggestions.classList.add("opacity-100", "scale-100", "pointer-events-auto");
+      }
+    };
+
+    const hideDesktopSuggestions = () => {
+      if (desktopSearchSuggestions) {
+        desktopSearchSuggestions.classList.add("opacity-0", "scale-95", "pointer-events-none");
+        desktopSearchSuggestions.classList.remove("opacity-100", "scale-100", "pointer-events-auto");
+      }
+    };
+
+    const performSearch = (query: string, resultsContainer: HTMLElement, isMobile: boolean) => {
+      const trimmed = query.trim();
+      if (trimmed.length === 0) {
+        if (isMobile) {
+          resultsContainer.classList.add("animate-pulse");
+          resultsContainer.innerHTML = `
+            <div class="text-center py-10 text-neutral-400 text-[14px]">
+              <svg class="w-12 h-12 mx-auto mb-3 text-neutral-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" stroke-linecap="round" />
+              </svg>
+              Saisissez un mot pour rechercher...
+            </div>
+          `;
+        } else {
+          hideDesktopSuggestions();
+        }
+        return;
+      }
+
+      if (!isMobile) {
+        showDesktopSuggestions();
+      }
+
+      if (!searchIndex) {
+        resultsContainer.innerHTML = `
+          <div class="flex items-center justify-center py-10 text-neutral-500 gap-2">
+            <svg class="animate-spin h-5 w-5 text-vert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke-linecap="round"/>
+            </svg>
+            <span>Recherche en cours...</span>
+          </div>
+        `;
+        ensureSearchIndex().then(() => {
+          performSearch(query, resultsContainer, isMobile);
+        });
+        return;
+      }
+
+      const normalizedQuery = normalizeString(trimmed);
+      const queryWords = normalizedQuery.split(/\s+/).filter(Boolean);
+
+      const matchingProduits = searchIndex.produits.filter((p: any) => matchQuery(p, queryWords)).slice(0, 6);
+      const matchingRayons = searchIndex.rayons.filter((r: any) => matchQuery(r, queryWords)).slice(0, 4);
+      const matchingRecettes = searchIndex.recettes.filter((r: any) => matchQuery(r, queryWords)).slice(0, 4);
+      const matchingActus = searchIndex.actus.filter((a: any) => matchQuery(a, queryWords)).slice(0, 4);
+
+      const totalMatches = matchingProduits.length + matchingRayons.length + matchingRecettes.length + matchingActus.length;
+
+      resultsContainer.classList.remove("animate-pulse");
+
+      if (totalMatches === 0) {
+        resultsContainer.innerHTML = `
+          <div class="text-center py-10 text-neutral-400 text-[14.5px]">
+            <span class="text-[20px] mb-2 block">🔍</span>
+            Aucun résultat pour <strong class="text-neutral-700 font-bold">"${query}"</strong>
+            <p class="text-[12px] text-neutral-400 mt-1 font-normal">Essayez d'autres mots-clés ou vérifiez l'orthographe.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = `<div class="space-y-5">`;
+
+      if (matchingRayons.length > 0) {
+        html += `
+          <div>
+            <div class="text-[11px] font-black text-neutral-400 uppercase tracking-widest px-2 mb-2">Rayons (${matchingRayons.length})</div>
+            <div class="grid grid-cols-1 gap-1">
+              ${matchingRayons.map((r: any) => `
+                <a href="${r.href}" class="flex items-center gap-3 p-2 rounded-2xl hover:bg-neutral-50 transition-colors group">
+                  <div class="w-10 h-10 rounded-xl overflow-hidden bg-neutral-100 flex-shrink-0">
+                    <img src="${r.image}" alt="${r.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="text-[14px] font-bold text-neutral-900 group-hover:text-vert transition-colors truncate">${r.title}</div>
+                    <div class="text-[11px] text-neutral-400 truncate">${r.tagline}</div>
+                  </div>
+                  <svg class="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      if (matchingProduits.length > 0) {
+        html += `
+          <div>
+            <div class="text-[11px] font-black text-neutral-400 uppercase tracking-widest px-2 mb-2">Produits (${matchingProduits.length})</div>
+            <div class="grid grid-cols-1 gap-1">
+              ${matchingProduits.map((p: any) => `
+                <a href="${p.href}" class="flex items-center gap-3 p-2 rounded-2xl hover:bg-neutral-50 transition-colors group">
+                  <div class="w-10 h-10 rounded-xl overflow-hidden bg-neutral-100 flex-shrink-0">
+                    <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-[14px] font-bold text-neutral-900 group-hover:text-vert transition-colors truncate">${p.title}</div>
+                    <div class="flex items-center gap-2 mt-0.5">
+                      <span class="text-[11px] text-neutral-500 font-bold">${p.rayon}</span>
+                      ${p.origine ? `<span class="text-[10px] bg-neutral-100 text-neutral-600 px-1.5 py-0.5 rounded-full font-medium">Origine: ${p.origine}</span>` : ""}
+                    </div>
+                  </div>
+                  ${p.badge ? `<span class="text-[10.5px] font-bold bg-rouge/10 text-rouge px-2.5 py-0.5 rounded-full">${p.badge}</span>` : ""}
+                  <svg class="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      if (matchingRecettes.length > 0) {
+        html += `
+          <div>
+            <div class="text-[11px] font-black text-neutral-400 uppercase tracking-widest px-2 mb-2">Recettes (${matchingRecettes.length})</div>
+            <div class="grid grid-cols-1 gap-1">
+              ${matchingRecettes.map((r: any) => `
+                <a href="${r.href}" class="flex items-center gap-3 p-2 rounded-2xl hover:bg-neutral-50 transition-colors group">
+                  <div class="w-8 h-8 rounded-lg bg-vert/10 text-vert flex items-center justify-center flex-shrink-0 text-[14px] font-bold">🍳</div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-[14px] font-bold text-neutral-900 group-hover:text-vert transition-colors truncate">${r.title}</div>
+                    <div class="text-[11px] text-neutral-400 truncate">Rayon ${r.rayon}</div>
+                  </div>
+                  <svg class="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      if (matchingActus.length > 0) {
+        html += `
+          <div>
+            <div class="text-[11px] font-black text-neutral-400 uppercase tracking-widest px-2 mb-2">Actualités (${matchingActus.length})</div>
+            <div class="grid grid-cols-1 gap-1">
+              ${matchingActus.map((a: any) => `
+                <a href="${a.href}" class="flex items-center gap-3 p-2 rounded-2xl hover:bg-neutral-50 transition-colors group">
+                  <div class="w-8 h-8 rounded-lg bg-orange-500/10 text-orange-500 flex items-center justify-center flex-shrink-0 text-[14px] font-bold">📰</div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-[14px] font-bold text-neutral-900 group-hover:text-vert transition-colors truncate">${a.title}</div>
+                    <div class="text-[11px] text-neutral-400 truncate">${a.categorie}</div>
+                  </div>
+                  <svg class="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      html += `</div>`;
+      resultsContainer.innerHTML = html;
+    };
+
+    // Mobile triggers
+    if (mobileSearchTrigger && mobileSearchOverlay && mobileSearchInput) {
+      if (!mobileSearchTrigger.dataset.listenerAttached) {
+        mobileSearchTrigger.dataset.listenerAttached = "true";
+        mobileSearchTrigger.addEventListener("click", () => {
+          mobileSearchOverlay.classList.remove("opacity-0", "pointer-events-none");
+          mobileSearchOverlay.classList.add("opacity-100", "pointer-events-auto");
+          setTimeout(() => mobileSearchInput.focus(), 150);
+          ensureSearchIndex();
+        });
+      }
+    }
+
+    if (mobileSearchClose && mobileSearchOverlay && mobileSearchInput && mobileSearchResults) {
+      if (!mobileSearchClose.dataset.listenerAttached) {
+        mobileSearchClose.dataset.listenerAttached = "true";
+        mobileSearchClose.addEventListener("click", () => {
+          mobileSearchOverlay.classList.add("opacity-0", "pointer-events-none");
+          mobileSearchOverlay.classList.remove("opacity-100", "pointer-events-auto");
+          mobileSearchInput.value = "";
+          mobileSearchResults.classList.add("animate-pulse");
+          mobileSearchResults.innerHTML = `
+            <div class="text-center py-10 text-neutral-400 text-[14px]">
+              <svg class="w-12 h-12 mx-auto mb-3 text-neutral-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" stroke-linecap="round" />
+              </svg>
+              Saisissez un mot pour rechercher...
+            </div>
+          `;
+        });
+      }
+    }
+
+    // Prefetch focus
+    if (desktopSearchInput) {
+      if (!desktopSearchInput.dataset.focusListenerAttached) {
+        desktopSearchInput.dataset.focusListenerAttached = "true";
+        desktopSearchInput.addEventListener("focus", () => {
+          ensureSearchIndex();
+          if (desktopSearchInput.value.trim().length > 0) {
+            showDesktopSuggestions();
+          }
+        });
+      }
+    }
+
+    if (mobileSearchInput) {
+      if (!mobileSearchInput.dataset.focusListenerAttached) {
+        mobileSearchInput.dataset.focusListenerAttached = "true";
+        mobileSearchInput.addEventListener("focus", () => {
+          ensureSearchIndex();
+        });
+      }
+    }
+
+    // Input listeners
+    if (desktopSearchInput && desktopSearchSuggestions) {
+      if (!desktopSearchInput.dataset.inputListenerAttached) {
+        desktopSearchInput.dataset.inputListenerAttached = "true";
+        desktopSearchInput.addEventListener("input", (e) => {
+          const val = (e.target as HTMLInputElement).value;
+          performSearch(val, desktopSearchSuggestions, false);
+        });
+      }
+    }
+
+    if (mobileSearchInput && mobileSearchResults) {
+      if (!mobileSearchInput.dataset.inputListenerAttached) {
+        mobileSearchInput.dataset.inputListenerAttached = "true";
+        mobileSearchInput.addEventListener("input", (e) => {
+          const val = (e.target as HTMLInputElement).value;
+          performSearch(val, mobileSearchResults, true);
+        });
+      }
+    }
+
+    // Click outside to hide desktop suggestions
+    if (!(window as any).__clickOutsideSearchBound) {
+      (window as any).__clickOutsideSearchBound = true;
+      document.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement;
+        if (desktopSearchContainer && !desktopSearchContainer.contains(target)) {
+          hideDesktopSuggestions();
+        }
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          hideDesktopSuggestions();
+          if (mobileSearchOverlay && mobileSearchOverlay.classList.contains("opacity-100")) {
+            mobileSearchClose?.click();
           }
         }
       });

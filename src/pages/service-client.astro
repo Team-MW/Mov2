@@ -93,7 +93,9 @@ const bc = breadcrumbSchema([{ name: "Service client", url: "/service-client" }]
         </p>
       </div>
       <div class="lg:col-span-7">
-        <form method="POST" action="/api/contact" class="bg-white rounded-3xl p-6 md:p-8 shadow-card space-y-5">
+        <form id="contact-form" method="POST" action="/api/contact" class="bg-white rounded-3xl p-6 md:p-8 shadow-card space-y-5">
+          <!-- Honeypot anti-spam -->
+          <input type="text" name="phone_confirm" class="hidden" tabindex="-1" autocomplete="off" style="display: none !important" />
           <div class="grid md:grid-cols-2 gap-4">
             <div>
               <label for="prenom" class="block text-[13px] font-bold mb-1.5">Prénom *</label>
@@ -139,13 +141,56 @@ const bc = breadcrumbSchema([{ name: "Service client", url: "/service-client" }]
   <FAQAccordion items={FAQ_HOME} />
 </Layout>
 
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    const form = document.getElementById("contact-form");
+    if (!form) return;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const button = form.querySelector("button[type='submit']");
+      if (button) button.disabled = true;
+
+      try {
+        const formData = new FormData(form);
+        const payload = {};
+        formData.forEach((value, key) => {
+          payload[key] = value;
+        });
+
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(data.error || "Une erreur est survenue.");
+        }
+
+        if (window.showToast) {
+          window.showToast("Message envoyé ! Notre service client vous répondra sous 48h.", "success");
+        }
+        form.reset();
+      } catch (err) {
+        if (window.showToast) {
+          window.showToast(err.message, "error");
+        }
+      } finally {
+        if (button) button.disabled = false;
+      }
+    });
+  });
+</script>
+
 <style>
   .input-sc {
     display: block;
     width: 100%;
     border-radius: 14px;
     border: 1px solid rgba(0,0,0,0.12);
-    background: #F7F5F0;
+    background: var(--color-neutral-100);
     padding: 12px 14px;
     font-size: 14.5px;
     font-family: var(--font-pro);
@@ -153,7 +198,7 @@ const bc = breadcrumbSchema([{ name: "Service client", url: "/service-client" }]
   }
   .input-sc:focus {
     outline: none;
-    border-color: #1C6B35;
+    border-color: var(--color-vert);
     box-shadow: 0 0 0 3px rgba(28,107,53,0.1);
   }
 </style>

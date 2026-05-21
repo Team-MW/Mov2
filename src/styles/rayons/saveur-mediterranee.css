@@ -1,36 +1,33 @@
 /* DA méditerranéenne — Saveur Méditerranéenne
    Lumière du sud, marché provençal premium. Faïence Zellige.
-   Pas d'orientalisme cliché.                                                    */
+   Premium dark night-cobalt theme with Majolica SVG motifs. */
 
 [data-rayon="saveur-mediterranee"] {
-  --rayon-accent:       #2A6599;   /* bleu méditerranéen */
-  --rayon-accent-dark:  #1E4A72;
-  --rayon-accent-2:     #7A8C3A;   /* olive */
-  --rayon-accent-3:     #F6E9CF;   /* sable chaud */
-  --rayon-fond-section: #F6F9FC;
-  --rayon-fond-hero:    #F2F7FB;
-  --rayon-texte-hero:   #1E4A72;
+  --rayon-accent:       #3A7DCA;   /* bleu cobalt */
+  --rayon-accent-dark:  #1C3F6E;
+  --rayon-accent-2:     #D35400;   /* terracotta */
+  --rayon-accent-3:     #5B8C33;   /* olive */
+  --rayon-fond-section: #F4F7FA;   /* bleu très clair */
+  --rayon-fond-hero:    #061124;   /* cobalt nuit */
+  --rayon-texte-hero:   #F0F4F8;
   --rayon-font-deco:    var(--font-display);
 }
 
 [data-rayon="saveur-mediterranee"] .rayon-hero {
   background:
-    linear-gradient(135deg, #F2F7FB 0%, #E7EFF7 100%);
+    radial-gradient(circle at 10% 20%, rgba(211, 84, 0, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(91, 140, 51, 0.15) 0%, transparent 40%),
+    linear-gradient(135deg, #061124 0%, #0C2340 100%);
   color: var(--rayon-texte-hero);
 }
 
-/* Motif Zellige — losanges & carreaux bleus */
+/* Motif Majolica / Zellige — losanges bleus, olive et terracotta */
 [data-rayon="saveur-mediterranee"] .rayon-motif {
-  background-image:
-    linear-gradient(45deg, rgba(42, 101, 153, 0.10) 25%, transparent 25%),
-    linear-gradient(-45deg, rgba(42, 101, 153, 0.10) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, rgba(42, 101, 153, 0.10) 75%),
-    linear-gradient(-45deg, transparent 75%, rgba(42, 101, 153, 0.10) 75%);
-  background-size: 28px 28px;
-  background-position: 0 0, 0 14px, 14px -14px, -14px 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 0 L60 30 L30 60 L0 30 Z' fill='none' stroke='%233A7DCA' stroke-width='1' stroke-opacity='0.15'/%3E%3Ccircle cx='30' cy='30' r='6' fill='none' stroke='%23D35400' stroke-width='1.2' stroke-opacity='0.15'/%3E%3Cpath d='M0 0 L15 15 M60 0 L45 15 M0 60 L15 45 M60 60 L45 45' stroke='%235B8C33' stroke-width='1' stroke-opacity='0.15'/%3E%3C/svg%3E");
+  background-size: 60px 60px;
 }
 
-/* Rayures olive discrètes en haut du hero */
+/* Bordure supérieure terracotta et olive */
 [data-rayon="saveur-mediterranee"] .rayon-hero::before {
   content: "";
   position: absolute;
@@ -39,8 +36,9 @@
   background: repeating-linear-gradient(90deg,
     var(--rayon-accent) 0 32px,
     var(--rayon-accent-2) 32px 40px,
-    var(--rayon-accent) 40px 72px);
-  opacity: 0.5;
+    var(--rayon-accent-3) 40px 48px,
+    var(--rayon-accent) 48px 80px);
+  opacity: 0.85;
 }
 
 [data-rayon="saveur-mediterranee"] .rayon-badge {
@@ -49,7 +47,7 @@
 }
 
 [data-rayon="saveur-mediterranee"] .rayon-pill {
-  background: color-mix(in srgb, var(--rayon-accent) 10%, transparent);
-  color: var(--rayon-accent-dark);
-  border: 1px solid color-mix(in srgb, var(--rayon-accent) 22%, transparent);
+  background: rgba(240, 244, 252, 0.08);
+  color: var(--rayon-texte-hero);
+  border: 1px solid rgba(240, 244, 252, 0.18);
 }

@@ -54,6 +54,8 @@ export default function ApplicationForm({ poste = "spontanee", posteNom = "Candi
 
   return (
     <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-6 md:p-8 shadow-card space-y-5" noValidate>
+      {/* Honeypot anti-spam */}
+      <input type="text" name="phone_confirm" className="hidden" tabIndex={-1} autoComplete="off" style={{ display: "none" }} />
       <div>
         <p className="eyebrow">{posteNom}</p>
         <h3 className="font-soft font-bold text-[22px] mt-2">Votre candidature</h3>

@@ -181,6 +181,8 @@
     font-size: clamp(2.25rem, 5vw, 4.5rem);
     line-height: 1;
     letter-spacing: -0.02em;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
   .display-md {
     font-family: var(--font-display);
@@ -188,6 +190,8 @@
     font-size: clamp(1.75rem, 3.5vw, 3rem);
     line-height: 1.05;
     letter-spacing: -0.01em;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
 
   /* Badges promo */
@@ -240,6 +244,11 @@
   .bg-noir-section h3,
   .bg-noir-section h4 {
     color: var(--color-blanc);
+  }
+  /* Ensure headings inherit white in ANY dark container (cards, overlays, etc.) */
+  .bg-noir h1, .bg-noir h2, .bg-noir h3, .bg-noir h4,
+  .text-white h1, .text-white h2, .text-white h3, .text-white h4 {
+    color: inherit;
   }
 
   /* Watermark Mo' — 4-5% sur sections blanches */

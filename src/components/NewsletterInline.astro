@@ -43,8 +43,10 @@ const isDark = variant === "dark";
         <form
           method="POST"
           action="/api/newsletter"
-          class="flex flex-col md:flex-row gap-3"
+          class="newsletter-inline-form flex flex-col md:flex-row gap-3"
         >
+          <!-- Honeypot anti-spam -->
+          <input type="text" name="phone_confirm" class="hidden" tabindex="-1" autocomplete="off" style="display: none !important" />
           <label class="sr-only" for="newsletter-email-inline">Votre email</label>
           <input
             id="newsletter-email-inline"
@@ -69,3 +71,44 @@ const isDark = variant === "dark";
     </div>
   </div>
 </section>
+
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    const forms = document.querySelectorAll(".newsletter-inline-form");
+    forms.forEach((form) => {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const button = form.querySelector("button");
+        if (button) button.disabled = true;
+
+        try {
+          const formData = new FormData(form);
+          const email = formData.get("email");
+          const phone_confirm = formData.get("phone_confirm");
+
+          const res = await fetch("/api/newsletter", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, phone_confirm }),
+          });
+
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            throw new Error(data.error || "Une erreur est survenue.");
+          }
+
+          if (window.showToast) {
+            window.showToast("Merci pour votre abonnement ! -20% sur votre prochain caddie.", "success");
+          }
+          form.reset();
+        } catch (err) {
+          if (window.showToast) {
+            window.showToast(err.message, "error");
+          }
+        } finally {
+          if (button) button.disabled = false;
+        }
+      });
+    });
+  });
+</script>

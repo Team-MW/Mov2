@@ -328,6 +328,7 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
     imageAlt: "Rayon saveur méditerranéenne Marché de Mo' Toulouse — olives, huile d'olive, épices",
     heroSlideshow: [
       "/images/rayons/saveur-mediterranee.jpg",
+      "/images/rayons/saveur-mediterranee/image-de-giorgio-trovato.jpg",
     ],
     culturel: true,
     ordre: 6,
@@ -414,6 +415,7 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
     ordre: 9,
     icone: "cart",
     featured: ["Épicerie sucrée", "Épicerie salée", "Entretien", "Hygiène"],
+    accent: "#6B7280",
     keywords: [
       "discount Toulouse",
       "produits courants pas chers Toulouse",
@@ -461,6 +463,10 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
     ordre: 11,
     icone: "bread",
     featured: ["Pain traditionnel", "Msemmen", "Batbout", "Viennoiseries"],
+    heroSlideshow: [
+      "/images/rayons/boulangerie.jpg",
+      "/images/rayons/boulangerie/pains-chauds.jpg",
+    ],
     accent: "#E29B56",
     keywords: ["boulangerie Toulouse", "pain chaud Toulouse", "galette orientale Toulouse"]
   },
@@ -478,6 +484,10 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
     ordre: 12,
     icone: "cheese",
     featured: ["Lait frais", "Yaourt nature", "Fromage de brebis", "Beurre traditionnel"],
+    heroSlideshow: [
+      "/images/rayons/produits-laitiers.jpg",
+      "/images/rayons/produits-laitiers/fromages.jpg",
+    ],
     accent: "#4A90E2",
     keywords: ["produits laitiers Toulouse", "fromage brebis Toulouse", "yaourt frais Toulouse"]
   },
