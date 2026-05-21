@@ -30,7 +30,7 @@ const BUTTON_COLORS: Record<string, string> = {
 
 <header
   id="site-header"
-  class="sticky top-0 z-[60] w-full border-b border-black/5 bg-white/95 backdrop-blur-sm transition-all duration-300"
+  class="sticky top-0 z-[60] w-full border-b border-black/5 bg-white/95 backdrop-blur-sm transition-[box-shadow] duration-200"
 >
   <!-- 0. Row 0: Top bar discrete (Desktop only, slides up on scroll) -->
   <div id="header-top-bar" class="header-top-bar border-b border-black/5 bg-white overflow-hidden hidden lg:block">
@@ -143,7 +143,7 @@ const BUTTON_COLORS: Record<string, string> = {
   </div>
 
   <!-- Mobile/Tablet Layout (Segmented Grand Frais style layout, Hidden on Desktop) -->
-  <div id="header-row-mobile" class="lg:hidden w-full min-h-[64px] pb-3 pt-[max(6px,env(safe-area-inset-top,0px))] border-b border-black/5 bg-white flex items-stretch select-none relative z-20">
+  <div id="header-row-mobile" class="lg:hidden w-full h-[64px] border-b border-black/5 bg-white flex items-stretch select-none relative z-20">
     <!-- 1. Menu block -->
     <button
       id="burger-btn-mobile"
@@ -238,7 +238,7 @@ const BUTTON_COLORS: Record<string, string> = {
   </div>
 
   <!-- 3. Row 3: Category Buttons & Auxiliary Links (Sticky below Row 1) -->
-  <div id="header-categories-row" class="border-t border-black/5 bg-neutral-50/80 py-2.5 transition-all duration-300 relative z-10">
+  <div id="header-categories-row" class="border-t border-black/5 bg-neutral-50/80 py-2.5 relative z-10">
     <div id="header-categories-flex" class="container-mo flex items-center gap-6 transition-all duration-300">
       <!-- Scrollable category tabs bar (Centered by default in top state) -->
       <div 
@@ -447,6 +447,39 @@ const BUTTON_COLORS: Record<string, string> = {
   }
   #header-scrolled-links {
     display: none !important;
+  }
+
+  /* Desktop header — expanded vs compact (instant switch, no in-between tweak) */
+  #header-top-bar,
+  #header-logo-row {
+    max-height: 9rem;
+    opacity: 1;
+    overflow: hidden;
+  }
+  #site-header.is-header-scrolled #header-top-bar,
+  #site-header.is-header-scrolled #header-logo-row {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+    pointer-events: none;
+  }
+
+  @media (min-width: 1024px) {
+    #site-header.is-header-scrolled #header-categories-flex {
+      justify-content: space-between;
+    }
+    #site-header.is-header-scrolled #header-categories-container {
+      justify-content: flex-start;
+      flex: 1;
+    }
+    #site-header.is-header-scrolled #header-scrolled-links {
+      display: flex !important;
+      opacity: 1 !important;
+      transform: none !important;
+      pointer-events: auto !important;
+    }
   }
 
   @media (min-width: 1024px) {
@@ -872,7 +905,46 @@ const BUTTON_COLORS: Record<string, string> = {
     });
   }
 
-  document.addEventListener("astro:page-load", setupHeader);
-  if (document.readyState !== "loading") setupHeader();
-  else document.addEventListener("DOMContentLoaded", setupHeader);
+  const setupHeaderScroll = () => {
+    const header = document.getElementById("site-header");
+    if (!header) return;
+
+    const SCROLL_DOWN = 150;
+    const SCROLL_UP = 48;
+    let isScrolled = false;
+
+    const apply = (scrolled: boolean) => {
+      if (scrolled === isScrolled) return;
+      isScrolled = scrolled;
+      header.classList.toggle("is-header-scrolled", scrolled);
+      header.classList.toggle("header-scrolled", scrolled);
+    };
+
+    const evaluate = () => {
+      const y = window.scrollY;
+      if (!isScrolled && y >= SCROLL_DOWN) apply(true);
+      else if (isScrolled && y <= SCROLL_UP) apply(false);
+    };
+
+    /* Sync state on every navigation (fixes logo/home View Transition carrying class). */
+    const y = window.scrollY;
+    isScrolled = y >= SCROLL_DOWN;
+    header.classList.toggle("is-header-scrolled", isScrolled);
+    header.classList.toggle("header-scrolled", isScrolled);
+
+    if (!(window as any).__headerScrollEvaluate) {
+      (window as any).__headerScrollEvaluate = evaluate;
+      window.addEventListener("scroll", evaluate, { passive: true });
+    }
+  };
+
+  const initHeader = () => {
+    setupHeader();
+    setupHeaderScroll();
+    (window as any).__headerScrollEvaluate?.();
+  };
+
+  document.addEventListener("astro:page-load", initHeader);
+  if (document.readyState !== "loading") initHeader();
+  else document.addEventListener("DOMContentLoaded", initHeader);
 </script>

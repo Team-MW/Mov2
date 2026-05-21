@@ -53,7 +53,24 @@ interface Props {
   autoAdvanceMs?: number;
 }
 
-const { promos = [], extraSlides = [], autoAdvanceMs = 4500 } = Astro.props as Props;
+const { promos = [], extraSlides = [], autoAdvanceMs = 2800 } = Astro.props as Props;
+
+/* Featured rectangular banner — always first slide. */
+const agneauBannerSlide = {
+  kind: "banner" as const,
+  titre: "Promo Agneau Aïd el Kebir",
+  description: "",
+  eyebrow: "",
+  image: "/promos/promo_rectangulaire.webp",
+  imageAlt: "Promo agneau Aïd — 290€ prix coûtant, Marché de Mo'",
+  ctaLabel: "",
+  ctaHref: "/promos",
+  accent: "#1C6B35",
+  prixPromo: null as number | null,
+  prixOriginal: null as number | null,
+  reductionPct: null as number | null,
+  videoUrl: null as string | null,
+};
 
 /* Build slides array — promos first, editorial after. Max 5 total. */
 const promoSlides = promos.slice(0, 5).map((p) => ({
@@ -88,7 +105,7 @@ const editorialSlides = extraSlides.map((s) => ({
   videoUrl: null as string | null,
 }));
 
-const initialSlides = [...promoSlides, ...editorialSlides];
+const initialSlides = [agneauBannerSlide, ...promoSlides, ...editorialSlides];
 const videoSlide = {
   kind: "video" as const,
   titre: "Votre supermarché du monde à Toulouse",
@@ -111,17 +128,30 @@ if (initialSlides.length > 0) {
   initialSlides.push(videoSlide);
 }
 
-const slides = initialSlides.slice(0, 7);
-const hasSlides = slides.length > 0;
+const baseSlides = initialSlides.slice(0, 7);
+const slideCount = baseSlides.length;
+/* Clone head/tail for seamless infinite loop (always shows neighbour peeks). */
+const loopSlides =
+  slideCount > 1
+    ? [baseSlides[slideCount - 1], ...baseSlides, baseSlides[0]]
+    : baseSlides;
+const hasSlides = slideCount > 0;
+
+const isGreenOverlaySlide = (s: (typeof baseSlides)[number]) =>
+  s.kind === "banner" ||
+  s.kind === "video" ||
+  (s.kind === "editorial" && (s.accent ?? "#1C6B35").toLowerCase() === "#1c6b35");
 
 /* Hero is full-bleed (100vw). Widths cover : mobile portrait DPR 3
  * (≈ 1290 px), tablet landscape DPR 2 (≈ 2048 px), desktop 1920 DPR 1.
  * Above 2400 px the file cost (> 250 KB even as WebP) outweighs the
  * extra sharpness at the distance a user views a hero photo. */
 const heroWidths = [800, 1200, 1600, 2400];
-const heroSizes = "100vw";
-const heroSources = slides.map((s) =>
-  supabaseSrcSet(s.image, heroWidths, { quality: 78 }),
+const heroSizes = "76vw";
+const heroSources = loopSlides.map((s) =>
+  s.kind === "banner" || s.image.startsWith("/promos/")
+    ? { src: s.image, srcset: "" }
+    : supabaseSrcSet(s.image, heroWidths, { quality: 78 }),
 );
 ---
 
@@ -129,20 +159,35 @@ const heroSources = slides.map((s) =>
   <section
     class="promo-hero"
     data-auto-ms={autoAdvanceMs}
+    data-slide-count={slideCount}
+    data-loop={slideCount > 1 ? "true" : undefined}
     aria-roledescription="carousel"
     aria-label="Promotions et annonces"
   >
     {/* Track : horizontal scroll with snap */}
     <div class="promo-hero-track" data-promo-hero-track tabindex="0" role="region">
-      {slides.map((slide, i) => {
+      {loopSlides.map((slide, i) => {
         const isVideo = slide.kind === "video";
+        const isBanner = slide.kind === "banner";
+        const isClone = slideCount > 1 && (i === 0 || i === loopSlides.length - 1);
+        const realIndex =
+          slideCount > 1
+            ? i === 0
+              ? slideCount - 1
+              : i === loopSlides.length - 1
+                ? 0
+                : i - 1
+            : i;
+        const hideText = isGreenOverlaySlide(slide);
         return (
           <article
-            class={`promo-hero-slide ${isVideo ? 'promo-hero-slide-video-layout' : ''}`}
+            class={`promo-hero-slide ${isVideo ? "promo-hero-slide-video-layout" : ""} ${isBanner ? "promo-hero-slide--banner" : ""}`}
             role="group"
             aria-roledescription="diapositive"
-            aria-label={`${i + 1} sur ${slides.length} : ${slide.titre}`}
-            data-slide-index={i}
+            aria-label={`${realIndex + 1} sur ${slideCount} : ${slide.titre}`}
+            data-slide-index={realIndex}
+            data-dom-index={i}
+            data-loop-clone={isClone ? "true" : undefined}
           >
             {isVideo ? (
               /* Split Screen Layout for Video Slide */
@@ -154,24 +199,26 @@ const heroSources = slides.map((s) =>
                   style="background-image: radial-gradient(circle at center, rgba(46, 139, 74, 0.4) 0%, rgba(0,0,0,0) 80%), url('data:image/svg+xml,%3Csvg width=\'120\' height=\'24\' viewBox=\'0 0 120 24\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 12 Q 30 0, 60 12 T 120 12\' fill=\'none\' stroke=\'%231c6b35\' stroke-width=\'1.5\'/%3E%3C/svg%3E');"
                 ></div>
                 
-                <!-- Left text column -->
-                <div class="promo-video-left flex-1 flex flex-col justify-end md:justify-center p-4 md:p-8 lg:p-12 z-10 text-white">
-                  <div class="promo-hero-slide-inner">
-                    <span class="promo-hero-eyebrow" style={`--accent: ${slide.accent}`}>{slide.eyebrow}</span>
-                    <h2 class="promo-hero-title text-balance text-white mt-2">{slide.titre}</h2>
-                    <p class="promo-hero-desc text-white/90 mt-2 max-w-xl">{slide.description}</p>
-                    <a
-                      href={slide.ctaHref}
-                      class="promo-hero-cta btn-sheen mt-4 inline-flex"
-                      style={`--accent: ${slide.accent}`}
-                    >
-                      {slide.ctaLabel}
-                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                        <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </a>
+                <!-- Left text column (hidden on green-accent / video slides per design) -->
+                {!hideText && (
+                  <div class="promo-video-left flex-1 flex flex-col justify-end md:justify-center p-4 md:p-8 lg:p-12 z-10 text-white">
+                    <div class="promo-hero-slide-inner">
+                      <span class="promo-hero-eyebrow" style={`--accent: ${slide.accent}`}>{slide.eyebrow}</span>
+                      <h2 class="promo-hero-title text-balance text-white mt-2">{slide.titre}</h2>
+                      <p class="promo-hero-desc text-white/90 mt-2 max-w-xl">{slide.description}</p>
+                      <a
+                        href={slide.ctaHref}
+                        class="promo-hero-cta btn-sheen mt-4 inline-flex"
+                        style={`--accent: ${slide.accent}`}
+                      >
+                        {slide.ctaLabel}
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                          <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </a>
+                    </div>
                   </div>
-                </div>
+                )}
                 
                 <!-- Right video player card column -->
                 <div class="promo-video-right flex-1 flex items-center justify-center p-4 md:p-6 z-10 relative">
@@ -190,57 +237,61 @@ const heroSources = slides.map((s) =>
                 </div>
               </div>
             ) : (
-              /* Original Full-Bleed Image/Video Promo Slide */
+              /* Image promo / banner slide */
               <>
                 <div class="promo-hero-slide-image-wrap">
                   <img
                     src={heroSources[i].src || slide.image}
-                    srcset={heroSources[i].srcset}
+                    srcset={heroSources[i].srcset || undefined}
                     sizes={heroSizes}
                     alt={slide.imageAlt}
-                    loading={i === 0 ? "eager" : "lazy"}
-                    fetchpriority={i === 0 ? "high" : undefined}
+                    loading={realIndex === 0 && !isClone ? "eager" : "lazy"}
+                    fetchpriority={realIndex === 0 && !isClone ? "high" : undefined}
                     decoding="async"
                     class="promo-hero-slide-image"
-                    width="1920"
-                    height="820"
+                    width={isBanner ? "1200" : "1920"}
+                    height={isBanner ? "510" : "820"}
                   />
-                  <div
-                    class="promo-hero-slide-overlay"
-                    style={`--accent: ${slide.accent}`}
-                  ></div>
-                </div>
-
-                <div class="promo-hero-slide-content">
-                  <div class="container-mo promo-hero-slide-inner">
-                    <span class="promo-hero-eyebrow">{slide.eyebrow}</span>
-                    <h2 class="promo-hero-title text-balance">{slide.titre}</h2>
-                    <p class="promo-hero-desc">{slide.description}</p>
-
-                    {slide.kind === "promo" && slide.prixPromo != null && (
-                      <div class="promo-hero-price">
-                        <span class="promo-hero-price-now">{slide.prixPromo}€</span>
-                        {slide.prixOriginal != null && (
-                          <span class="promo-hero-price-before">{slide.prixOriginal}€</span>
-                        )}
-                        {slide.reductionPct != null && (
-                          <span class="promo-hero-price-pct">−{slide.reductionPct}%</span>
-                        )}
-                      </div>
-                    )}
-
-                    <a
-                      href={slide.ctaHref}
-                      class="promo-hero-cta btn-sheen"
+                  {!isBanner && (
+                    <div
+                      class="promo-hero-slide-overlay"
                       style={`--accent: ${slide.accent}`}
-                    >
-                      {slide.ctaLabel}
-                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                        <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </a>
-                  </div>
+                    ></div>
+                  )}
                 </div>
+
+                {!hideText && (
+                  <div class="promo-hero-slide-content">
+                    <div class="container-mo promo-hero-slide-inner">
+                      <span class="promo-hero-eyebrow">{slide.eyebrow}</span>
+                      <h2 class="promo-hero-title text-balance">{slide.titre}</h2>
+                      <p class="promo-hero-desc">{slide.description}</p>
+
+                      {slide.kind === "promo" && slide.prixPromo != null && (
+                        <div class="promo-hero-price">
+                          <span class="promo-hero-price-now">{slide.prixPromo}€</span>
+                          {slide.prixOriginal != null && (
+                            <span class="promo-hero-price-before">{slide.prixOriginal}€</span>
+                          )}
+                          {slide.reductionPct != null && (
+                            <span class="promo-hero-price-pct">−{slide.reductionPct}%</span>
+                          )}
+                        </div>
+                      )}
+
+                      <a
+                        href={slide.ctaHref}
+                        class="promo-hero-cta btn-sheen"
+                        style={`--accent: ${slide.accent}`}
+                      >
+                        {slide.ctaLabel}
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                          <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                )}
               </>
             )}
           </article>
@@ -262,13 +313,13 @@ const heroSources = slides.map((s) =>
 
     {/* Dots indicator */}
     <div class="promo-hero-dots" role="tablist" aria-label="Sélectionner une diapositive">
-      {slides.map((_, i) => (
+      {baseSlides.map((_, i) => (
         <button
           type="button"
           class="promo-hero-dot"
           data-promo-hero-dot={i}
           role="tab"
-          aria-label={`Diapositive ${i + 1} sur ${slides.length}`}
+          aria-label={`Diapositive ${i + 1} sur ${slideCount}`}
           aria-current={i === 0 ? "true" : undefined}
         ></button>
       ))}
@@ -319,8 +370,8 @@ const heroSources = slides.map((s) =>
   .promo-hero-track:focus { outline: none; }
 
   .promo-hero-slide {
-    flex: 0 0 88vw;
-    width: 88vw;
+    flex: 0 0 76vw;
+    width: 76vw;
     position: relative;
     scroll-snap-align: center;
     scroll-snap-stop: always;
@@ -331,14 +382,24 @@ const heroSources = slides.map((s) =>
     overflow: hidden;
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
   }
+  .promo-hero-slide--banner {
+    aspect-ratio: 2.35 / 1;
+    max-height: min(36vh, 300px);
+    min-height: 160px;
+  }
   @media (max-width: 768px) {
     .promo-hero-slide {
-      flex: 0 0 92vw;
-      width: 92vw;
+      flex: 0 0 84vw;
+      width: 84vw;
       aspect-ratio: 16 / 11;
-      max-height: min(52vh, 380px);
-      min-height: 240px;
+      max-height: min(48vh, 340px);
+      min-height: 200px;
       border-radius: 16px;
+    }
+    .promo-hero-slide--banner {
+      aspect-ratio: 2.2 / 1;
+      max-height: min(40vh, 280px);
+      min-height: 150px;
     }
   }
 
@@ -355,10 +416,19 @@ const heroSources = slides.map((s) =>
     transform: scale(1.08);
     transition: transform 8s ease-out;
   }
+  .promo-hero-slide--banner .promo-hero-slide-image {
+    object-fit: contain;
+    object-position: center;
+    transform: none;
+    background: #fff;
+  }
   /* Ken-Burns : every slide image slowly drifts when it's the active one.
      We toggle .is-active via JS once the slide is centered in view. */
   .promo-hero-slide.is-active .promo-hero-slide-image {
     transform: scale(1);
+  }
+  .promo-hero-slide--banner.is-active .promo-hero-slide-image {
+    transform: none;
   }
 
   .promo-hero-slide-overlay {
@@ -646,8 +716,11 @@ const heroSources = slides.map((s) =>
       const next = hero.querySelector<HTMLButtonElement>("[data-promo-hero-next]");
       const dots = Array.from(hero.querySelectorAll<HTMLButtonElement>("[data-promo-hero-dot]"));
       const status = hero.querySelector<HTMLElement>("[data-promo-hero-status]");
-      const slides = Array.from(hero.querySelectorAll<HTMLElement>(".promo-hero-slide"));
-      if (!track || slides.length === 0) return;
+      const domSlides = Array.from(hero.querySelectorAll<HTMLElement>(".promo-hero-slide"));
+      if (!track || domSlides.length === 0) return;
+
+      const logicalCount = Math.max(1, Number(hero.dataset.slideCount) || domSlides.length);
+      const hasLoop = hero.dataset.loop === "true" && logicalCount > 1;
 
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const autoMs = Math.max(0, Number(hero.dataset.autoMs) || 0);
@@ -658,14 +731,37 @@ const heroSources = slides.map((s) =>
       let autoTimer: number | null = null;
       let isUserScrolling = false;
       let scrollSettleTimer: number | null = null;
+      let isLoopJumping = false;
 
-      const getSlideWidth = () => track.clientWidth || 1;
+      const domToLogical = (domIdx: number) => {
+        const slide = domSlides[domIdx];
+        return Number(slide?.dataset.slideIndex ?? domIdx);
+      };
 
-      const settleActiveFromScroll = () => {
+      const logicalToDom = (logicalIdx: number) => {
+        const target = ((logicalIdx % logicalCount) + logicalCount) % logicalCount;
+        return hasLoop ? target + 1 : target;
+      };
+
+      const scrollToDomIndex = (domIdx: number, smooth = true) => {
+        const slide = domSlides[domIdx];
+        if (!slide) return;
+        const targetScrollLeft =
+          track.scrollLeft +
+          slide.getBoundingClientRect().left -
+          track.getBoundingClientRect().left -
+          (track.clientWidth - slide.clientWidth) / 2;
+        track.scrollTo({
+          left: targetScrollLeft,
+          behavior: smooth && !reduced ? "smooth" : "auto",
+        });
+      };
+
+      const getClosestDomIndex = () => {
         const trackCenter = track.getBoundingClientRect().left + track.clientWidth / 2;
         let closestIdx = 0;
         let minDiff = Infinity;
-        slides.forEach((slide, i) => {
+        domSlides.forEach((slide, i) => {
           const slideCenter = slide.getBoundingClientRect().left + slide.clientWidth / 2;
           const diff = Math.abs(slideCenter - trackCenter);
           if (diff < minDiff) {
@@ -673,7 +769,31 @@ const heroSources = slides.map((s) =>
             closestIdx = i;
           }
         });
-        markActive(closestIdx);
+        return closestIdx;
+      };
+
+      const wrapLoopIfNeeded = () => {
+        if (!hasLoop || isLoopJumping) return;
+        const domIdx = getClosestDomIndex();
+        if (domIdx === 0) {
+          isLoopJumping = true;
+          const jumpDom = logicalToDom(logicalCount - 1);
+          scrollToDomIndex(jumpDom, false);
+          markActive(logicalCount - 1);
+          isLoopJumping = false;
+        } else if (domIdx === domSlides.length - 1) {
+          isLoopJumping = true;
+          const jumpDom = logicalToDom(0);
+          scrollToDomIndex(jumpDom, false);
+          markActive(0);
+          isLoopJumping = false;
+        }
+      };
+
+      const settleActiveFromScroll = () => {
+        wrapLoopIfNeeded();
+        const domIdx = getClosestDomIndex();
+        markActive(domToLogical(domIdx));
       };
 
       const onTrackScroll = () => {
@@ -682,7 +802,7 @@ const heroSources = slides.map((s) =>
         scrollSettleTimer = window.setTimeout(() => {
           isUserScrolling = false;
           settleActiveFromScroll();
-        }, 120);
+        }, 80);
       };
 
       track.addEventListener("scroll", onTrackScroll, { passive: true });
@@ -694,15 +814,20 @@ const heroSources = slides.map((s) =>
         });
       }
 
-      const markActive = (idx: number) => {
+      const markActive = (logicalIdx: number) => {
+        const idx = ((logicalIdx % logicalCount) + logicalCount) % logicalCount;
         activeIndex = idx;
-        slides.forEach((s, i) => s.classList.toggle("is-active", i === idx));
+        domSlides.forEach((s) => {
+          const isLogicalMatch = Number(s.dataset.slideIndex) === idx;
+          s.classList.toggle("is-active", isLogicalMatch && !isLoopJumping);
+        });
         dots.forEach((d, i) => {
           if (i === idx) d.setAttribute("aria-current", "true");
           else d.removeAttribute("aria-current");
         });
         if (status) {
-          const slide = slides[idx];
+          const domIdx = logicalToDom(idx);
+          const slide = domSlides[domIdx];
           status.textContent = slide?.getAttribute("aria-label") ?? "";
         }
 
@@ -770,10 +895,11 @@ const heroSources = slides.map((s) =>
       };
 
       // Handle video playback and custom timing
-      slides.forEach((s, i) => {
+      domSlides.forEach((s) => {
         const video = s.querySelector<HTMLVideoElement>("video");
+        const slideLogical = Number(s.dataset.slideIndex);
         if (video) {
-          if (i === idx) {
+          if (slideLogical === idx) {
             video.currentTime = 0;
             setupVideoBgSync(video, s);
             video.play().catch(() => {});
@@ -790,34 +916,35 @@ const heroSources = slides.map((s) =>
         }
       });
       };
-      markActive(0);
 
-      const goTo = (idx: number, smooth = true) => {
-        const clamped = ((idx % slides.length) + slides.length) % slides.length;
-        const slide = slides[clamped];
-        if (!slide) return;
+      const goTo = (logicalIdx: number, smooth = true) => {
+        const clamped = ((logicalIdx % logicalCount) + logicalCount) % logicalCount;
+        let domIdx = logicalToDom(clamped);
+
+        if (hasLoop) {
+          const forward = (clamped - activeIndex + logicalCount) % logicalCount;
+          const backward = (activeIndex - clamped + logicalCount) % logicalCount;
+          if (backward === 1 && activeIndex === 0 && clamped === logicalCount - 1) {
+            domIdx = 0;
+          } else if (forward === 1 && activeIndex === logicalCount - 1 && clamped === 0) {
+            domIdx = domSlides.length - 1;
+          }
+        }
 
         isUserScrolling = true;
-        const targetScrollLeft =
-          track.scrollLeft +
-          slide.getBoundingClientRect().left -
-          track.getBoundingClientRect().left -
-          (track.clientWidth - slide.clientWidth) / 2;
-
-        track.scrollTo({
-          left: targetScrollLeft,
-          behavior: smooth && !reduced ? "smooth" : "auto",
-        });
+        scrollToDomIndex(domIdx, smooth);
 
         if (!smooth || reduced) {
           isUserScrolling = false;
           markActive(clamped);
+          wrapLoopIfNeeded();
           return;
         }
 
         const onScrollEnd = () => {
           isUserScrolling = false;
           markActive(clamped);
+          wrapLoopIfNeeded();
           track.removeEventListener("scrollend", onScrollEnd);
         };
         if ("onscrollend" in track) {
@@ -826,9 +953,16 @@ const heroSources = slides.map((s) =>
           setTimeout(() => {
             isUserScrolling = false;
             markActive(clamped);
-          }, 450);
+            wrapLoopIfNeeded();
+          }, 320);
         }
       };
+
+      /* Start on first real slide (index 1 when loop clones exist). */
+      if (hasLoop) {
+        scrollToDomIndex(logicalToDom(0), false);
+      }
+      markActive(0);
 
       const nudgePause = (ms = 8000) => {
         pauseUntil = performance.now() + ms;
@@ -851,7 +985,7 @@ const heroSources = slides.map((s) =>
           },
           { root: track, threshold: [0.5, 0.75, 0.88, 1] }
         );
-        slides.forEach((s) => io.observe(s));
+        domSlides.forEach((s) => io.observe(s));
       }
 
       /* Arrow buttons */
@@ -911,19 +1045,7 @@ const heroSources = slides.map((s) =>
         isDown = false;
         track.classList.remove("is-dragging");
         try { track.releasePointerCapture(e.pointerId); } catch {}
-        /* Snap to nearest slide after drag */
-        const trackCenter = track.getBoundingClientRect().left + track.clientWidth / 2;
-        let closestIdx = 0;
-        let minDiff = Infinity;
-        slides.forEach((slide, i) => {
-          const slideCenter = slide.getBoundingClientRect().left + slide.clientWidth / 2;
-          const diff = Math.abs(slideCenter - trackCenter);
-          if (diff < minDiff) {
-            minDiff = diff;
-            closestIdx = i;
-          }
-        });
-        goTo(closestIdx);
+        goTo(activeIndex);
         if (hasDragged) {
           const stop = (ev: Event) => { ev.preventDefault(); ev.stopPropagation(); };
           track.addEventListener("click", stop, { capture: true, once: true });
@@ -956,7 +1078,14 @@ const heroSources = slides.map((s) =>
     });
   }
 
-  document.addEventListener("astro:page-load", mountPromoHero);
-  if (document.readyState !== "loading") mountPromoHero();
-  else document.addEventListener("DOMContentLoaded", mountPromoHero);
+  const resetAndMountPromoHero = () => {
+    document.querySelectorAll<HTMLElement>(".promo-hero").forEach((hero) => {
+      delete (hero as any).__promoHeroMounted;
+    });
+    mountPromoHero();
+  };
+
+  document.addEventListener("astro:page-load", resetAndMountPromoHero);
+  if (document.readyState !== "loading") resetAndMountPromoHero();
+  else document.addEventListener("DOMContentLoaded", resetAndMountPromoHero);
 </script>
