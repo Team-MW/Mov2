@@ -143,7 +143,7 @@ const BUTTON_COLORS: Record<string, string> = {
   </div>
 
   <!-- Mobile/Tablet Layout (Segmented Grand Frais style layout, Hidden on Desktop) -->
-  <div id="header-row-mobile" class="lg:hidden w-full h-[64px] border-b border-black/5 bg-white flex items-stretch select-none relative z-20">
+  <div id="header-row-mobile" class="lg:hidden w-full min-h-[64px] pb-3 pt-[max(6px,env(safe-area-inset-top,0px))] border-b border-black/5 bg-white flex items-stretch select-none relative z-20">
     <!-- 1. Menu block -->
     <button
       id="burger-btn-mobile"
