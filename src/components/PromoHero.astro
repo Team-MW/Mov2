@@ -155,14 +155,14 @@ const heroSources = slides.map((s) =>
                 ></div>
                 
                 <!-- Left text column -->
-                <div class="promo-video-left flex-1 flex flex-col justify-end md:justify-center p-6 md:p-12 lg:p-20 z-10 text-white">
+                <div class="promo-video-left flex-1 flex flex-col justify-end md:justify-center p-4 md:p-8 lg:p-12 z-10 text-white">
                   <div class="promo-hero-slide-inner">
                     <span class="promo-hero-eyebrow" style={`--accent: ${slide.accent}`}>{slide.eyebrow}</span>
-                    <h2 class="promo-hero-title text-balance text-white mt-3">{slide.titre}</h2>
-                    <p class="promo-hero-desc text-white/90 mt-4 max-w-xl">{slide.description}</p>
+                    <h2 class="promo-hero-title text-balance text-white mt-2">{slide.titre}</h2>
+                    <p class="promo-hero-desc text-white/90 mt-2 max-w-xl">{slide.description}</p>
                     <a
                       href={slide.ctaHref}
-                      class="promo-hero-cta btn-sheen mt-6 inline-flex"
+                      class="promo-hero-cta btn-sheen mt-4 inline-flex"
                       style={`--accent: ${slide.accent}`}
                     >
                       {slide.ctaLabel}
@@ -174,8 +174,8 @@ const heroSources = slides.map((s) =>
                 </div>
                 
                 <!-- Right video player card column -->
-                <div class="promo-video-right flex-1 flex items-center justify-center p-6 md:p-12 z-10 relative">
-                  <div class="w-full max-w-[540px] aspect-video md:aspect-[16/10] rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-neutral-900 relative">
+                <div class="promo-video-right flex-1 flex items-center justify-center p-4 md:p-6 z-10 relative">
+                  <div class="w-full max-w-[420px] aspect-video md:aspect-[16/10] rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-neutral-900 relative">
                     <video
                       src={slide.videoUrl}
                       muted
@@ -283,15 +283,15 @@ const heroSources = slides.map((s) =>
   .promo-hero {
     position: relative;
     width: 100%;
-    background: #0F0F0F;
+    background: #ffffff;
     overflow: hidden;
     isolation: isolate;
     border-radius: 0;
-    padding: 16px 0;
+    padding: 10px 0 12px;
   }
   @media (max-width: 768px) {
     .promo-hero {
-      padding: 12px 0;
+      padding: 8px 0 10px;
     }
   }
 
@@ -324,18 +324,20 @@ const heroSources = slides.map((s) =>
     position: relative;
     scroll-snap-align: center;
     scroll-snap-stop: always;
-    aspect-ratio: 21/9;
-    min-height: 400px;
+    aspect-ratio: 21 / 7;
+    max-height: min(42vh, 340px);
+    min-height: 200px;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
   }
   @media (max-width: 768px) {
     .promo-hero-slide {
       flex: 0 0 92vw;
       width: 92vw;
-      aspect-ratio: 4/5;
-      min-height: 520px;
+      aspect-ratio: 16 / 11;
+      max-height: min(52vh, 380px);
+      min-height: 240px;
       border-radius: 16px;
     }
   }
@@ -372,7 +374,7 @@ const heroSources = slides.map((s) =>
     inset: 0;
     display: flex;
     align-items: flex-end;
-    padding-bottom: clamp(72px, 10vw, 100px);
+    padding-bottom: clamp(32px, 5vw, 48px);
   }
   .promo-hero-slide-inner {
     color: white;
@@ -399,16 +401,16 @@ const heroSources = slides.map((s) =>
     padding: 6px 14px;
     border-radius: 999px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    margin-bottom: 18px;
+    margin-bottom: 10px;
   }
 
   .promo-hero-title {
     font-family: var(--font-soft, inherit);
     font-weight: 900;
-    font-size: clamp(32px, 6vw, 64px);
+    font-size: clamp(24px, 4vw, 44px);
     line-height: 0.98;
     letter-spacing: -0.025em;
-    margin: 0 0 18px;
+    margin: 0 0 10px;
     /* Override the global `h1..h6 { color: var(--color-noir) }` rule
        in styles/global.css — the title sits on top of a dark photo
        overlay, so it must be white. Without this, the heading
@@ -417,10 +419,10 @@ const heroSources = slides.map((s) =>
     text-shadow: 0 2px 20px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.6);
   }
   .promo-hero-desc {
-    font-size: clamp(16px, 1.8vw, 20px);
+    font-size: clamp(14px, 1.3vw, 16px);
     line-height: 1.45;
     max-width: 520px;
-    margin: 0 0 28px;
+    margin: 0 0 14px;
     color: rgba(255,255,255,0.92);
     text-shadow: 0 1px 8px rgba(0,0,0,0.4);
   }
@@ -429,7 +431,7 @@ const heroSources = slides.map((s) =>
     display: inline-flex;
     align-items: baseline;
     gap: 14px;
-    margin-bottom: 24px;
+    margin-bottom: 14px;
   }
   .promo-hero-price-now {
     font-family: var(--font-soft, inherit);
@@ -458,7 +460,7 @@ const heroSources = slides.map((s) =>
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    padding: 14px 28px;
+    padding: 10px 22px;
     background: white;
     color: #0F0F0F;
     font-family: var(--font-pro, inherit);
@@ -594,7 +596,7 @@ const heroSources = slides.map((s) =>
 
   /* Video slide split layout styles */
   .promo-hero-slide-video-layout {
-    background: #0A0A0A;
+    background: #1C6B35;
     transition: background-color 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
   }
   @media (max-width: 768px) {
@@ -654,8 +656,43 @@ const heroSources = slides.map((s) =>
       let paused = reduced;
       let pauseUntil = 0;
       let autoTimer: number | null = null;
+      let isUserScrolling = false;
+      let scrollSettleTimer: number | null = null;
 
       const getSlideWidth = () => track.clientWidth || 1;
+
+      const settleActiveFromScroll = () => {
+        const trackCenter = track.getBoundingClientRect().left + track.clientWidth / 2;
+        let closestIdx = 0;
+        let minDiff = Infinity;
+        slides.forEach((slide, i) => {
+          const slideCenter = slide.getBoundingClientRect().left + slide.clientWidth / 2;
+          const diff = Math.abs(slideCenter - trackCenter);
+          if (diff < minDiff) {
+            minDiff = diff;
+            closestIdx = i;
+          }
+        });
+        markActive(closestIdx);
+      };
+
+      const onTrackScroll = () => {
+        isUserScrolling = true;
+        if (scrollSettleTimer) clearTimeout(scrollSettleTimer);
+        scrollSettleTimer = window.setTimeout(() => {
+          isUserScrolling = false;
+          settleActiveFromScroll();
+        }, 120);
+      };
+
+      track.addEventListener("scroll", onTrackScroll, { passive: true });
+      if ("onscrollend" in track) {
+        track.addEventListener("scrollend", () => {
+          isUserScrolling = false;
+          if (scrollSettleTimer) clearTimeout(scrollSettleTimer);
+          settleActiveFromScroll();
+        });
+      }
 
       const markActive = (idx: number) => {
         activeIndex = idx;
@@ -759,24 +796,50 @@ const heroSources = slides.map((s) =>
         const clamped = ((idx % slides.length) + slides.length) % slides.length;
         const slide = slides[clamped];
         if (!slide) return;
-        
-        // Calculate the scroll position to center the target slide in the track container
-        const targetScrollLeft = track.scrollLeft + slide.getBoundingClientRect().left - track.getBoundingClientRect().left - (track.clientWidth - slide.clientWidth) / 2;
-        
+
+        isUserScrolling = true;
+        const targetScrollLeft =
+          track.scrollLeft +
+          slide.getBoundingClientRect().left -
+          track.getBoundingClientRect().left -
+          (track.clientWidth - slide.clientWidth) / 2;
+
         track.scrollTo({
           left: targetScrollLeft,
-          behavior: smooth ? "smooth" : "auto",
+          behavior: smooth && !reduced ? "smooth" : "auto",
         });
+
+        if (!smooth || reduced) {
+          isUserScrolling = false;
+          markActive(clamped);
+          return;
+        }
+
+        const onScrollEnd = () => {
+          isUserScrolling = false;
+          markActive(clamped);
+          track.removeEventListener("scrollend", onScrollEnd);
+        };
+        if ("onscrollend" in track) {
+          track.addEventListener("scrollend", onScrollEnd, { once: true });
+        } else {
+          setTimeout(() => {
+            isUserScrolling = false;
+            markActive(clamped);
+          }, 450);
+        }
       };
 
       const nudgePause = (ms = 8000) => {
         pauseUntil = performance.now() + ms;
       };
 
-      /* IntersectionObserver on each slide to know which is centered in view */
+      /* IntersectionObserver — only commit active slide when scroll is settled
+         or the slide is nearly fully centered (avoids mid-scroll "tweaking"). */
       if ("IntersectionObserver" in window) {
         const io = new IntersectionObserver(
           (entries) => {
+            if (isUserScrolling) return;
             let best = { ratio: 0, idx: activeIndex };
             entries.forEach((e) => {
               const idx = Number((e.target as HTMLElement).dataset.slideIndex || 0);
@@ -784,26 +847,11 @@ const heroSources = slides.map((s) =>
                 best = { ratio: e.intersectionRatio, idx };
               }
             });
-            if (best.ratio > 0.55) markActive(best.idx);
+            if (best.ratio > 0.88) markActive(best.idx);
           },
-          { root: track, threshold: [0.3, 0.55, 0.8, 1] }
+          { root: track, threshold: [0.5, 0.75, 0.88, 1] }
         );
         slides.forEach((s) => io.observe(s));
-      } else {
-        track.addEventListener("scroll", () => {
-          const trackCenter = track.getBoundingClientRect().left + track.clientWidth / 2;
-          let closestIdx = 0;
-          let minDiff = Infinity;
-          slides.forEach((slide, i) => {
-            const slideCenter = slide.getBoundingClientRect().left + slide.clientWidth / 2;
-            const diff = Math.abs(slideCenter - trackCenter);
-            if (diff < minDiff) {
-              minDiff = diff;
-              closestIdx = i;
-            }
-          });
-          markActive(closestIdx);
-        }, { passive: true });
       }
 
       /* Arrow buttons */
@@ -902,6 +950,8 @@ const heroSources = slides.map((s) =>
       /* Cleanup on page transition */
       document.addEventListener("astro:before-preparation", () => {
         if (autoTimer) clearInterval(autoTimer);
+        if (scrollSettleTimer) clearTimeout(scrollSettleTimer);
+        track.removeEventListener("scroll", onTrackScroll);
       }, { once: true });
     });
   }

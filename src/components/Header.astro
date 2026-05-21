@@ -30,7 +30,7 @@ const BUTTON_COLORS: Record<string, string> = {
 
 <header
   id="site-header"
-  class="sticky top-0 z-50 w-full border-b border-black/5 transition-all duration-300 bg-white/95 backdrop-blur-sm"
+  class="sticky top-0 z-[60] w-full border-b border-black/5 bg-white/95 backdrop-blur-sm transition-all duration-300"
 >
   <!-- 0. Row 0: Top bar discrete (Desktop only, slides up on scroll) -->
   <div id="header-top-bar" class="header-top-bar border-b border-black/5 bg-white overflow-hidden hidden lg:block">
@@ -52,15 +52,15 @@ const BUTTON_COLORS: Record<string, string> = {
     </div>
   </div>
 
-  <!-- 1. Row 1: Sticky Navigation Bar (Search, Burger, Promos & Magasins) -->
-  <div id="header-row-1" class="container-mo py-3 relative z-10">
-    <!-- Desktop Layout (Hidden on Mobile/Tablet) -->
-    <div class="hidden lg:flex items-center justify-between gap-6">
-      <!-- Left: Scrolled Logo & Burger Menu -->
+  <!-- 1. Row 1: Navigation Bar -->
+  <!-- Desktop Navigation Bar (Hidden on Mobile/Tablet) -->
+  <div id="header-row-1" class="border-b border-black/5 hidden lg:block bg-white relative z-10">
+    <div class="container-mo py-4 flex items-center justify-between gap-6">
+      <!-- Left: Logo & Burger Menu -->
       <div class="flex items-center shrink-0">
         <a
           href="/"
-          id="header-scrolled-logo"
+          class="flex items-center"
           title="Retour à l'accueil"
         >
           <img
@@ -78,7 +78,7 @@ const BUTTON_COLORS: Record<string, string> = {
         <button
           id="burger-btn"
           aria-label="Ouvrir le menu"
-          class="burger-btn px-4 py-2.5 rounded-full hover:bg-neutral-100 transition text-neutral-800 flex items-center gap-2.5 border border-black/10 bg-white shadow-sm shrink-0"
+          class="burger-btn ml-4 px-4 py-2.5 rounded-full hover:bg-neutral-100 transition text-neutral-800 flex items-center gap-2.5 border border-black/10 bg-white shadow-sm shrink-0"
         >
           <div class="burger-icon relative w-5 h-3.5 flex flex-col justify-between shrink-0">
             <span class="bar bar-1 w-full h-[2px] bg-neutral-800 rounded transition-all duration-300"></span>
@@ -122,7 +122,7 @@ const BUTTON_COLORS: Record<string, string> = {
           href="/promos"
           class="px-4 py-2 bg-rouge text-white rounded-full font-soft font-bold text-[13px] flex items-center gap-1.5 transition hover:bg-rouge-dark hover:-translate-y-0.5 shadow-sm"
         >
-          <span class="relative flex h-1.5 w-1.5">
+          <span class="relative flex h-1.5 w-1.5 shrink-0">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
             <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
           </span>
@@ -140,76 +140,89 @@ const BUTTON_COLORS: Record<string, string> = {
         </a>
       </div>
     </div>
-
-    <!-- Mobile/Tablet Layout (Hidden on Desktop) -->
-    <div class="flex flex-col lg:hidden gap-3">
-      <div class="flex items-center justify-between">
-        <!-- Burger menu & small logo -->
-        <div class="flex items-center gap-2">
-          <button
-            id="burger-btn-mobile"
-            aria-label="Ouvrir le menu"
-            class="burger-btn w-10 h-10 rounded-full hover:bg-black/5 transition text-neutral-800 border border-black/10 bg-white shadow-sm flex items-center justify-center shrink-0"
-          >
-            <div class="burger-icon relative w-5 h-3.5 flex flex-col justify-between shrink-0">
-              <span class="bar bar-1 w-full h-[2px] bg-neutral-800 rounded transition-all duration-300"></span>
-              <span class="bar bar-2 w-full h-[2px] bg-neutral-800 rounded transition-all duration-300"></span>
-              <span class="bar bar-3 w-full h-[2px] bg-neutral-800 rounded transition-all duration-300"></span>
-            </div>
-          </button>
-          <a href="/" class="flex items-center gap-2">
-            <img
-              src="/logos/logo-marchedemo-rond-contourgreen.png"
-              alt="Marché de Mo'"
-              width="40"
-              height="40"
-              class="w-9 h-9 object-contain"
-            />
-            <span class="font-soft font-bold text-[15px] text-vert-dark hidden md:inline whitespace-nowrap">Marché de Mo'</span>
-          </a>
-        </div>
-        <!-- Promos, Magasins & Search icons -->
-        <div class="flex items-center gap-1.5">
-          <button
-            id="mobile-search-trigger"
-            class="w-10 h-10 border border-black/10 text-neutral-700 hover:bg-neutral-100 rounded-full transition bg-white shadow-sm flex items-center justify-center shrink-0"
-            title="Rechercher"
-            aria-label="Rechercher"
-          >
-            <svg class="w-5 h-5 shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
-          </button>
-          <a
-            href="/promos"
-            class="h-10 px-4 bg-rouge text-white rounded-full font-soft font-bold text-[13px] flex items-center justify-center gap-1.5 shadow-sm shrink-0 hover:bg-rouge-dark transition"
-          >
-            <span class="relative flex h-1.5 w-1.5">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
-            </span>
-            Promos
-          </a>
-          <a
-            href="/magasins"
-            class="w-10 h-10 border border-vert text-vert hover:bg-vert hover:text-white rounded-full transition bg-white shadow-sm flex items-center justify-center shrink-0"
-            title="Magasins"
-          >
-            <svg class="w-5 h-5 shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
-          </a>
-        </div>
-      </div>
-    </div>
   </div>
 
-  <!-- 2. Row 2: Large Centered Logo with wave background (Hides on scroll) -->
+  <!-- Mobile/Tablet Layout (Segmented Grand Frais style layout, Hidden on Desktop) -->
+  <div id="header-row-mobile" class="lg:hidden w-full h-[64px] border-b border-black/5 bg-white flex items-stretch select-none relative z-20">
+    <!-- 1. Menu block -->
+    <button
+      id="burger-btn-mobile"
+      aria-label="Ouvrir le menu"
+      class="burger-btn flex-1 flex flex-col items-center justify-center text-white transition-colors duration-200"
+      style="background-color: #1C6B35;"
+    >
+      <div class="burger-icon relative w-5 h-3.5 flex flex-col justify-between shrink-0 mb-1">
+        <span class="bar bar-1 w-full h-[2px] bg-white rounded transition-all duration-300"></span>
+        <span class="bar bar-2 w-full h-[2px] bg-white rounded transition-all duration-300"></span>
+        <span class="bar bar-3 w-full h-[2px] bg-white rounded transition-all duration-300"></span>
+      </div>
+      <span class="text-[9px] font-pro font-black uppercase tracking-wider text-white">Menu</span>
+    </button>
+
+    <!-- 2. Promos block -->
+    <a
+      href="/promos"
+      class="flex-1 flex flex-col items-center justify-center text-white transition-colors duration-200"
+      style="background-color: #8B1919;"
+    >
+      <span class="relative flex h-2 w-2 shrink-0 mb-1">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+      </span>
+      <span class="text-[9px] font-pro font-black uppercase tracking-wider text-white">Promos</span>
+    </a>
+
+    <!-- 3. Logo block (centered overlapping white circle) -->
+    <div class="flex-1 flex items-center justify-center relative bg-white">
+      <a
+        href="/"
+        class="absolute top-1 w-16 h-16 rounded-full bg-white shadow-[0_4px_12px_rgba(0,0,0,0.12)] border border-black/5 flex items-center justify-center z-30"
+        title="Retour à l'accueil"
+      >
+        <img
+          src="/logos/logo-marchedemo-rond-contourgreen.png"
+          alt="Marché de Mo'"
+          width="44"
+          height="44"
+          class="w-11 h-11 object-contain"
+        />
+      </a>
+    </div>
+
+    <!-- 4. Search block -->
+    <button
+      id="mobile-search-trigger"
+      class="flex-1 flex flex-col items-center justify-center text-white transition-colors duration-200"
+      style="background-color: #2E8B4A;"
+      title="Rechercher"
+      aria-label="Rechercher"
+    >
+      <svg class="w-5 h-5 shrink-0 mb-1 text-white" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.35-4.35" />
+      </svg>
+      <span class="text-[9px] font-pro font-black uppercase tracking-wider text-white">Recherche</span>
+    </button>
+
+    <!-- 5. Magasins block -->
+    <a
+      href="/magasins"
+      class="flex-1 flex flex-col items-center justify-center text-white transition-colors duration-200"
+      style="background-color: #A86B1E;"
+      title="Magasins"
+    >
+      <svg class="w-5 h-5 shrink-0 mb-1 text-white" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+        <circle cx="12" cy="10" r="3" />
+      </svg>
+      <span class="text-[9px] font-pro font-black uppercase tracking-wider text-white">Magasins</span>
+    </a>
+  </div>
+
+  <!-- 2. Row 2: Large Centered Logo with wave background (Desktop only) -->
   <div 
     id="header-logo-row" 
-    class="header-logo-row w-full flex flex-col items-center overflow-hidden"
+    class="header-logo-row w-full flex flex-col items-center overflow-hidden hidden lg:flex"
     style="background: radial-gradient(circle at center, rgba(46, 139, 74, 0.05) 0%, rgba(255, 255, 255, 0) 80%), url('data:image/svg+xml,%3Csvg width=\'120\' height=\'24\' viewBox=\'0 0 120 24\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 12 Q 30 0, 60 12 T 120 12\' fill=\'none\' stroke=\'%231c6b35\' stroke-width=\'1.5\' stroke-opacity=\'0.04\'/%3E%3C/svg%3E') repeat;"
   >
     <a href="/" class="group flex flex-col items-center py-4">
@@ -361,39 +374,6 @@ const BUTTON_COLORS: Record<string, string> = {
 </header>
 
 <style>
-  /* Stationary and scrolled heights for fluid scroll transition */
-  .header-top-bar {
-    max-height: 40px;
-    opacity: 1;
-    overflow: hidden;
-    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, border-color 0.4s ease;
-  }
-  .header-logo-row {
-    max-height: 160px;
-    opacity: 1;
-    overflow: hidden;
-    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, padding 0.4s ease;
-  }
-
-  #header-scrolled-logo {
-    display: flex;
-    align-items: center;
-    width: 0px;
-    opacity: 0;
-    margin-right: 0px;
-    pointer-events: none;
-    overflow: hidden;
-    white-space: nowrap;
-    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin-right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .is-scrolled #header-scrolled-logo {
-    width: 195px;
-    opacity: 1;
-    margin-right: 16px;
-    pointer-events: auto;
-  }
-
   /* Hamburger button & icon animation */
   .burger-btn {
     position: relative;
@@ -476,33 +456,6 @@ const BUTTON_COLORS: Record<string, string> = {
     }
   }
 
-  /* Scrolled State Styles */
-  .is-scrolled .header-top-bar {
-    max-height: 0px !important;
-    opacity: 0 !important;
-    border-bottom-width: 0px !important;
-    pointer-events: none;
-  }
-  .is-scrolled .header-logo-row {
-    max-height: 0px !important;
-    opacity: 0 !important;
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-    pointer-events: none;
-  }
-
-  .is-scrolled #header-categories-flex {
-    justify-content: space-between !important;
-  }
-  @media (min-width: 1024px) {
-    .is-scrolled #header-categories-container {
-      justify-content: flex-start !important;
-    }
-    .is-scrolled #header-scrolled-links {
-      display: flex !important;
-    }
-  }
-
   /* Hide categories row dynamically when the mobile menu is open */
   .menu-is-open #header-categories-row {
     max-height: 0px !important;
@@ -512,6 +465,12 @@ const BUTTON_COLORS: Record<string, string> = {
     border-top-width: 0px !important;
     pointer-events: none;
     overflow: hidden;
+  }
+
+  /* Ensure SVG stroke inherits parent color correctly and doesn't get overridden or hidden */
+  #site-header button svg,
+  #site-header a svg {
+    stroke: currentColor !important;
   }
 </style>
 
@@ -575,10 +534,12 @@ const BUTTON_COLORS: Record<string, string> = {
     const mobileSearchResults = document.getElementById("mobile-search-results") as HTMLElement | null;
 
     const updateDrawerPosition = () => {
-      if (!drawer || !row1 || !header) return;
-      const row1Rect = row1.getBoundingClientRect();
+      if (!drawer || !header) return;
+      const activeRow = (window.innerWidth < 1024) ? document.getElementById("header-row-mobile") : document.getElementById("header-row-1");
+      if (!activeRow) return;
+      const rowRect = activeRow.getBoundingClientRect();
       const headerRect = header.getBoundingClientRect();
-      const drawerTop = Math.max(0, row1Rect.bottom - headerRect.top);
+      const drawerTop = Math.max(0, rowRect.bottom - headerRect.top);
       drawer.style.top = `${drawerTop}px`;
     };
 
@@ -892,48 +853,11 @@ const BUTTON_COLORS: Record<string, string> = {
       });
     }
 
-    // Throttled scroll adaptation with requestAnimationFrame
-    let ticking = false;
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          if (!header) return;
-          
-          if (window.scrollY > 40) {
-            header.classList.add("is-scrolled", "shadow-[0_4px_20px_rgba(0,0,0,0.06)]");
-            header.style.backdropFilter = "blur(18px)";
-            header.style.webkitBackdropFilter = "blur(18px)";
-            header.style.backgroundColor = "rgba(255, 255, 255, 0.82)";
-            if (scrolledLinks) {
-              scrolledLinks.classList.remove("opacity-0", "translate-x-5", "pointer-events-none");
-              scrolledLinks.classList.add("opacity-100", "translate-x-0");
-            }
-          } else {
-            header.classList.remove("is-scrolled", "shadow-[0_4px_20px_rgba(0,0,0,0.06)]");
-            header.style.backdropFilter = "blur(8px)";
-            header.style.webkitBackdropFilter = "blur(8px)";
-            header.style.backgroundColor = "rgba(255, 255, 255, 0.96)";
-            if (scrolledLinks) {
-              scrolledLinks.classList.add("opacity-0", "translate-x-5", "pointer-events-none");
-              scrolledLinks.classList.remove("opacity-100", "translate-x-0");
-            }
-          }
-          if (drawer && drawer.classList.contains("is-open")) {
-            updateDrawerPosition();
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", () => {
       if (drawer && drawer.classList.contains("is-open")) {
         updateDrawerPosition();
       }
     }, { passive: true });
-    onScroll();
   };
 
   // Global ⌘K / Ctrl+K search shortcut (Bind exactly once globally)
