@@ -8,7 +8,7 @@ export const SITE = {
   legalName: "Marché de Mo'",
   tagline: "Commerçant engagé. Saveurs du Monde.",
   shortPitch:
-    "Le plus grand supermarché ethnique d'Occitanie · 10 000+ références · Ouvert 7j/7",
+    "Le plus grand supermarché ethnique d'Occitanie · 20 000+ références · Ouvert 7j/7",
   url: "https://marchedemov2.vercel.app",
   locale: "fr_FR",
   phone: "05 82 95 82 52",
@@ -96,9 +96,9 @@ export const MAGASINS: Record<MagasinSlug, Magasin> = {
     ],
     telephone: "05 82 95 82 52",
     telE164: "+33582958252",
-    coords: { lat: 43.5842, lon: 1.4042 },
+    coords: { lat: 43.5841, lon: 1.4054 },
     mapsEmbed:
-      "https://www.openstreetmap.org/export/embed.html?bbox=1.3992%2C43.5812%2C1.4092%2C43.5872&layer=mapnik&marker=43.5842%2C1.4042",
+      "https://www.openstreetmap.org/export/embed.html?bbox=1.4004%2C43.5811%2C1.4104%2C43.5871&layer=mapnik&marker=43.5841%2C1.4054",
     mapsLink:
       "https://maps.google.com/?q=5+rue+Joachim+du+Bellay+31100+Toulouse",
     photo: "/images/magasins/toulouse-sud.jpg",
@@ -118,7 +118,7 @@ export const MAGASINS: Record<MagasinSlug, Magasin> = {
 };
 
 /* ------------------------------------------------------------
-   Rayons — 10 au total, dont 5 avec DA culturelle
+   Rayons — 12 au total, dont 5 avec DA culturelle
    ------------------------------------------------------------ */
 export type RayonSlug =
   | "boucherie-halal"

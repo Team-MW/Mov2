@@ -22,6 +22,7 @@
 import { getCollection } from "astro:content";
 import { RAYONS, type RayonSlug } from "@/lib/site";
 import { getAllRecettes } from "@/lib/recettes";
+import { supabase } from "@/lib/supabase";
 
 /** Type d'actu — utilisé pour le libellé fallback quand pas de rayon. */
 export type ActuType =
@@ -174,6 +175,36 @@ export function actuBadgeColor(actu: ActuItem): string {
  */
 export async function getActus(limit?: number): Promise<ActuItem[]> {
   const items: ActuItem[] = [];
+
+  /* 0 — Base de données Supabase */
+  try {
+    const { data: dbActus, error } = await supabase
+      .from("actus")
+      .select("*")
+      .eq("actif", true)
+      .order("date", { ascending: false });
+
+    if (error) {
+      console.warn("DB Actus failed, falling back to static collections:", error.message);
+    } else if (dbActus) {
+      for (const item of dbActus) {
+        items.push({
+          id: `db-${item.id}`,
+          type: item.type,
+          titre: item.titre,
+          resume: item.resume || undefined,
+          image: item.image,
+          imageAlt: item.image_alt || undefined,
+          rayon: item.rayon || undefined,
+          date: new Date(item.date),
+          href: item.href || "",
+          badgeLabel: item.badge_label || undefined,
+        });
+      }
+    }
+  } catch (e: any) {
+    console.warn("DB Actus query error, falling back:", e?.message || e);
+  }
 
   /* 1 — Articles (Content Collection) */
   try {

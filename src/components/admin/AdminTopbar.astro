@@ -19,7 +19,7 @@ import { SITE } from "@/lib/site";
 import KeyboardHelpOverlay from "@components/islands/admin/KeyboardHelpOverlay.jsx";
 
 interface Props {
-  current?: "dashboard" | "inventaire" | "catalogue" | "promos" | "produits" | "medias" | "images-gap" | "affiches";
+  current?: "dashboard" | "inventaire" | "catalogue" | "promos" | "produits" | "medias" | "images-gap" | "affiches" | "actus";
   subtitle?: string;
 }
 
@@ -30,6 +30,7 @@ const navItems = [
   { id: "inventaire", label: "Inventaire",       href: "/admin/inventaire/inventaire", icon: "📦" },
   { id: "catalogue",  label: "Catalogue",        href: "/admin/catalogue", icon: "🌳" },
   { id: "promos",     label: "Promos",           href: "/admin/promos",     icon: "🏷" },
+  { id: "actus",      label: "Actualités",       href: "/admin/actus",      icon: "📰" },
   { id: "produits",   label: "Produits",         href: "/admin/produits",   icon: "🛒" },
   { id: "medias",     label: "Images",           href: "/admin/medias",     icon: "🖼" },
   { id: "images-gap", label: "Manquantes",       href: "/admin/images-gap", icon: "⚠" },
@@ -131,6 +132,9 @@ const showSubtitle = !!subtitle;
             </a>
             <a href="/admin/medias" class="block px-3 py-2 rounded-lg text-[13px] hover:bg-white">
               Images
+            </a>
+            <a href="/admin/actus" class="block px-3 py-2 rounded-lg text-[13px] hover:bg-white">
+              Actualités & blog
             </a>
             <a href="/admin/generateur-affiche" class="block px-3 py-2 rounded-lg text-[13px] hover:bg-white">
               Générateur d'affiches A4

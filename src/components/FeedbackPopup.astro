@@ -1,0 +1,243 @@
+---
+/**
+ * FeedbackPopup.astro — customer satisfaction prompt.
+ * Asks user if they liked their visit:
+ *   - Yes -> redirects to Google Reviews
+ *   - No -> smooth scrolls to private suggestions form
+ * Uses localStorage to show once every 30 days.
+ */
+const googleReviewsUrl = "https://www.google.com/search?sca_esv=987102333fe88aad&sxsrf=ANbL-n4MkUMhL9v8oqWl_vATaSFdRY2uTw:1779404224790&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOQVmAaKOkam4zBEqGG6D2dkLApv2b1i4n_W4wW0VjN-p8FWo3rTf-y-WdWZuASv7xuuOwNgeIZXz8eW5pQLbYxMs9nDs&q=Marche+de+Mo%27+Reviews&sa=X&ved=2ahUKEwiI1-ulvcuUAxX0Rv4FHWujBzgQ0bkNegQINRAH&biw=1536&bih=730&dpr=1.25";
+---
+
+<div
+  id="feedback-popup"
+  class="feedback-popup-shell"
+  role="dialog"
+  aria-labelledby="feedback-title"
+  aria-hidden="true"
+>
+  <button
+    type="button"
+    id="feedback-close"
+    class="feedback-popup-close"
+    aria-label="Fermer"
+  >
+    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M18 6 6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <div class="space-y-4">
+    <div class="flex items-center gap-3">
+      <span class="text-[24px]" role="img" aria-label="Étoiles">⭐</span>
+      <div>
+        <span class="text-[10px] uppercase tracking-wider font-bold text-vert">Votre avis compte</span>
+        <h3 id="feedback-title" class="font-soft font-bold text-[15px] text-noir leading-tight">
+          Avez-vous apprécié votre dernière visite chez Marché de Mo' ?
+        </h3>
+      </div>
+    </div>
+
+    <p class="text-[12px] text-neutral-500 leading-normal">
+      Aidez-nous à nous améliorer ou partagez votre expérience avec la communauté toulousaine.
+    </p>
+
+    <div class="flex items-center gap-3 pt-1">
+      <a
+        id="feedback-yes"
+        href={googleReviewsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex-1 text-center py-2.5 px-4 rounded-full bg-vert text-white text-[12.5px] font-bold hover:bg-vert-dark transition shadow-md hover:shadow-lg"
+      >
+        Oui, super !
+      </a>
+      <button
+        id="feedback-no"
+        type="button"
+        class="flex-1 py-2.5 px-4 rounded-full border border-neutral-200 hover:border-black text-[12.5px] font-bold text-neutral-600 hover:text-noir transition bg-white"
+      >
+        Non...
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .feedback-popup-shell {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    z-index: 50;
+    max-width: 360px;
+    width: calc(100vw - 32px);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 28px;
+    padding: 20px;
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.12),
+      0 1px 3px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    
+    transform: translateY(24px) scale(0.95);
+    opacity: 0;
+    pointer-events: none;
+    transition: 
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.4s ease;
+    will-change: transform, opacity;
+  }
+
+  .feedback-popup-shell.is-visible {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .feedback-popup-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.03);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8C8C8C;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .feedback-popup-close:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: #111111;
+  }
+
+  @media (max-width: 640px) {
+    .feedback-popup-shell {
+      bottom: 80px; /* offset slightly on mobile so it doesn't cover main mobile layouts */
+    }
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    let checkTimeout = null;
+    let scrollListener = null;
+
+    const LOCAL_STORAGE_KEY = "mo_feedback_dismissed_until";
+    const SHOW_DELAY_MS = 15000; // 15 seconds
+    const SCROLL_THRESHOLD = 0.5; // 50% scroll
+
+    const getDismissedUntil = () => {
+      const val = localStorage.getItem(LOCAL_STORAGE_KEY);
+      return val ? parseInt(val, 10) : 0;
+    };
+
+    const setDismissed = (days = 30) => {
+      const until = Date.now() + days * 24 * 60 * 60 * 1000;
+      localStorage.setItem(LOCAL_STORAGE_KEY, until.toString());
+    };
+
+    const dismissPopup = (shell) => {
+      if (!shell) return;
+      shell.classList.remove("is-visible");
+      shell.setAttribute("aria-hidden", "true");
+      cleanup();
+    };
+
+    const showPopup = (shell) => {
+      if (!shell) return;
+      
+      // Safety check if already shown or dismissed
+      if (Date.now() < getDismissedUntil()) return;
+      
+      shell.classList.add("is-visible");
+      shell.setAttribute("aria-hidden", "false");
+      cleanup();
+    };
+
+    const cleanup = () => {
+      if (checkTimeout) clearTimeout(checkTimeout);
+      if (scrollListener) {
+        window.removeEventListener("scroll", scrollListener);
+        scrollListener = null;
+      }
+    };
+
+    const initFeedbackPopup = () => {
+      const shell = document.getElementById("feedback-popup");
+      if (!shell) return;
+
+      // Check if already dismissed for 30 days
+      if (Date.now() < getDismissedUntil()) {
+        return;
+      }
+
+      const closeBtn = document.getElementById("feedback-close");
+      const yesBtn = document.getElementById("feedback-yes");
+      const noBtn = document.getElementById("feedback-no");
+
+      // Set dismiss action
+      closeBtn?.addEventListener("click", () => {
+        setDismissed(30);
+        dismissPopup(shell);
+      });
+
+      yesBtn?.addEventListener("click", () => {
+        setDismissed(30);
+        dismissPopup(shell);
+      });
+
+      noBtn?.addEventListener("click", () => {
+        setDismissed(30);
+        dismissPopup(shell);
+
+        // Smooth scroll to suggestions section
+        const suggestionsSec = document.getElementById("suggestions");
+        if (suggestionsSec) {
+          suggestionsSec.scrollIntoView({ behavior: "smooth" });
+          // Focus the input
+          const txt = document.getElementById("suggestion-message");
+          if (txt) {
+            setTimeout(() => txt.focus(), 800);
+          }
+        }
+      });
+
+      // Show trigger 1: Timer (15s)
+      checkTimeout = setTimeout(() => {
+        showPopup(shell);
+      }, SHOW_DELAY_MS);
+
+      // Show trigger 2: Scroll past 50%
+      scrollListener = () => {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        if (docHeight > 0 && (scrollTop / docHeight) >= SCROLL_THRESHOLD) {
+          showPopup(shell);
+        }
+      };
+      window.addEventListener("scroll", scrollListener, { passive: true });
+    };
+
+    // Support Astro Page transitions
+    document.addEventListener("astro:page-load", () => {
+      cleanup();
+      initFeedbackPopup();
+    });
+
+    // Run on first load
+    if (document.readyState !== "loading") {
+      initFeedbackPopup();
+    } else {
+      document.addEventListener("DOMContentLoaded", initFeedbackPopup);
+    }
+  })();
+</script>

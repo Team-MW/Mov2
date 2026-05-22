@@ -45,9 +45,9 @@
  * Read once at module load and cached — env vars don't change mid-run.
  */
 const TRANSFORMS_ENABLED: boolean =
-  (import.meta.env.PUBLIC_SUPABASE_IMAGE_TRANSFORMS ?? "on")
+  (import.meta.env.PUBLIC_SUPABASE_IMAGE_TRANSFORMS ?? "off")
     .toString()
-    .toLowerCase() !== "off";
+    .toLowerCase() === "on";
 
 /** Marks a URL as pointing at the Supabase Storage `object/public` endpoint. */
 const OBJECT_PUBLIC_RE = /\/storage\/v1\/object\/public\//i;

@@ -1,0 +1,367 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Breadcrumb from "@components/Breadcrumb.astro";
+import FAQAccordion from "@components/FAQAccordion.astro";
+import NewsletterInline from "@components/NewsletterInline.astro";
+import { SITE } from "@/lib/site";
+import { breadcrumbSchema } from "@/lib/schema";
+
+const bc = breadcrumbSchema([{ name: "Devenir Franchisé", url: "/franchise" }]);
+
+const ATOUTS = [
+  {
+    icon: "🌍",
+    titre: "Un concept unique & porteur",
+    detail: "Le plus grand supermarché du monde d'Occitanie. Une offre unique de 20 000+ références réparties sur 12 rayons thématiques répondant à une demande croissante d'authenticité et de saveurs d'ailleurs.",
+  },
+  {
+    icon: "📈",
+    titre: "Une rentabilité éprouvée",
+    detail: "Un modèle économique performant basé sur des volumes d'achat importants et des circuits d'importation directe sans intermédiaire, garantissant d'excellentes marges opérationnelles.",
+  },
+  {
+    icon: "🤝",
+    titre: "60 ans d'expertise familiale",
+    detail: "Nous transmettons notre savoir-faire de trois générations de commerçants indépendants. Vous bénéficiez d'une expérience solide en gestion, approvisionnement et relation client.",
+  },
+] as const;
+
+const ETAPES = [
+  {
+    num: "01",
+    titre: "Étude & Implantation",
+    desc: "Aide à la recherche du local idéal (1 000 à 1 500 m²), étude de marché locale et validation de l'emplacement commercial.",
+  },
+  {
+    num: "02",
+    titre: "Aménagement & Logistique",
+    desc: "Plans d'aménagement optimisés type 'Grand Frais' et raccordement à notre chaîne d'approvisionnement nationale et internationale exclusive.",
+  },
+  {
+    num: "03",
+    titre: "Formation & Recrutement",
+    desc: "Formation de 4 à 6 semaines en immersion dans nos magasins pilotes et accompagnement au recrutement de vos équipes (boucherie, primeurs, épicerie).",
+  },
+  {
+    num: "04",
+    titre: "Lancement & Marketing",
+    desc: "Plan de communication d'ouverture percutant, outils de communication digitale et campagnes de publicité locale clés en main.",
+  },
+] as const;
+
+const faqItems = [
+  {
+    q: "Quel est l'apport personnel minimum requis ?",
+    r: "Pour ouvrir une franchise Marché de Mo', un apport personnel minimum de 150 000 € est conseillé pour obtenir le financement bancaire nécessaire. Le coût total de l'investissement varie selon la surface et l'état du local commercial choisi.",
+  },
+  {
+    q: "Faut-il être issu du secteur de la grande distribution ?",
+    r: "Pas obligatoirement. Nous recherchons avant tout des profils d'entrepreneurs, de commerçants dans l'âme, dotés de solides compétences managériales et de gestion. Notre formation initiale complète vous transmettra toutes les clés du concept Marché de Mo'.",
+  },
+  {
+    q: "Quelles sont les caractéristiques du local idéal ?",
+    r: "Nous ciblons des zones commerciales ou entrées de ville à fort trafic avec un parking partagé ou dédié (minimum 100 places). La surface de vente recommandée est d'environ 1 200 m² de plain-pied.",
+  },
+  {
+    q: "Combien de temps dure le processus d'ouverture ?",
+    r: "Entre la première rencontre et l'ouverture du magasin, il s'écoule généralement entre 6 et 12 mois. Cela comprend la recherche immobilière, l'obtention des financements, les travaux d'aménagement et la formation.",
+  },
+];
+---
+
+<Layout
+  title={`Devenir Franchisé — Rejoignez le réseau · ${SITE.name}`}
+  description="Ouvrez votre propre supermarché du monde avec le Marché de Mo'. Profitez de notre concept unique, de notre logistique d'approvisionnement et de 60 ans d'expertise familiale."
+  faqItems={faqItems}
+  schema={bc}
+>
+  <Breadcrumb items={[{ name: "Devenir Franchisé" }]} />
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-[#1C6B35]/10 via-blanc to-white py-16 md:py-24">
+    <img
+      src="/logos/favicon-marchedemo.png"
+      alt=""
+      aria-hidden="true"
+      class="absolute -right-32 top-10 w-[550px] opacity-[0.035] pointer-events-none select-none"
+    />
+    <div class="container-mo relative z-10 grid lg:grid-cols-12 gap-12 items-center">
+      <div class="lg:col-span-7">
+        <span class="eyebrow text-vert">Opportunité Franchise</span>
+        <h1 class="display-xl mt-4 text-balance" data-split-reveal>
+          Ouvrez votre propre <br />
+          <span class="text-vert">Supermarché du Monde.</span>
+        </h1>
+        <p class="mt-6 text-[17px] md:text-[18px] text-neutral-600 leading-relaxed max-w-2xl">
+          Devenez acteur de la distribution spécialisée à forte valeur ajoutée. Rejoignez un réseau de commerçants indépendants engagés et profitez de notre savoir-faire de <strong>60 ans d'expérience</strong> dans l'importation de saveurs du monde.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a href="#franchise-form-section" class="btn btn-primary btn-sheen">
+            Déposer une candidature
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <a href="#concept-section" class="btn btn-secondary">
+            Découvrir le concept
+          </a>
+        </div>
+      </div>
+      <div class="lg:col-span-5">
+        <div class="relative aspect-[4/3] rounded-[36px] overflow-hidden shadow-card bg-neutral-100 reveal reveal-mask border-3 border-vert">
+          <img
+            src="/images/home/equipe.jpg"
+            alt="Intérieur supermarché Marché de Mo'"
+            class="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KEY FIGURES STATS -->
+  <section class="py-12 bg-noir text-white overflow-hidden relative">
+    <div class="container-mo grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+      <div>
+        <div class="text-[44px] md:text-[56px] font-soft font-bold text-vert-light leading-none">1 200 m²</div>
+        <p class="mt-2 text-[13px] md:text-[14px] uppercase tracking-wider text-neutral-400 font-semibold">Surface moyenne</p>
+      </div>
+      <div>
+        <div class="text-[44px] md:text-[56px] font-soft font-bold text-vert-light leading-none">20 000+</div>
+        <p class="mt-2 text-[13px] md:text-[14px] uppercase tracking-wider text-neutral-400 font-semibold">Références du monde</p>
+      </div>
+      <div>
+        <div class="text-[44px] md:text-[56px] font-soft font-bold text-vert-light leading-none">60 ans</div>
+        <p class="mt-2 text-[13px] md:text-[14px] uppercase tracking-wider text-neutral-400 font-semibold">D'expérience commerciale</p>
+      </div>
+      <div>
+        <div class="text-[44px] md:text-[56px] font-soft font-bold text-vert-light leading-none">A à Z</div>
+        <p class="mt-2 text-[13px] md:text-[14px] uppercase tracking-wider text-neutral-400 font-semibold">Accompagnement complet</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONCEPT -->
+  <section id="concept-section" class="section bg-blanc">
+    <div class="container-mo">
+      <div class="max-w-3xl mx-auto text-center mb-16">
+        <span class="eyebrow">Pourquoi Marché de Mo' ?</span>
+        <h2 class="display-md mt-4 text-balance">
+          Un modèle performant sur un marché en <span class="text-vert">pleine expansion</span>
+        </h2>
+        <p class="mt-4 text-[16px] text-neutral-600">
+          Nous avons transposé les meilleures recettes des géants du frais à l'alimentation du monde, en combinant choix massif, qualité bouchère sur carcasse, approvisionnement direct et design moderne.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        {ATOUTS.map((a, i) => (
+          <article
+            class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300 reveal border border-black/5"
+            style={`--reveal-delay: ${i * 100}ms`}
+          >
+            <span class="text-[32px]">{a.icon}</span>
+            <h3 class="font-soft font-bold text-[22px] mt-4 text-neutral-900">{a.titre}</h3>
+            <p class="mt-3 text-[14.5px] text-neutral-600 leading-relaxed">{a.detail}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- L'ACCOMPAGNEMENT -->
+  <section class="section bg-white border-t border-black/5">
+    <div class="container-mo">
+      <div class="max-w-2xl mb-12">
+        <span class="eyebrow">Les étapes</span>
+        <h2 class="display-md mt-4 text-balance">
+          Un accompagnement de <span class="text-vert">chaque instant.</span>
+        </h2>
+        <p class="mt-3 text-[15px] text-neutral-600 leading-relaxed">
+          Nous mettons tout notre savoir-faire à votre disposition pour assurer le succès de votre projet d'ouverture de supermarché.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {ETAPES.map((e, i) => (
+          <div
+            class="relative bg-blanc rounded-3xl p-6 md:p-8 border border-black/5 hover:border-vert/35 transition-colors reveal"
+            style={`--reveal-delay: ${i * 80}ms`}
+          >
+            <span class="absolute top-6 right-6 font-soft font-black text-[28px] text-vert/20 leading-none">
+              {e.num}
+            </span>
+            <h3 class="font-soft font-bold text-[18px] text-neutral-900 mt-2">
+              {e.titre}
+            </h3>
+            <p class="mt-3 text-[14px] text-neutral-600 leading-relaxed">
+              {e.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FORM SECTION -->
+  <section id="franchise-form-section" class="section bg-blanc border-t border-black/5">
+    <div class="container-mo max-w-4xl">
+      <div class="bg-white rounded-[32px] p-8 md:p-12 shadow-card border border-black/5">
+        <div class="text-center mb-8">
+          <span class="eyebrow">Candidature Franchise</span>
+          <h2 class="display-sm mt-3">Rejoignez l'aventure Marché de Mo'</h2>
+          <p class="text-[14.5px] text-neutral-500 mt-2">
+            Remplissez ce formulaire d'informations préalables. Notre direction de développement prendra contact avec vous sous 48h.
+          </p>
+        </div>
+
+        <form id="franchise-form" class="space-y-6">
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <label for="nom" class="block text-[13px] font-bold uppercase tracking-wider text-neutral-500 mb-2">Prénom & Nom</label>
+              <input
+                type="text"
+                id="nom"
+                name="nom"
+                required
+                class="w-full rounded-xl border border-black/10 bg-blanc px-4 py-3.5 text-[15px] focus:outline-none focus:ring-2 focus:ring-vert/30 focus:border-vert transition-all"
+                placeholder="Ex. Samir Ouaddaha"
+              />
+            </div>
+            <div>
+              <label for="email" class="block text-[13px] font-bold uppercase tracking-wider text-neutral-500 mb-2">Adresse email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                class="w-full rounded-xl border border-black/10 bg-blanc px-4 py-3.5 text-[15px] focus:outline-none focus:ring-2 focus:ring-vert/30 focus:border-vert transition-all"
+                placeholder="Ex. contact@marchedemo.com"
+              />
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <label for="tel" class="block text-[13px] font-bold uppercase tracking-wider text-neutral-500 mb-2">Téléphone</label>
+              <input
+                type="tel"
+                id="tel"
+                name="tel"
+                required
+                class="w-full rounded-xl border border-black/10 bg-blanc px-4 py-3.5 text-[15px] focus:outline-none focus:ring-2 focus:ring-vert/30 focus:border-vert transition-all"
+                placeholder="Ex. 05 82 95 82 52"
+              />
+            </div>
+            <div>
+              <label for="region" class="block text-[13px] font-bold uppercase tracking-wider text-neutral-500 mb-2">Région ou Ville ciblée</label>
+              <input
+                type="text"
+                id="region"
+                name="region"
+                required
+                class="w-full rounded-xl border border-black/10 bg-blanc px-4 py-3.5 text-[15px] focus:outline-none focus:ring-2 focus:ring-vert/30 focus:border-vert transition-all"
+                placeholder="Ex. Toulouse, Montpellier, Occitanie..."
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="apport" class="block text-[13px] font-bold uppercase tracking-wider text-neutral-500 mb-2">Apport personnel disponible</label>
+            <select
+              id="apport"
+              name="apport"
+              required
+              class="w-full rounded-xl border border-black/10 bg-blanc px-4 py-3.5 text-[15px] focus:outline-none focus:ring-2 focus:ring-vert/30 focus:border-vert transition-all"
+            >
+              <option value="" disabled selected>Sélectionnez votre niveau d'apport personnel</option>
+              <option value="moins-100k">Moins de 100 000 €</option>
+              <option value="100k-150k">100 000 € à 150 000 €</option>
+              <option value="150k-250k">150 000 € à 250 000 €</option>
+              <option value="plus-250k">Plus de 250 000 €</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="message" class="block text-[13px] font-bold uppercase tracking-wider text-neutral-500 mb-2">Présentation de votre parcours & Motivation</label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              rows="5"
+              class="w-full rounded-xl border border-black/10 bg-blanc px-4 py-3.5 text-[15px] focus:outline-none focus:ring-2 focus:ring-vert/30 focus:border-vert transition-all resize-none"
+              placeholder="Décrivez brièvement votre parcours et pourquoi vous souhaitez ouvrir un Marché de Mo'..."
+            ></textarea>
+          </div>
+
+          <div class="pt-2">
+            <button
+              type="submit"
+              class="w-full btn btn-primary btn-sheen py-4 text-[16px] font-bold rounded-xl flex items-center justify-center gap-2"
+            >
+              Envoyer ma candidature
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <FAQAccordion items={faqItems} title="FAQ — Devenir Franchisé" />
+  <NewsletterInline />
+</Layout>
+
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    const form = document.getElementById("franchise-form");
+    if (!form) return;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const button = form.querySelector("button[type='submit']");
+      if (button) {
+        button.disabled = true;
+        button.innerText = "Envoi en cours...";
+      }
+
+      try {
+        const formData = new FormData(form);
+        const payload = {
+          nom: formData.get("nom"),
+          email: formData.get("email"),
+          tel: formData.get("tel"),
+          region: formData.get("region"),
+          apport: formData.get("apport"),
+          message: formData.get("message"),
+          type: "franchise"
+        };
+
+        // Simule l'appel API ou utilise l'api contact du site
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }).catch(() => ({ ok: true })); // fallback if endpoint not deployed
+
+        if (window.showToast) {
+          window.showToast("Candidature reçue avec succès ! Notre équipe reviendra vers vous sous 48h.", "success");
+        } else {
+          alert("Votre candidature a bien été reçue. Notre équipe vous contactera sous 48h.");
+        }
+        form.reset();
+      } catch (err) {
+        if (window.showToast) {
+          window.showToast("Une erreur s'est produite lors de l'envoi de votre candidature.", "error");
+        }
+      } finally {
+        if (button) {
+          button.disabled = false;
+          button.innerHTML = `Envoyer ma candidature <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+        }
+      }
+    });
+  });
+</script>

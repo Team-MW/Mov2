@@ -1,0 +1,83 @@
+---
+export const prerender = false;
+
+import Layout from "@layouts/Layout.astro";
+import AdminTopbar from "@components/admin/AdminTopbar.astro";
+import ActusManager from "@components/islands/admin/ActusManager.jsx";
+import { SITE, RAYONS_LIST } from "@/lib/site";
+import { isAuthenticated } from "@/lib/auth";
+import { supabaseAdmin } from "@/lib/supabase";
+
+if (!(await isAuthenticated(Astro.cookies))) {
+  return Astro.redirect("/admin/login");
+}
+
+let initialActus: any[] = [];
+let errorMsg: string | null = null;
+
+if (!supabaseAdmin) {
+  errorMsg =
+    "SUPABASE_SERVICE_ROLE_KEY non configurée. Ajoutez-la dans .env.local (dev) ou dans Vercel Environment Variables (prod) puis redémarrez le serveur.";
+} else {
+  const { data, error } = await supabaseAdmin
+    .from("actus")
+    .select("*")
+    .order("date", { ascending: false });
+  if (error) {
+    // If the table public.actus doesn't exist, we explain it to the user.
+    if (error.code === "PGRST205") {
+      errorMsg =
+        "La table 'public.actus' n'existe pas encore dans la base de données Supabase.\n" +
+        "Veuillez exécuter le script de migration 'supabase/migrations/003_add_actus.sql' dans votre SQL Editor sur Supabase Studio.";
+    } else {
+      errorMsg = `Supabase : ${error.message} (Code: ${error.code})`;
+    }
+  } else {
+    initialActus = data ?? [];
+  }
+}
+
+const rayonsOptions = RAYONS_LIST.map((r) => ({
+  slug: r.slug,
+  nom: r.nomCourt ?? r.nom,
+}));
+---
+
+<Layout
+  title={`Gestion des actualités · ${SITE.name} — Admin`}
+  description="Administration des actualités et du blog du site."
+  noIndex
+  hideChrome
+>
+  <div class="min-h-screen bg-white">
+    <AdminTopbar current="actus" />
+
+    <main class="container-mo py-8 md:py-12">
+      <section class="mb-8">
+        <span class="eyebrow">Actualités</span>
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mt-3">
+          <h1 class="display-sm leading-tight">
+            Gestion des actualités & blog
+          </h1>
+          <p class="text-[13px] text-neutral-500 max-w-md md:text-right">
+            Les actualités sont stockées dans Supabase (<code class="bg-white px-1.5 py-0.5 rounded text-[12px]">public.actus</code>).
+            Vous pouvez y gérer les articles de blog, recettes, arrivages et événements.
+          </p>
+        </div>
+      </section>
+
+      {errorMsg ? (
+        <div class="bg-rouge/5 border border-rouge/30 text-rouge rounded-3xl p-6 md:p-8 space-y-4">
+          <p class="font-bold text-[15px]">⚠ Supabase ou table indisponible</p>
+          <p class="text-[14px] leading-relaxed whitespace-pre-line">{errorMsg}</p>
+        </div>
+      ) : (
+        <ActusManager
+          client:load
+          initialActus={initialActus}
+          rayonsOptions={rayonsOptions}
+        />
+      )}
+    </main>
+  </div>
+</Layout>

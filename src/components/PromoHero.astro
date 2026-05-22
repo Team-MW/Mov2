@@ -178,7 +178,7 @@ const heroSources = loopSlides.map((s) =>
                 ? 0
                 : i - 1
             : i;
-        const hideText = isGreenOverlaySlide(slide);
+        const hideText = slide.kind === "banner";
         return (
           <article
             class={`promo-hero-slide ${isVideo ? "promo-hero-slide-video-layout" : ""} ${isBanner ? "promo-hero-slide--banner" : ""}`}
@@ -381,11 +381,10 @@ const heroSources = loopSlides.map((s) =>
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+    border: 3px solid #1C6B35;
   }
   .promo-hero-slide--banner {
-    aspect-ratio: 2.35 / 1;
-    max-height: min(36vh, 300px);
-    min-height: 160px;
+    /* Height and aspect ratio overrides removed to inherit from .promo-hero-slide */
   }
   @media (max-width: 768px) {
     .promo-hero-slide {
@@ -397,9 +396,7 @@ const heroSources = loopSlides.map((s) =>
       border-radius: 16px;
     }
     .promo-hero-slide--banner {
-      aspect-ratio: 2.2 / 1;
-      max-height: min(40vh, 280px);
-      min-height: 150px;
+      /* Height and aspect ratio overrides removed to inherit from .promo-hero-slide */
     }
   }
 

@@ -10,7 +10,7 @@ export interface FAQItem {
 export const FAQ_HOME: FAQItem[] = [
   {
     q: "Qu'est-ce que Marché de Mo' ?",
-    r: "Le plus grand supermarché ethnique d'Occitanie. 10 000+ références, boucherie halal, fruits et légumes exotiques, épices du monde, saveurs d'Afrique, d'Asie, de Méditerranée et bien plus. Ouvert 7j/7 à Toulouse.",
+    r: "Le plus grand supermarché ethnique d'Occitanie. 20 000+ références, boucherie halal, fruits et légumes exotiques, épices du monde, saveurs d'Afrique, d'Asie, de Méditerranée et bien plus. Ouvert 7j/7 à Toulouse.",
   },
   {
     q: "Où se trouve le magasin Marché de Mo' ?",
@@ -52,7 +52,7 @@ export const FAQ_BOUCHERIE: FAQItem[] = [
 export const FAQ_RAYONS_GENERAL: FAQItem[] = [
   {
     q: "Combien de références propose Marché de Mo' ?",
-    r: "Plus de 10 000 références sur 10 rayons thématiques.",
+    r: "Plus de 20 000 références sur 12 rayons thématiques.",
   },
   {
     q: "Trouve-t-on des produits exotiques rares ?",

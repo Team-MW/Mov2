@@ -34,6 +34,7 @@ const ALLOWED_FOLDERS = new Set([
   "home",
   "magasins",
   "postes",
+  "actus",
 ]);
 
 /* Accepted MIME types + max size (8 MB per file). */

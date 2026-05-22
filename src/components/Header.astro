@@ -26,11 +26,20 @@ const BUTTON_COLORS: Record<string, string> = {
   "saveurs-asie": "#A82F24",        // Rouge Asie
   "saveur-mediterranee": "#1E5A8F", // Bleu Méditerranée
 };
+
+const BUTTON_EMOJIS: Record<string, string> = {
+  "boucherie-halal": "🥩",
+  "fruits-legumes": "🍉",
+  "epices-du-monde": "🌶️",
+  "saveurs-afrique": "🌍",
+  "saveurs-asie": "🍜",
+  "saveur-mediterranee": "🫒",
+};
 ---
 
 <header
   id="site-header"
-  class="sticky top-0 z-[60] w-full border-b border-black/5 bg-white/95 backdrop-blur-sm transition-[box-shadow] duration-200"
+  class="sticky lg:fixed top-0 left-0 z-[60] w-full border-b border-black/5 bg-white/95 backdrop-blur-sm transition-[box-shadow] duration-200"
 >
   <!-- 0. Row 0: Top bar discrete (Desktop only, slides up on scroll) -->
   <div id="header-top-bar" class="header-top-bar border-b border-black/5 bg-white overflow-hidden hidden lg:block">
@@ -72,7 +81,7 @@ const BUTTON_COLORS: Record<string, string> = {
           />
           <div class="flex flex-col text-left font-soft shrink-0 ml-2.5">
             <span class="text-[16px] font-black text-vert-dark leading-none">Marché de Mo'</span>
-            <span class="text-[10px] font-bold text-neutral-400 mt-1 leading-none uppercase tracking-wider">Saveurs du monde</span>
+            <span class="text-[10px] font-bold text-neutral-400 mt-1 leading-none uppercase tracking-wider">Supermarché du Monde</span>
           </div>
         </a>
         <button
@@ -120,13 +129,9 @@ const BUTTON_COLORS: Record<string, string> = {
       <div class="flex items-center gap-3 shrink-0">
         <a
           href="/promos"
-          class="px-4 py-2 bg-rouge text-white rounded-full font-soft font-bold text-[13px] flex items-center gap-1.5 transition hover:bg-rouge-dark hover:-translate-y-0.5 shadow-sm"
+          class="px-6 py-3 bg-rouge text-white rounded-full font-soft font-bold text-[15px] flex items-center gap-1.5 transition hover:bg-rouge-dark hover:-translate-y-0.5 shadow-md border-2 border-vert animate-pulse-glow"
         >
-          <span class="relative flex h-1.5 w-1.5 shrink-0">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
-          </span>
-          Promos
+          🏷️ Promos
         </a>
         <a
           href="/magasins"
@@ -142,81 +147,75 @@ const BUTTON_COLORS: Record<string, string> = {
     </div>
   </div>
 
-  <!-- Mobile/Tablet Layout (Segmented Grand Frais style layout, Hidden on Desktop) -->
-  <div id="header-row-mobile" class="lg:hidden w-full h-[64px] border-b border-black/5 bg-white flex items-stretch select-none relative z-20">
-    <!-- 1. Menu block -->
-    <button
-      id="burger-btn-mobile"
-      aria-label="Ouvrir le menu"
-      class="burger-btn flex-1 flex flex-col items-center justify-center text-white transition-colors duration-200"
-      style="background-color: #1C6B35;"
-    >
-      <div class="burger-icon relative w-5 h-3.5 flex flex-col justify-between shrink-0 mb-1">
-        <span class="bar bar-1 w-full h-[2px] bg-white rounded transition-all duration-300"></span>
-        <span class="bar bar-2 w-full h-[2px] bg-white rounded transition-all duration-300"></span>
-        <span class="bar bar-3 w-full h-[2px] bg-white rounded transition-all duration-300"></span>
+  <!-- Mobile/Tablet Layout (Premium Clean Glassmorphic, matching Desktop style) -->
+  <div
+    id="header-row-mobile"
+    class="lg:hidden w-full h-[64px] border-b border-black/5 bg-white/95 backdrop-blur-sm flex items-center justify-between px-4 select-none relative z-20"
+  >
+    <!-- Left: Brand Logo & Title -->
+    <a href="/" class="flex items-center gap-2" title="Retour à l'accueil">
+      <img
+        src="/logos/logo-marchedemo-rond-contourgreen.png"
+        alt="Marché de Mo'"
+        width="36"
+        height="36"
+        class="w-9 h-9 object-contain bg-white rounded-full shadow-sm p-0.5"
+      />
+      <div class="flex flex-col text-left font-soft">
+        <span class="text-[14px] font-black text-vert-dark leading-none">Marché de Mo'</span>
+        <span class="text-[8px] font-bold text-neutral-400 mt-0.5 leading-none uppercase tracking-wider">Supermarché</span>
       </div>
-      <span class="text-[9px] font-pro font-black uppercase tracking-wider text-white">Menu</span>
-    </button>
-
-    <!-- 2. Promos block -->
-    <a
-      href="/promos"
-      class="flex-1 flex flex-col items-center justify-center text-white transition-colors duration-200"
-      style="background-color: #8B1919;"
-    >
-      <span class="relative flex h-2 w-2 shrink-0 mb-1">
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-        <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-      </span>
-      <span class="text-[9px] font-pro font-black uppercase tracking-wider text-white">Promos</span>
     </a>
 
-    <!-- 3. Logo block (centered overlapping white circle) -->
-    <div class="flex-1 flex items-center justify-center relative bg-white">
-      <a
-        href="/"
-        class="absolute top-1 w-16 h-16 rounded-full bg-white shadow-[0_4px_12px_rgba(0,0,0,0.12)] border border-black/5 flex items-center justify-center z-30"
-        title="Retour à l'accueil"
+    <!-- Right: Actions (Search, Promos, Magasins, Burger/Menu) -->
+    <div class="flex items-center gap-2">
+      <!-- Search button -->
+      <button
+        id="mobile-search-trigger"
+        class="w-9 h-9 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-800 active:bg-neutral-200 transition-colors"
+        title="Rechercher"
+        aria-label="Rechercher"
       >
-        <img
-          src="/logos/logo-marchedemo-rond-contourgreen.png"
-          alt="Marché de Mo'"
-          width="44"
-          height="44"
-          class="w-11 h-11 object-contain"
-        />
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+      </button>
+
+      <!-- Promos button -->
+      <a
+        href="/promos"
+        class="h-9 px-3 bg-rouge text-white rounded-full flex items-center justify-center gap-1 font-soft font-bold text-[12px] transition hover:bg-rouge-dark border border-vert active:scale-95"
+      >
+        <span>🏷️</span>
+        <span class="hidden sm:inline">Promos</span>
       </a>
+
+      <!-- Magasins button -->
+      <a
+        href="/magasins"
+        class="w-9 h-9 rounded-full border border-vert text-vert flex items-center justify-center transition active:bg-vert/10"
+        title="Magasins"
+      >
+        <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
+      </a>
+
+      <!-- Burger Menu button -->
+      <button
+        id="burger-btn-mobile"
+        aria-label="Ouvrir le menu"
+        class="burger-btn w-9 h-9 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-850 active:bg-neutral-200 transition-colors"
+      >
+        <div class="burger-icon relative w-5 h-3.5 flex flex-col justify-between shrink-0">
+          <span class="bar bar-1 w-full h-[2px] bg-neutral-800 rounded transition-all duration-300"></span>
+          <span class="bar bar-2 w-full h-[2px] bg-neutral-800 rounded transition-all duration-300"></span>
+          <span class="bar bar-3 w-full h-[2px] bg-neutral-800 rounded transition-all duration-300"></span>
+        </div>
+      </button>
     </div>
-
-    <!-- 4. Search block -->
-    <button
-      id="mobile-search-trigger"
-      class="flex-1 flex flex-col items-center justify-center text-white transition-colors duration-200"
-      style="background-color: #2E8B4A;"
-      title="Rechercher"
-      aria-label="Rechercher"
-    >
-      <svg class="w-5 h-5 shrink-0 mb-1 text-white" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-        <circle cx="11" cy="11" r="8" />
-        <path d="m21 21-4.35-4.35" />
-      </svg>
-      <span class="text-[9px] font-pro font-black uppercase tracking-wider text-white">Recherche</span>
-    </button>
-
-    <!-- 5. Magasins block -->
-    <a
-      href="/magasins"
-      class="flex-1 flex flex-col items-center justify-center text-white transition-colors duration-200"
-      style="background-color: #A86B1E;"
-      title="Magasins"
-    >
-      <svg class="w-5 h-5 shrink-0 mb-1 text-white" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-        <circle cx="12" cy="10" r="3" />
-      </svg>
-      <span class="text-[9px] font-pro font-black uppercase tracking-wider text-white">Magasins</span>
-    </a>
   </div>
 
   <!-- 2. Row 2: Large Centered Logo with wave background (Desktop only) -->
@@ -247,14 +246,14 @@ const BUTTON_COLORS: Record<string, string> = {
       >
         {RAYONS_LIST.slice(0, 6).map((r) => {
           const bgCol = BUTTON_COLORS[r.slug] || BUTTON_COLORS["fruits-legumes"];
+          const emoji = BUTTON_EMOJIS[r.slug] || "";
           return (
             <a
               href={`/rayons/${r.slug}`}
-              class="group/tab inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-soft font-bold text-white transition-all shadow-[0_3px_8px_rgba(0,0,0,0.06)] hover:-translate-y-[1px] hover:scale-[1.02] shrink-0"
+              class="group/tab inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-[15px] font-soft font-bold text-white transition-all shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:-translate-y-[1px] hover:scale-[1.02] shrink-0"
               style={`background-color: ${bgCol}; box-shadow: 0 4px 10px ${bgCol}25;`}
             >
-              <span class="w-1.5 h-1.5 rounded-full bg-white/40 group-hover/tab:bg-white transition-colors shrink-0"></span>
-              <span class="whitespace-nowrap">{r.nomCourt}</span>
+              <span class="whitespace-nowrap">{emoji} {r.nomCourt}</span>
             </a>
           );
         })}
@@ -268,6 +267,7 @@ const BUTTON_COLORS: Record<string, string> = {
         <a href="/recettes" class="hover:text-vert transition-colors">Recettes</a>
         <a href="/actualites" class="hover:text-vert transition-colors">Actualités</a>
         <a href="/recrutement" class="hover:text-vert transition-colors">Recrutement</a>
+        <a href="/franchise" class="hover:text-vert transition-colors text-vert-dark">Franchise</a>
         <a href="/programme-fidelite" class="hover:text-vert transition-colors">Fidélité</a>
       </div>
     </div>
@@ -283,17 +283,18 @@ const BUTTON_COLORS: Record<string, string> = {
       <div class="p-4 bg-vert/5 border border-vert/10 rounded-2xl mb-4 text-left">
         <span class="flex items-center gap-1.5 text-[11px] font-bold text-vert-dark uppercase tracking-wider">
           <span class="w-1.5 h-1.5 rounded-full bg-vert animate-pulse"></span>
-          Marché de Mo'
+          Marché de Mo' · Supermarché
         </span>
         <h4 class="font-soft font-bold text-[15px] mt-1 text-neutral-900 leading-tight">
           Le plus grand supermarché ethnique d'Occitanie
         </h4>
         <p class="text-[12px] font-normal text-neutral-500 mt-1 leading-normal">
-          Plus de 10 000 références et 12 rayons thématiques à Toulouse Sud. Ouvert 7j/7.
+          Plus de 20 000 références et 12 rayons thématiques à Toulouse Sud. Ouvert 7j/7.
         </p>
       </div>
 
       <a href="/" class="block py-2.5 border-b border-black/5">Accueil</a>
+      <a href="/franchise" class="block py-2.5 border-b border-black/5 text-vert font-bold">Devenir franchisé</a>
       <a href="/notre-enseigne" class="block py-2.5 border-b border-black/5">Notre enseigne</a>
 
       <details class="border-b border-black/5">
@@ -324,9 +325,17 @@ const BUTTON_COLORS: Record<string, string> = {
       <a href="/actualites" class="block py-2.5 border-b border-black/5">Actualités</a>
       <a href="/service-client" class="block py-2.5 border-b border-black/5">Service client</a>
 
-      <a href={`tel:0582958252`} class="mt-4 btn btn-primary w-full">
-        Nous appeler — 05 82 95 82 52
-      </a>
+      <div class="flex flex-col items-center justify-center pt-6 pb-2 border-t border-black/5 mt-4">
+        <img
+          src="/logos/logo-marchedemo-rond-contourgreen.png"
+          alt="Marché de Mo'"
+          width="70"
+          height="70"
+          class="w-[70px] h-[70px] object-contain bg-white rounded-full shadow-sm p-0.5"
+        />
+        <span class="text-[14px] font-black text-vert-dark mt-2">Marché de Mo'</span>
+        <span class="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Supermarché du Monde</span>
+      </div>
     </nav>
   </div>
 
@@ -372,6 +381,7 @@ const BUTTON_COLORS: Record<string, string> = {
     </div>
   </div>
 </header>
+<div id="header-spacer" class="hidden lg:block"></div>
 
 <style>
   /* Hamburger button & icon animation */
@@ -464,6 +474,18 @@ const BUTTON_COLORS: Record<string, string> = {
     padding-bottom: 0;
     border-width: 0;
     pointer-events: none;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(139, 25, 25, 0.4), 0 0 10px rgba(28, 107, 53, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 15px rgba(139, 25, 25, 0.8), 0 0 20px rgba(28, 107, 53, 0.5);
+    }
+  }
+  .animate-pulse-glow {
+    animation: pulse-glow 2s infinite ease-in-out;
   }
 
   @media (min-width: 1024px) {
@@ -906,42 +928,56 @@ const BUTTON_COLORS: Record<string, string> = {
   }
 
   const setupHeaderScroll = () => {
-    const header = document.getElementById("site-header");
-    if (!header) return;
-
-    const SCROLL_DOWN = 150;
-    const SCROLL_UP = 48;
-    let isScrolled = false;
-
-    const apply = (scrolled: boolean) => {
-      if (scrolled === isScrolled) return;
-      isScrolled = scrolled;
-      header.classList.toggle("is-header-scrolled", scrolled);
-      header.classList.toggle("header-scrolled", scrolled);
-    };
+    const SCROLL_DOWN = 120;
+    const SCROLL_UP = 60;
 
     const evaluate = () => {
+      const header = document.getElementById("site-header");
+      if (!header) return;
       const y = window.scrollY;
-      if (!isScrolled && y >= SCROLL_DOWN) apply(true);
-      else if (isScrolled && y <= SCROLL_UP) apply(false);
+      const wasScrolled = header.classList.contains("is-header-scrolled");
+      if (!wasScrolled && y >= SCROLL_DOWN) {
+        header.classList.add("is-header-scrolled", "header-scrolled");
+      } else if (wasScrolled && y <= SCROLL_UP) {
+        header.classList.remove("is-header-scrolled", "header-scrolled");
+      }
     };
 
-    /* Sync state on every navigation (fixes logo/home View Transition carrying class). */
-    const y = window.scrollY;
-    isScrolled = y >= SCROLL_DOWN;
-    header.classList.toggle("is-header-scrolled", isScrolled);
-    header.classList.toggle("header-scrolled", isScrolled);
-
-    if (!(window as any).__headerScrollEvaluate) {
-      (window as any).__headerScrollEvaluate = evaluate;
-      window.addEventListener("scroll", evaluate, { passive: true });
+    // Remove the old scroll listener first if it exists
+    if ((window as any).__headerScrollEvaluate) {
+      window.removeEventListener("scroll", (window as any).__headerScrollEvaluate);
     }
+
+    // Assign the new evaluate and add it
+    (window as any).__headerScrollEvaluate = evaluate;
+    window.addEventListener("scroll", (window as any).__headerScrollEvaluate, { passive: true });
+
+    // Measure and set spacer height
+    const header = document.getElementById("site-header");
+    const spacer = document.getElementById("header-spacer");
+    if (header && spacer) {
+      const wasScrolled = header.classList.contains("is-header-scrolled");
+      if (wasScrolled) {
+        header.classList.remove("is-header-scrolled", "header-scrolled");
+      }
+      const naturalHeight = header.offsetHeight;
+      spacer.style.height = `${naturalHeight}px`;
+      if (wasScrolled) {
+        header.classList.add("is-header-scrolled", "header-scrolled");
+      }
+    }
+
+    // Run evaluate immediately and multiple times to handle Astro scroll restoration
+    evaluate();
+    requestAnimationFrame(evaluate);
+    setTimeout(evaluate, 50);
+    setTimeout(evaluate, 150);
+    setTimeout(evaluate, 300);
   };
 
   const initHeader = () => {
     setupHeader();
     setupHeaderScroll();
-    (window as any).__headerScrollEvaluate?.();
   };
 
   document.addEventListener("astro:page-load", initHeader);

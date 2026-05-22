@@ -98,3 +98,22 @@ export interface ProduitRow {
   created_at: string;
   updated_at: string;
 }
+
+export type ActuType = "article" | "recette" | "arrivage" | "nouveaute" | "evenement";
+
+export interface ActuRow {
+  id: string;
+  slug: string;
+  type: ActuType;
+  titre: string;
+  resume: string;
+  image: string;
+  image_alt: string;
+  rayon: RayonSlug | null;
+  date: string;
+  href: string;
+  badge_label: string | null;
+  actif: boolean;
+  created_at: string;
+  updated_at: string;
+}
