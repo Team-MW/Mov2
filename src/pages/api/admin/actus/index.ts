@@ -130,13 +130,22 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   try {
     const body = await request.json();
+    console.log("[actus POST] Received body:", JSON.stringify(body, null, 2));
+    
     const row = normalizeActu(body);
+    console.log("[actus POST] Normalized row:", JSON.stringify(row, null, 2));
+    
     const { data, error } = await supabaseAdmin!
       .from("actus")
       .insert(row)
       .select()
       .single();
-    if (error) throw error;
+    
+    if (error) {
+      console.error("[actus POST] Supabase error:", error);
+      throw error;
+    }
+    
     logActivity({
       entity: "actu",
       entity_id: data?.id ?? null,
@@ -146,7 +155,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
     return json({ actu: data }, 201);
   } catch (err: any) {
-    return json({ error: err.message || String(err) }, 400);
+    console.error("[actus POST] Error:", err);
+    return json({ error: err.message || String(err), details: err.toString() }, 400);
   }
 };
 

@@ -254,8 +254,10 @@ export async function getActus(limit?: number): Promise<ActuItem[]> {
     }
   } catch {}
 
-  /* 3 — Seeds arrivages / événements / nouveautés */
-  items.push(...ACTUS_SEED);
+  /* 3 — Seeds arrivages / événements / nouveautés (only if DB is empty or has no items) */
+  if (items.length === 0) {
+    items.push(...ACTUS_SEED);
+  }
 
   /* Tri par date desc */
   items.sort((a, b) => b.date.getTime() - a.date.getTime());

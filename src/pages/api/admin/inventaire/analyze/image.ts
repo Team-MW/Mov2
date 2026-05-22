@@ -19,6 +19,12 @@ export async function POST({ request }: { request: Request }) {
     });
     return json({ result: merged, sources });
   } catch (e: any) {
+    if (e.message === 'SCAN_IMPOSSIBLE') {
+      return json({ 
+        error: 'Impossible de scanner le produit. Veuillez réessayer avec un meilleur éclairage ou une photo plus nette.',
+        userFriendly: true 
+      }, 500);
+    }
     return json({ error: e.message || 'Erreur analyse image' }, 500);
   }
 }

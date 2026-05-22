@@ -81,7 +81,7 @@ export async function analyzeImageHybrid({ base64DataUrl, geminiKey, visionKey, 
   const useVision = !!(visionKey || hasVisionKey());
 
   if (!useLLM && !useVision) {
-    throw new Error("Aucun service IA configuré (LLM vision ou Cloud Vision).");
+    throw new Error("SCAN_IMPOSSIBLE");
   }
 
   const tasks = [];

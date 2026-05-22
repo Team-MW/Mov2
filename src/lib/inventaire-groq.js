@@ -7,7 +7,7 @@
 
 import { IMAGE_PROMPT, buildBarcodePrompt, normalizeArticleResult } from './inventaire-vision-prompt.js';
 
-const DEFAULT_MODEL = 'llama-3.2-11b-vision-preview';
+const DEFAULT_MODEL = 'llama-3.2-90b-vision-preview';
 // Text-only model used for barcode lookup fallback (no image needed).
 // Llama 3.3 70B is more knowledgeable than 11B for product recognition.
 const DEFAULT_TEXT_MODEL = 'llama-3.3-70b-versatile';

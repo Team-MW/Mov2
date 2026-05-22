@@ -66,6 +66,9 @@ export async function POST({ request }: { request: Request }) {
       llmSource = r.source;
     } catch (e: any) {
       llmError = e.message || String(e);
+      if (e.message === 'SCAN_IMPOSSIBLE') {
+        llmError = 'Service IA temporairement indisponible. Veuillez réessayer.';
+      }
       console.warn('[barcode] LLM fallback failed:', llmError);
     }
 
