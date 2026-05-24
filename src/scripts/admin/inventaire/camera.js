@@ -3,6 +3,9 @@ let activeStream = null;
 
 export async function startCamera(videoEl, { facingMode = 'environment' } = {}) {
   await stopCamera();
+  if (typeof window !== 'undefined' && !window.isSecureContext) {
+    throw new Error("L'accès à la caméra nécessite un contexte sécurisé (HTTPS ou localhost).");
+  }
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     throw new Error("Votre navigateur ne supporte pas l'accès à la caméra.");
   }

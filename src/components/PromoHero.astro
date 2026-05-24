@@ -28,6 +28,22 @@
 import type { PromoEntry } from "@/lib/promos-repo";
 import { supabaseSrcSet } from "@/lib/image-cdn";
 
+export interface Slide {
+  kind: "banner" | "promo" | "editorial" | "video";
+  titre: string;
+  description: string;
+  eyebrow: string;
+  image: string;
+  imageAlt: string;
+  ctaLabel: string;
+  ctaHref: string;
+  accent: string;
+  prixPromo: number | null;
+  prixOriginal: number | null;
+  reductionPct: number | null;
+  videoUrl: string | null;
+}
+
 const magasinLabel = (m: string): string =>
   m === "tous" || m === "toulouse-sud" ? "Toulouse Sud — Cépière" : m;
 
@@ -105,7 +121,7 @@ const editorialSlides = extraSlides.map((s) => ({
   videoUrl: null as string | null,
 }));
 
-const initialSlides = [agneauBannerSlide, ...promoSlides, ...editorialSlides];
+const initialSlides: Slide[] = [agneauBannerSlide, ...promoSlides, ...editorialSlides];
 const videoSlide = {
   kind: "video" as const,
   titre: "Votre supermarché du monde à Toulouse",
@@ -224,13 +240,23 @@ const heroSources = loopSlides.map((s) =>
                 <div class="promo-video-right flex-1 flex items-center justify-center p-4 md:p-6 z-10 relative">
                   <div class="w-full max-w-[420px] aspect-video md:aspect-[16/10] rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-neutral-900 relative">
                     <video
-                      src={slide.videoUrl}
                       muted
                       playsinline
                       loop
                       autoplay
                       class="w-full h-full object-cover"
-                    ></video>
+                    >
+                      {/* WebM transcodes are intentionally disabled : no
+                          .webm siblings exist in /public/videos yet,
+                          which previously caused a 404 per video on
+                          every request. To re-enable, generate WebM
+                          versions (ffmpeg -c:v libvpx-vp9) and add a
+                          <source type="video/webm"> back here BEFORE the
+                          .mp4 fallback so VP9-capable clients pick it up. */}
+                      {slide.videoUrl && (
+                        <source src={slide.videoUrl} type={slide.videoUrl.endsWith(".mp4") ? "video/mp4" : undefined} />
+                      )}
+                    </video>
                     <!-- Glowing frame overlay -->
                     <div class="absolute inset-0 ring-1 ring-inset ring-white/10 pointer-events-none rounded-2xl"></div>
                   </div>
@@ -375,8 +401,8 @@ const heroSources = loopSlides.map((s) =>
     position: relative;
     scroll-snap-align: center;
     scroll-snap-stop: always;
-    aspect-ratio: 21 / 7;
-    max-height: min(42vh, 340px);
+    aspect-ratio: 21 / 8;
+    max-height: min(45vh, 360px);
     min-height: 200px;
     border-radius: 20px;
     overflow: hidden;
@@ -413,11 +439,21 @@ const heroSources = loopSlides.map((s) =>
     transform: scale(1.08);
     transition: transform 8s ease-out;
   }
+  /* Banner slide (e.g. promo agneau Aïd) — we use `contain` so the
+     entire artwork is visible without cropping. The image is 21:8.92
+     while the slide is 21:8, so `cover` was zooming in and clipping
+     the artwork's edges (user feedback : "trop grosse, on ne voit pas
+     tout"). With `contain` the slide keeps its existing height and the
+     image fits inside it without distortion. A subtle white surface
+     fills the thin letterbox so it stays on-brand. */
+  .promo-hero-slide--banner {
+    background: #ffffff;
+  }
   .promo-hero-slide--banner .promo-hero-slide-image {
     object-fit: contain;
     object-position: center;
     transform: none;
-    background: #fff;
+    padding: 4px;
   }
   /* Ken-Burns : every slide image slowly drifts when it's the active one.
      We toggle .is-active via JS once the slide is centered in view. */
@@ -440,8 +476,9 @@ const heroSources = loopSlides.map((s) =>
     position: absolute;
     inset: 0;
     display: flex;
-    align-items: flex-end;
-    padding-bottom: clamp(32px, 5vw, 48px);
+    align-items: center;
+    padding-top: clamp(20px, 3.5vh, 32px);
+    padding-bottom: clamp(36px, 5vh, 48px);
   }
   .promo-hero-slide-inner {
     color: white;
@@ -468,16 +505,16 @@ const heroSources = loopSlides.map((s) =>
     padding: 6px 14px;
     border-radius: 999px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
 
   .promo-hero-title {
     font-family: var(--font-soft, inherit);
     font-weight: 900;
-    font-size: clamp(24px, 4vw, 44px);
+    font-size: clamp(22px, 3.5vw, 40px);
     line-height: 0.98;
     letter-spacing: -0.025em;
-    margin: 0 0 10px;
+    margin: 0 0 8px;
     /* Override the global `h1..h6 { color: var(--color-noir) }` rule
        in styles/global.css — the title sits on top of a dark photo
        overlay, so it must be white. Without this, the heading
@@ -489,7 +526,7 @@ const heroSources = loopSlides.map((s) =>
     font-size: clamp(14px, 1.3vw, 16px);
     line-height: 1.45;
     max-width: 520px;
-    margin: 0 0 14px;
+    margin: 0 0 10px;
     color: rgba(255,255,255,0.92);
     text-shadow: 0 1px 8px rgba(0,0,0,0.4);
   }
@@ -498,7 +535,7 @@ const heroSources = loopSlides.map((s) =>
     display: inline-flex;
     align-items: baseline;
     gap: 14px;
-    margin-bottom: 14px;
+    margin-bottom: 10px;
   }
   .promo-hero-price-now {
     font-family: var(--font-soft, inherit);

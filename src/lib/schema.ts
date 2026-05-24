@@ -106,7 +106,7 @@ export function jobPostingSchema(p: {
   const locs =
     p.magasin === "tous"
       ? Object.values(MAGASINS)
-      : [MAGASINS[p.magasin]];
+      : (p.magasin in MAGASINS ? [MAGASINS[p.magasin as keyof typeof MAGASINS]] : []);
   return {
     "@context": "https://schema.org",
     "@type": "JobPosting",

@@ -13,6 +13,20 @@ import ChatMo from "@components/islands/ChatMo.jsx";
 import { SITE } from "@/lib/site";
 import { faqSchema } from "@/lib/schema";
 import type { FAQItem } from "@/lib/faqs";
+import { DEFAULT_STORE } from "@/lib/geo";
+
+/* SSR / prerender uses the default store (Toulouse Sud — Cépière).
+ * Calling `resolveStore` here would route through `Astro.cookies.get()`,
+ * which in turn reads `Astro.request.headers` and emits the
+ * `Astro.request.headers is unavailable in "static" output mode` warning
+ * for every prerendered page during build.
+ *
+ * The cookie-based "remember last store" behaviour is restored on the
+ * client by `enhanceStoreFromCookie()` (small inline snippet at the
+ * bottom of <body>) which patches store-dependent text + ChatMo props
+ * after hydration. No SEO impact since the default store is the
+ * canonical flagship one. */
+const currentStore = DEFAULT_STORE;
 
 interface Props {
   /** Page title (used as <title> and og:title). */
@@ -109,6 +123,22 @@ const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Synchronous Admin Theme Loader (zero flash) -->
+    <script is:inline>
+      (() => {
+        try {
+          const theme = localStorage.getItem('admin_selected_theme');
+          if (theme && theme !== 'default') {
+            document.documentElement.setAttribute('data-admin-theme', theme);
+          }
+          const intensity = localStorage.getItem('admin_theme_intensity');
+          if (intensity === 'bold') {
+            document.documentElement.setAttribute('data-admin-intensity', 'bold');
+          }
+        } catch (_) {}
+      })();
+    </script>
 
     <link rel="icon" type="image/png" href="/logos/logo-marchedemo.png" />
     <link rel="apple-touch-icon" href="/logos/logo-marchedemo.png" />
@@ -259,8 +289,8 @@ const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
     {!hideChrome && (
       <ChatMo
         client:only="react"
-        phoneE164={SITE.phoneE164}
-        phoneDisplay={SITE.phone}
+        phoneE164={currentStore.telE164 || SITE.phoneE164}
+        phoneDisplay={currentStore.telephone || SITE.phone}
         email={SITE.email}
       />
     )}

@@ -5,6 +5,7 @@ import FilterChip from "./FilterChip.jsx";
 import EmptyState from "./EmptyState.jsx";
 import { adminFetch } from "./adminFetch.js";
 import { useAdminListState, compareRows } from "./useAdminListState.js";
+import { publishAdminEvent, subscribeAdminEvents, ADMIN_EVENT } from "./admin-bus.js";
 
 const EMPTY_ACTU = {
   id: null,
@@ -138,6 +139,23 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
   const [editing, setEditing] = useState(null); // null | EMPTY_ACTU | existing actu row
   const [toast, setToast] = useState(null); // { type: 'ok' | 'err', msg }
   const [pendingDelete, setPendingDelete] = useState(null); // id of row about to be deleted
+
+  /* Cross-tab / cross-island sync : refetch when another admin window
+   * mutates actus. Skips self-echoes via the senderId guard inside
+   * subscribeAdminEvents, so we never re-fetch a change we just made. */
+  useEffect(() => {
+    return subscribeAdminEvents([ADMIN_EVENT.ACTUS_UPDATED], async () => {
+      try {
+        const res = await adminFetch("/api/admin/actus");
+        if (res.ok) {
+          const data = await res.json();
+          setActus(data.actus ?? []);
+        }
+      } catch (err) {
+        console.warn("[actus-sync] failed to refresh", err);
+      }
+    });
+  }, []);
   const [formTab, setFormTab] = useState("form"); // "form" | "preview"
   const searchInputRef = useRef(null);
 
@@ -211,6 +229,10 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
         const err = await res.json().catch(() => ({}));
         throw new Error(err.error || res.statusText);
       }
+      publishAdminEvent(ADMIN_EVENT.ACTUS_UPDATED, {
+        entity: "actu:toggle-actif",
+        ids: [row.id],
+      });
       notify("ok", `Actualité ${nextActif ? "activée" : "masquée"} avec succès.`);
     } catch (e) {
       // Revert optimistic change
@@ -258,6 +280,10 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
         setActus((cur) => cur.map((item) => (item.id === saved.id ? saved : item)));
         notify("ok", "Actualité modifiée avec succès !");
       }
+      publishAdminEvent(ADMIN_EVENT.ACTUS_UPDATED, {
+        entity: isNew ? "actu:created" : "actu:updated",
+        ids: saved?.id ? [saved.id] : undefined,
+      });
       setEditing(null);
     } catch (err) {
       notify("err", `Erreur d'enregistrement : ${err.message}`);
@@ -273,6 +299,10 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
         throw new Error(err.error || res.statusText);
       }
       setActus((cur) => cur.filter((item) => item.id !== id));
+      publishAdminEvent(ADMIN_EVENT.ACTUS_UPDATED, {
+        entity: "actu:deleted",
+        ids: [id],
+      });
       notify("ok", "Actualité supprimée avec succès.");
       setPendingDelete(null);
     } catch (e) {

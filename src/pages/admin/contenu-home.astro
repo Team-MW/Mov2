@@ -1,0 +1,103 @@
+---
+export const prerender = false;
+
+import Layout from "@layouts/Layout.astro";
+import AdminTopbar from "@components/admin/AdminTopbar.astro";
+import HomeContentManager from "@components/islands/admin/HomeContentManager.jsx";
+import { SITE } from "@/lib/site";
+import { isAuthenticated } from "@/lib/auth";
+import { supabaseAdmin } from "@/lib/supabase";
+
+if (!(await isAuthenticated(Astro.cookies))) {
+  return Astro.redirect("/admin/login");
+}
+
+let initialSlides: any[] = [];
+let initialMarquee: any[] = [];
+let errorMsg: string | null = null;
+
+if (!supabaseAdmin) {
+  errorMsg =
+    "SUPABASE_SERVICE_ROLE_KEY non configurée. Ajoutez-la dans .env.local (dev) ou dans Vercel Environment Variables (prod) puis redémarrez le serveur.";
+} else {
+  /* Load both lists in parallel — they share the same admin page so a
+   * sequential fetch would needlessly delay first paint. */
+  const [slidesRes, marqueeRes] = await Promise.all([
+    supabaseAdmin
+      .from("home_editorial_slides")
+      .select("*")
+      .order("ordre", { ascending: true }),
+    supabaseAdmin
+      .from("home_marquee_items")
+      .select("*")
+      .order("ordre", { ascending: true }),
+  ]);
+
+  if (slidesRes.error || marqueeRes.error) {
+    const tableMissing =
+      slidesRes.error?.code === "PGRST205" || marqueeRes.error?.code === "PGRST205";
+    if (tableMissing) {
+      errorMsg =
+        "Les tables 'public.home_editorial_slides' et 'public.home_marquee_items' n'existent pas encore.\n" +
+        "Veuillez exécuter la migration 'supabase/migrations/006_add_home_content.sql' dans votre SQL Editor sur Supabase Studio.";
+    } else {
+      errorMsg = `Supabase : ${(slidesRes.error || marqueeRes.error)?.message ?? "erreur inconnue"}`;
+    }
+  } else {
+    initialSlides = slidesRes.data ?? [];
+    initialMarquee = marqueeRes.data ?? [];
+  }
+}
+---
+
+<Layout
+  title={`Contenu de la page d'accueil · ${SITE.name} — Admin`}
+  description="Gestion du contenu éditorial de la page d'accueil : slides hero et marquee défilant."
+  noIndex
+  hideChrome
+>
+  <div class="min-h-screen bg-white">
+    <AdminTopbar current="contenu-home" />
+
+    <main class="container-mo py-8 md:py-12">
+      <section class="mb-8">
+        <span class="eyebrow">Contenu — Accueil</span>
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mt-3">
+          <div class="max-w-2xl">
+            <h1 class="display-sm leading-tight">
+              Contenu éditorial de la page d'accueil
+            </h1>
+            <p class="text-[13px] text-neutral-500 mt-3 leading-relaxed">
+              Éditez les <strong>slides éditoriales</strong> intercalées
+              entre les promos « mise en avant » dans le carrousel hero,
+              et les <strong>libellés du marquee</strong> qui défile
+              entre la grille des rayons et les actualités.
+            </p>
+          </div>
+          <p class="text-[12px] text-neutral-400 max-w-xs md:text-right leading-relaxed">
+            Stockage : <code class="bg-neutral-100 px-1.5 py-0.5 rounded">public.home_editorial_slides</code>
+            et <code class="bg-neutral-100 px-1.5 py-0.5 rounded">public.home_marquee_items</code>
+            (Supabase). Les changements sont reflétés sur le site sans redéploiement.
+          </p>
+        </div>
+      </section>
+
+      {/* HomeContentManager is a plain JSX file (no exported prop types),
+          so Astro narrows its `initial*` array props to `never[]` when
+          they originate from `let foo: any[] = []`. We cast at the
+          boundary — the island validates row shapes itself at render. */}
+      {errorMsg ? (
+        <div class="bg-rouge/5 border border-rouge/30 text-rouge rounded-3xl p-6 md:p-8 space-y-4">
+          <p class="font-bold text-[15px]">⚠ Supabase ou tables indisponibles</p>
+          <p class="text-[14px] leading-relaxed whitespace-pre-line">{errorMsg}</p>
+        </div>
+      ) : (
+        <HomeContentManager
+          client:load
+          initialSlides={initialSlides as any}
+          initialMarquee={initialMarquee as any}
+        />
+      )}
+    </main>
+  </div>
+</Layout>

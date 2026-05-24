@@ -3,7 +3,22 @@ import { RAYONS_LIST } from "../../lib/site";
 import { getAllProduits } from "../../lib/produits-repo";
 import { getCollection } from "astro:content";
 
+let cachedIndex: any = null;
+let cacheTimestamp = 0;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes in ms
+
 export const GET: APIRoute = async () => {
+  const now = Date.now();
+  if (cachedIndex && (now - cacheTimestamp < CACHE_TTL)) {
+    return new Response(JSON.stringify(cachedIndex), {
+      status: 200,
+      headers: {
+        "content-type": "application/json",
+        "cache-control": "public, max-age=60, s-maxage=600, stale-while-revalidate=300",
+      },
+    });
+  }
+
   const produits = await getAllProduits();
 
   /* Actualités (MD collection) */
@@ -72,11 +87,15 @@ export const GET: APIRoute = async () => {
     })),
   };
 
+  cachedIndex = index;
+  cacheTimestamp = now;
+
   return new Response(JSON.stringify(index), {
     status: 200,
     headers: {
       "content-type": "application/json",
-      "cache-control": "public, max-age=3600",
+      "cache-control": "public, max-age=60, s-maxage=600, stale-while-revalidate=300",
     },
   });
 };
+

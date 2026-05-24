@@ -32,6 +32,44 @@ const bc = breadcrumbSchema([
   { name: recette.data.titre, url: `/recettes/${recette.slug}` },
 ]);
 
+function extractIngredientsAndSteps(body: string) {
+  const ingredients: string[] = [];
+  const steps: string[] = [];
+  const lines = body.split("\n");
+  let currentSection: "none" | "ingredients" | "steps" = "none";
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith("## ") || trimmed.startsWith("# ")) {
+      const lower = trimmed.toLowerCase();
+      if (lower.includes("ingred")) {
+        currentSection = "ingredients";
+      } else if (lower.includes("etape") || lower.includes("étapes")) {
+        currentSection = "steps";
+      } else {
+        currentSection = "none";
+      }
+      continue;
+    }
+
+    if (currentSection === "ingredients") {
+      if (trimmed.startsWith("-") || trimmed.startsWith("*")) {
+        const cleaned = trimmed.replace(/^[-*]\s+/, "").replace(/\*\*/g, "");
+        if (cleaned) ingredients.push(cleaned);
+      }
+    } else if (currentSection === "steps") {
+      if (/^\d+\.\s+/.test(trimmed)) {
+        const cleaned = trimmed.replace(/^\d+\.\s+/, "").replace(/\*\*/g, "");
+        if (cleaned) steps.push(cleaned);
+      }
+    }
+  }
+
+  return { ingredients, steps };
+}
+
+const { ingredients, steps } = extractIngredientsAndSteps(recette.body || "");
+
 const recipeJsonLd = recipeSchema({
   titre: recette.data.titre,
   resume: recette.data.resume,
@@ -46,6 +84,8 @@ const recipeJsonLd = recipeSchema({
   keywords: recette.data.keywords,
   date_publication: recette.data.date_publication,
   slug: recette.slug,
+  ingredients,
+  steps,
 });
 
 const schemas = [bc, recipeJsonLd];

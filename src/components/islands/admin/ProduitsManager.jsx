@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { publishAdminEvent, subscribeAdminEvents, ADMIN_EVENT } from "./admin-bus.js";
 import MassImageMatchModal from "./MassImageMatchModal.jsx";
 import ProductImageSearchModal from "./ProductImageSearchModal.jsx";
 import InlineImageUpload from "./InlineImageUpload.jsx";
@@ -244,6 +245,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
       if (!res.ok) throw new Error((await res.json()).error || res.statusText);
       const { produit } = await res.json();
       setProduits((cur) => cur.map((p) => (p.id === row.id ? produit : p)));
+      publishAdminEvent(ADMIN_EVENT.PRODUITS_UPDATED, { entity: "produit:toggle-actif", ids: [row.id] });
     } catch (err) {
       setProduits((cur) => cur.map((p) => (p.id === row.id ? row : p)));
       notify("err", `Erreur : ${humanizeError(err)}`);
@@ -283,6 +285,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
       if (!res.ok && res.status !== 204) {
         throw new Error((await res.json().catch(() => ({}))).error || res.statusText);
       }
+      publishAdminEvent(ADMIN_EVENT.PRODUITS_UPDATED, { entity: "produit:deleted", ids: [row.id] });
       notify("ok", `« ${row.nom} » supprimé.`);
     } catch (err) {
       /* API delete failed — bring the row back exactly where it was.
@@ -356,6 +359,10 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
        * row so re-opening the modal doesn't restore stale values. */
       clearDraft(draftKey);
       setEditing(null);
+      publishAdminEvent(ADMIN_EVENT.PRODUITS_UPDATED, {
+        entity: isNew ? "produit:created" : "produit:updated",
+        ids: produit?.id ? [produit.id] : undefined,
+      });
       notify("ok", isNew ? "Produit créé." : "Produit mis à jour.");
     } catch (err) {
       notify("err", `Erreur : ${humanizeError(err)}`);
@@ -374,6 +381,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
       const refreshed = await adminFetch(`/api/admin/produits`).then((r) => r.json());
       setProduits(refreshed.produits ?? []);
       setImporting(false);
+      publishAdminEvent(ADMIN_EVENT.PRODUITS_UPDATED, { entity: "produit:bulk-import" });
       notify("ok", `${count} produit(s) importé(s).`);
     } catch (err) {
       notify("err", `Erreur import : ${humanizeError(err)}`);
@@ -393,6 +401,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
 
   async function onMassMatchApplied(summary) {
     await refreshProduits();
+    publishAdminEvent(ADMIN_EVENT.PRODUITS_UPDATED, { entity: "produit:mass-image-match" });
     const parts = [`${summary.applied} image(s) associée(s)`];
     if (summary.failed > 0) parts.push(`${summary.failed} échec(s)`);
     if (summary.skipped > 0) parts.push(`${summary.skipped} ignorée(s)`);
@@ -439,6 +448,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
         clearSelection();
         notify("ok", `${affected} produit(s) mis à jour.`);
       }
+      publishAdminEvent(ADMIN_EVENT.PRODUITS_UPDATED, { entity: `produit:bulk-${action}`, ids });
     } catch (err) {
       setProduits(snapshot);
       notify("err", `Erreur : ${humanizeError(err)}`);
@@ -460,6 +470,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
       if (!res.ok) throw new Error((await res.json()).error || res.statusText);
       const { affected } = await res.json();
       clearSelection();
+      publishAdminEvent(ADMIN_EVENT.PRODUITS_UPDATED, { entity: "produit:bulk-patch", ids });
       notify("ok", `${affected} produit(s) mis à jour.`);
     } catch (err) {
       setProduits(snapshot);
@@ -480,6 +491,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
       });
       if (!res.ok) throw new Error((await res.json()).error || res.statusText);
       await refreshProduits();
+      publishAdminEvent(ADMIN_EVENT.PRODUITS_UPDATED, { entity: "produit:undo-bulk-delete" });
       notify("ok", `${rows.length} produit(s) restauré(s).`);
     } catch (err) {
       notify("err", `Restauration impossible : ${humanizeError(err)}`);
@@ -496,6 +508,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
         body: JSON.stringify({ rows: payload }),
       });
       if (!res.ok) throw new Error((await res.json()).error || res.statusText);
+      publishAdminEvent(ADMIN_EVENT.PRODUITS_UPDATED, { entity: "produit:reordered" });
     } catch (err) {
       notify("err", `Erreur réorganisation : ${humanizeError(err)}`);
     }
@@ -638,6 +651,16 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [editing, importing, massMatching, imageSearching, selected.size, reorderMode]);
+
+  /* Cross-tab / cross-island sync : refetch when another admin window
+   * mutates produits. Skips self-echoes via the senderId guard inside
+   * subscribeAdminEvents. */
+  useEffect(() => {
+    return subscribeAdminEvents([ADMIN_EVENT.PRODUITS_UPDATED], () => {
+      void refreshProduits();
+    });
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
 
   /* Prune selection when rows disappear (e.g. after filter change or delete). */
   useEffect(() => {
@@ -1203,6 +1226,10 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
             setProduits((list) =>
               list.map((p) => (p.id === updated.id ? { ...p, ...updated } : p)),
             );
+            publishAdminEvent(ADMIN_EVENT.PRODUITS_UPDATED, {
+              entity: "produit:image-searched",
+              ids: updated?.id ? [updated.id] : undefined,
+            });
             setImageSearching(null);
           }}
         />

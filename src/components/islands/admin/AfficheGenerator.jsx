@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { subscribeAdminEvents, ADMIN_EVENT } from './admin-bus.js';
 
 // Standard Rayon mappings from Slug to Short French names
 const RAYONS_NAMES = {
@@ -19,7 +20,112 @@ const RAYONS_NAMES = {
 const STORAGE_KEY = 'marchedemo_affiche_draft_v1';
 const POSTER_PX_WIDTH = (297 * 96) / 25.4; // 1122.52px real A4 landscape
 
+// Theme definitions for seasonal and cultural designs
+const THEMES = {
+  default: {
+    id: 'default',
+    name: 'Standard',
+    category: 'default',
+    colors: {
+      primary: '#1C6B35',
+      secondary: '#0f4c21',
+      accent: '#8B1919',
+      gold: '#FACC15'
+    },
+    icon: null
+  },
+  spring: {
+    id: 'spring',
+    name: 'Printemps',
+    category: 'seasonal',
+    colors: {
+      primary: '#7CB342',
+      secondary: '#558B2F',
+      accent: '#FF7043',
+      gold: '#FFD54F'
+    },
+    icon: '🌸'
+  },
+  summer: {
+    id: 'summer',
+    name: 'Été',
+    category: 'seasonal',
+    colors: {
+      primary: '#FF9800',
+      secondary: '#F57C00',
+      accent: '#E91E63',
+      gold: '#FFEB3B'
+    },
+    icon: '☀️'
+  },
+  autumn: {
+    id: 'autumn',
+    name: 'Automne',
+    category: 'seasonal',
+    colors: {
+      primary: '#D84315',
+      secondary: '#BF360C',
+      accent: '#FF6F00',
+      gold: '#FFCA28'
+    },
+    icon: '🍂'
+  },
+  winter: {
+    id: 'winter',
+    name: 'Hiver',
+    category: 'seasonal',
+    colors: {
+      primary: '#1976D2',
+      secondary: '#0D47A1',
+      accent: '#E53935',
+      gold: '#90CAF9'
+    },
+    icon: '❄️'
+  },
+  ramadan: {
+    id: 'ramadan',
+    name: 'Ramadan',
+    category: 'cultural',
+    colors: {
+      primary: '#1C6B35',
+      secondary: '#0f4c21',
+      accent: '#C6A700',
+      gold: '#FFD700'
+    },
+    icon: '🌙'
+  },
+  christmas: {
+    id: 'christmas',
+    name: 'Noël',
+    category: 'cultural',
+    colors: {
+      primary: '#C62828',
+      secondary: '#8E0000',
+      accent: '#2E7D32',
+      gold: '#FFD700'
+    },
+    icon: '🎄'
+  },
+  easter: {
+    id: 'easter',
+    name: 'Pâques',
+    category: 'cultural',
+    colors: {
+      primary: '#9C27B0',
+      secondary: '#7B1FA2',
+      accent: '#FFEB3B',
+      gold: '#E1BEE7'
+    },
+    icon: '🐰'
+  }
+};
+
 export default function AfficheGenerator({ initialProduits = [], initialPromos = [], initialArticles = [] }) {
+  // ----- Dynamic Synchronized State -----
+  const [liveProduits, setLiveProduits] = useState(initialProduits);
+  const [livePromos, setLivePromos] = useState(initialPromos);
+  const [liveArticles, setLiveArticles] = useState(initialArticles);
+
   // ----- Form State -----
   const [name, setName] = useState('Nom du Produit');
   const [eyebrow, setEyebrow] = useState('Nouveauté');
@@ -36,6 +142,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
   const [qrUrlGenerated, setQrUrlGenerated] = useState('');
   const [showImage, setShowImage] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
+  const [selectedTheme, setSelectedTheme] = useState('default');
 
   // ----- UI State -----
   const [searchQuery, setSearchQuery] = useState('');
@@ -48,12 +155,59 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
   // ----- Refs -----
   const previewWrapRef = useRef(null);
 
+  // ----- Real-time cross-island sync via shared admin-bus -----
+  // Refetches produits / promos / actus when ANY other admin window
+  // (or React island) reports a mutation. Self-echoes are filtered out
+  // by the bus' senderId guard.
+  useEffect(() => {
+    return subscribeAdminEvents(
+      [
+        ADMIN_EVENT.PRODUITS_UPDATED,
+        ADMIN_EVENT.PROMOS_UPDATED,
+        ADMIN_EVENT.ACTUS_UPDATED,
+      ],
+      async (event) => {
+        if (event.type === ADMIN_EVENT.PRODUITS_UPDATED) {
+          try {
+            const res = await fetch('/api/admin/produits');
+            if (res.ok) {
+              const data = await res.json();
+              setLiveProduits(data.produits || []);
+            }
+          } catch (err) {
+            console.warn('[affiche-gen-sync] failed to refresh products', err);
+          }
+        } else if (event.type === ADMIN_EVENT.PROMOS_UPDATED) {
+          try {
+            const res = await fetch('/api/admin/promos');
+            if (res.ok) {
+              const data = await res.json();
+              setLivePromos(data.promos || []);
+            }
+          } catch (err) {
+            console.warn('[affiche-gen-sync] failed to refresh promos', err);
+          }
+        } else if (event.type === ADMIN_EVENT.ACTUS_UPDATED) {
+          try {
+            const res = await fetch('/api/admin/actus');
+            if (res.ok) {
+              const data = await res.json();
+              setLiveArticles(data.actus || data.articles || []);
+            }
+          } catch (err) {
+            console.warn('[affiche-gen-sync] failed to refresh actus', err);
+          }
+        }
+      },
+    );
+  }, []);
+
   // Combine and normalize all initial data sources for quick local search
   const allSearchableItems = React.useMemo(() => {
     const list = [];
     
     // 1. Promos
-    initialPromos.forEach(p => {
+    livePromos.forEach(p => {
       list.push({
         id: `promo-${p.slug}`,
         slug: p.slug,
@@ -69,7 +223,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
     });
 
     // 2. Produits
-    initialProduits.forEach(p => {
+    liveProduits.forEach(p => {
       list.push({
         id: `prod-${p.slug}`,
         slug: p.slug,
@@ -87,7 +241,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
     });
 
     // 3. Articles (Bridged inventory)
-    initialArticles.forEach(a => {
+    liveArticles.forEach(a => {
       list.push({
         id: `art-${a.slug}`,
         slug: a.slug,
@@ -106,7 +260,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
     });
 
     return list;
-  }, [initialProduits, initialPromos, initialArticles]);
+  }, [liveProduits, livePromos, liveArticles]);
 
   // ----- Autocomplete Filter -----
   useEffect(() => {
@@ -145,6 +299,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
         if (d.selectedChip) setSelectedChip(d.selectedChip);
         if (d.showImage !== undefined) setShowImage(d.showImage);
         if (d.imageUrl !== undefined) setImageUrl(d.imageUrl);
+        if (d.selectedTheme) setSelectedTheme(d.selectedTheme);
       }
     } catch (_) {}
   }, []);
@@ -154,12 +309,12 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
     const state = {
       name, eyebrow, pitch, rayon, format, origine, marque,
       price, oldPrice, promo, expo, productUrl, qrUrlGenerated, selectedChip,
-      showImage, imageUrl
+      showImage, imageUrl, selectedTheme
     };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch (_) {}
-  }, [name, eyebrow, pitch, rayon, format, origine, marque, price, oldPrice, promo, expo, productUrl, qrUrlGenerated, selectedChip, showImage, imageUrl]);
+  }, [name, eyebrow, pitch, rayon, format, origine, marque, price, oldPrice, promo, expo, productUrl, qrUrlGenerated, selectedChip, showImage, imageUrl, selectedTheme]);
 
   // ----- Resize / Scale Preview -----
   useEffect(() => {
@@ -277,6 +432,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
     setSearchQuery('');
     setImageUrl('');
     setShowImage(false);
+    setSelectedTheme('default');
   };
 
   // ----- Print Action -----
@@ -448,6 +604,28 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
             </svg>
             Configuration de l'affiche
           </h2>
+
+          {/* Theme Selector */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[13px] font-bold text-neutral-700">Thème de l'affiche</label>
+            <div className="grid grid-cols-2 gap-2">
+              {Object.entries(THEMES).map(([id, theme]) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => setSelectedTheme(id)}
+                  className={`flex items-center gap-2 p-3 border-2 rounded-xl transition-all ${
+                    selectedTheme === id
+                      ? 'border-mo-green bg-mo-green/5 text-mo-green-dark'
+                      : 'border-neutral-100 bg-neutral-50 text-neutral-600 hover:border-neutral-200'
+                  }`}
+                >
+                  <span className="text-xl">{theme.icon}</span>
+                  <span className="font-bold text-[13px]">{theme.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* Eyebrow & Name */}
           <div className="grid grid-cols-2 gap-4">
@@ -746,7 +924,14 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
             className="mo-poster" 
             data-promo={promo ? "true" : "false"}
             data-has-image={showImage && !!imageUrl ? "true" : "false"}
-            style={{ transform: `scale(${scale})` }}
+            data-theme={selectedTheme}
+            style={{ 
+              transform: `scale(${scale})`,
+              '--theme-primary': THEMES[selectedTheme].colors.primary,
+              '--theme-secondary': THEMES[selectedTheme].colors.secondary,
+              '--theme-accent': THEMES[selectedTheme].colors.accent,
+              '--theme-gold': THEMES[selectedTheme].colors.gold
+            }}
           >
             
             {/* 1. TOP BAR */}

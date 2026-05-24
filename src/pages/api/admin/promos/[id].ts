@@ -26,6 +26,7 @@ const ALLOWED_FIELDS = new Set([
   "date_debut",
   "date_fin",
   "mise_en_avant",
+  "ticker_semaine",
   "actif",
   "ordre",
   "slug",
@@ -117,6 +118,20 @@ export const PATCH: APIRoute = async ({ params, request, cookies }) => {
     }
     if ("slug" in patch) {
       patch.slug = String(patch.slug).trim().toLowerCase().replace(/[^a-z0-9-]/g, "-");
+    }
+
+    /* Single-slot ticker constraint: when this row is being promoted to
+     * the homepage urgent banner, force every OTHER row's ticker_semaine
+     * to false BEFORE we apply our patch. Order matters — if we did the
+     * reset AFTER, our own row could be flipped back to false. */
+    if (patch.ticker_semaine === true) {
+      await supabaseAdmin!
+        .from("promos")
+        .update({ ticker_semaine: false })
+        .neq("id", uuid);
+    }
+    if ("ticker_semaine" in patch) {
+      patch.ticker_semaine = !!patch.ticker_semaine;
     }
 
     const { data, error } = await supabaseAdmin!

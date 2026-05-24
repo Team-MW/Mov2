@@ -61,3 +61,148 @@
   --rayon-font-deco:    var(--font-display);
   --rayon-motif-opacity: 0.05;
 }
+
+/* ================================================================
+   Seasonal and cultural theme overrides for the admin panel
+   ----------------------------------------------------------------
+   ARCHITECTURE — Dual-channel theming (DA-safe)
+   ----------------------------------------------------------------
+   Channel 1 (BRAND, immutable by default):
+     --color-vert  / --color-rouge   → Marché de Mo' identity.
+     Only overridden when [data-admin-intensity="bold"] is set.
+   Channel 2 (ACCENT, always seasonal-aware):
+     --accent / --accent-dark / --accent-light  → festive flavor used
+     for decorative surfaces, callouts, hero gradients, badges.
+     Defaults to brand vert in :root so untouched UI stays on-brand.
+     Always re-flavored by [data-admin-theme=*] (Subtle mode).
+     --decor / --decor-soft  → secondary festive tone (gold, ruby...).
+   ----------------------------------------------------------------
+   Modes:
+     "subtle" (default)  → accents shift, brand is preserved.
+     "bold"              → accents shift AND brand colors are
+                           replaced by the theme palette (full
+                           seasonal takeover).
+   ================================================================ */
+
+/* Default accent tokens — brand-aligned so untouched UI is never naked. */
+:root {
+  --accent:       var(--color-vert);
+  --accent-dark:  var(--color-vert-dark);
+  --accent-light: var(--color-vert-light);
+  --decor:        var(--color-rouge);
+  --decor-soft:   #F5C242;            /* historical gold from logo */
+}
+
+/* ----------------------------------------------------------------
+   Subtle (default) — brand colors preserved, only accents shift.
+   ---------------------------------------------------------------- */
+html[data-admin-theme="spring"] {
+  --accent:       #7CB342;
+  --accent-dark:  #558B2F;
+  --accent-light: #C5E1A5;
+  --decor:        #FF7043;
+  --decor-soft:   #FFD180;
+}
+html[data-admin-theme="summer"] {
+  --accent:       #FB8C00;
+  --accent-dark:  #EF6C00;
+  --accent-light: #FFCC80;
+  --decor:        #E91E63;
+  --decor-soft:   #FFD740;
+}
+html[data-admin-theme="autumn"] {
+  --accent:       #D84315;
+  --accent-dark:  #BF360C;
+  --accent-light: #FFAB91;
+  --decor:        #FF8F00;
+  --decor-soft:   #C28C3A;
+}
+html[data-admin-theme="winter"] {
+  --accent:       #1976D2;
+  --accent-dark:  #0D47A1;
+  --accent-light: #BBDEFB;
+  --decor:        #E53935;
+  --decor-soft:   #ECEFF1;
+}
+html[data-admin-theme="ramadan"] {
+  --accent:       #1C6B35;            /* same as brand vert (intentional) */
+  --accent-dark:  #0F4C21;
+  --accent-light: #A5D6A7;
+  --decor:        #C6A700;
+  --decor-soft:   #FFD700;
+}
+html[data-admin-theme="christmas"] {
+  --accent:       #2E7D32;
+  --accent-dark:  #1B5E20;
+  --accent-light: #C8E6C9;
+  --decor:        #C62828;
+  --decor-soft:   #FFD700;
+}
+html[data-admin-theme="easter"] {
+  --accent:       #9C27B0;
+  --accent-dark:  #7B1FA2;
+  --accent-light: #E1BEE7;
+  --decor:        #FFC107;
+  --decor-soft:   #F8BBD0;
+}
+
+/* ----------------------------------------------------------------
+   Bold — full takeover. Brand vert + rouge are overridden by the
+   theme palette. Use sparingly (festive seasons or campaigns).
+   ---------------------------------------------------------------- */
+html[data-admin-theme="spring"][data-admin-intensity="bold"] {
+  --color-vert:        #7CB342;
+  --color-vert-dark:   #558B2F;
+  --color-vert-light:  #9CCC65;
+  --color-rouge:       #FF7043;
+  --color-rouge-dark:  #E64A19;
+  --color-rouge-light: #FF8A65;
+}
+html[data-admin-theme="summer"][data-admin-intensity="bold"] {
+  --color-vert:        #FB8C00;
+  --color-vert-dark:   #EF6C00;
+  --color-vert-light:  #FFB74D;
+  --color-rouge:       #E91E63;
+  --color-rouge-dark:  #C2185B;
+  --color-rouge-light: #F06292;
+}
+html[data-admin-theme="autumn"][data-admin-intensity="bold"] {
+  --color-vert:        #D84315;
+  --color-vert-dark:   #BF360C;
+  --color-vert-light:  #FF5722;
+  --color-rouge:       #FF8F00;
+  --color-rouge-dark:  #E65100;
+  --color-rouge-light: #FFA726;
+}
+html[data-admin-theme="winter"][data-admin-intensity="bold"] {
+  --color-vert:        #1976D2;
+  --color-vert-dark:   #0D47A1;
+  --color-vert-light:  #42A5F5;
+  --color-rouge:       #E53935;
+  --color-rouge-dark:  #B71C1C;
+  --color-rouge-light: #EF5350;
+}
+html[data-admin-theme="ramadan"][data-admin-intensity="bold"] {
+  --color-vert:        #1C6B35;
+  --color-vert-dark:   #0F4C21;
+  --color-vert-light:  #2E8B4A;
+  --color-rouge:       #C6A700;
+  --color-rouge-dark:  #9E8600;
+  --color-rouge-light: #FFD700;
+}
+html[data-admin-theme="christmas"][data-admin-intensity="bold"] {
+  --color-vert:        #2E7D32;
+  --color-vert-dark:   #1B5E20;
+  --color-vert-light:  #4CAF50;
+  --color-rouge:       #C62828;
+  --color-rouge-dark:  #8E0000;
+  --color-rouge-light: #EF5350;
+}
+html[data-admin-theme="easter"][data-admin-intensity="bold"] {
+  --color-vert:        #9C27B0;
+  --color-vert-dark:   #7B1FA2;
+  --color-vert-light:  #BA68C8;
+  --color-rouge:       #FFC107;
+  --color-rouge-dark:  #F9A825;
+  --color-rouge-light: #FFE082;
+}

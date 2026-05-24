@@ -107,9 +107,28 @@ function normalizePromo(raw: any) {
     date_debut: String(raw.date_debut),
     date_fin: String(raw.date_fin),
     mise_en_avant: !!raw.mise_en_avant,
+    ticker_semaine: !!raw.ticker_semaine,
     actif: raw.actif !== false,
     ordre: Number.isFinite(Number(raw.ordre)) ? Number(raw.ordre) : 0,
   };
+}
+
+/**
+ * Enforce single-slot constraint on the urgent ticker banner.
+ * If the row(s) about to be saved set ticker_semaine = true, every
+ * OTHER row in the table is forced to false BEFORE the insert/upsert
+ * lands. Excluding the slugs we're saving avoids a self-erase.
+ */
+async function clearOtherTickers(slugsBeingSaved: string[]): Promise<void> {
+  if (!supabaseAdmin) return;
+  const update = supabaseAdmin
+    .from("promos")
+    .update({ ticker_semaine: false });
+  const filtered =
+    slugsBeingSaved.length > 0
+      ? update.not("slug", "in", `(${slugsBeingSaved.map((s) => `"${s}"`).join(",")})`)
+      : update.eq("ticker_semaine", true); /* defensive : if no slugs, clear all */
+  await filtered;
 }
 
 /* ----------------------------------------------------------------- */
@@ -139,6 +158,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   try {
     const body = await request.json();
     const row = normalizePromo(body);
+    /* Enforce “one-and-only-one” ticker before the insert lands. */
+    if (row.ticker_semaine) {
+      await clearOtherTickers([row.slug]);
+    }
     const { data, error } = await supabaseAdmin!
       .from("promos")
       .insert(row)
@@ -150,7 +173,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       entity_id: data?.id ?? null,
       entity_label: data?.titre ?? row.slug,
       action: "create",
-      payload: { rayon: data?.rayon, slug: data?.slug, magasin: data?.magasin },
+      payload: {
+        rayon: data?.rayon,
+        slug: data?.slug,
+        magasin: data?.magasin,
+        ticker_semaine: !!data?.ticker_semaine,
+      },
     });
     return json({ promo: data }, 201);
   } catch (err: any) {
@@ -172,6 +200,24 @@ export const PUT: APIRoute = async ({ request, cookies }) => {
       return json({ error: "Format attendu : { promos: [...] }" }, 400);
     }
     const rows = body.promos.map(normalizePromo);
+    /* Bulk imports may carry multiple ticker_semaine=true entries by
+     * mistake. Keep ONLY the LAST one as authoritative; force the
+     * earlier ones to false so the DB can never end up with two
+     * tickers visible at the same time on the homepage. */
+    const tickerIndices: number[] = [];
+    rows.forEach((r: any, i: number) => {
+      if (r.ticker_semaine) tickerIndices.push(i);
+    });
+    if (tickerIndices.length > 1) {
+      const winner = tickerIndices[tickerIndices.length - 1];
+      tickerIndices.forEach((i) => {
+        if (i !== winner) rows[i].ticker_semaine = false;
+      });
+    }
+    const winnerSlugs = rows.filter((r: any) => r.ticker_semaine).map((r: any) => r.slug);
+    if (winnerSlugs.length > 0) {
+      await clearOtherTickers(winnerSlugs);
+    }
     const { data, error } = await supabaseAdmin!
       .from("promos")
       .upsert(rows, { onConflict: "slug" })
@@ -184,6 +230,7 @@ export const PUT: APIRoute = async ({ request, cookies }) => {
       payload: {
         count: data?.length ?? 0,
         slugs: (data ?? []).slice(0, 50).map((r: any) => r.slug),
+        ticker_winner: winnerSlugs[0] ?? null,
       },
     });
     return json({ promos: data ?? [], count: data?.length ?? 0 });

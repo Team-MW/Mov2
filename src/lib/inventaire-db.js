@@ -152,11 +152,14 @@ function rethrow(prefix, error) {
 }
 
 // --- Public API ---------------------------------------------------------
-export async function listArticles() {
+export async function listArticles({ lite = false } = {}) {
   const db = getDb();
+  const selectFields = lite
+    ? 'id,numero_article,nom_produit,marque,rayon,format,dlc,magasin,prix_vente,quantite,seuil_stock_faible,created_at,updated_at'
+    : '*';
   const { data, error } = await db
     .from(TABLE)
-    .select('*')
+    .select(selectFields)
     .order('created_at', { ascending: false });
   if (error) rethrow('Lecture des articles', error);
   return (data || []).map(decorate);

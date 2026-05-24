@@ -19,7 +19,17 @@ import { SITE } from "@/lib/site";
 import KeyboardHelpOverlay from "@components/islands/admin/KeyboardHelpOverlay.jsx";
 
 interface Props {
-  current?: "dashboard" | "inventaire" | "catalogue" | "promos" | "produits" | "medias" | "images-gap" | "affiches" | "actus";
+  current?:
+    | "dashboard"
+    | "inventaire"
+    | "catalogue"
+    | "promos"
+    | "produits"
+    | "medias"
+    | "images-gap"
+    | "affiches"
+    | "actus"
+    | "contenu-home";
   subtitle?: string;
 }
 
@@ -31,6 +41,7 @@ const navItems = [
   { id: "catalogue",  label: "Catalogue",        href: "/admin/catalogue", icon: "🌳" },
   { id: "promos",     label: "Promos",           href: "/admin/promos",     icon: "🏷" },
   { id: "actus",      label: "Actualités",       href: "/admin/actus",      icon: "📰" },
+  { id: "contenu-home", label: "Accueil",        href: "/admin/contenu-home", icon: "🏠" },
   { id: "produits",   label: "Produits",         href: "/admin/produits",   icon: "🛒" },
   { id: "medias",     label: "Images",           href: "/admin/medias",     icon: "🖼" },
   { id: "images-gap", label: "Manquantes",       href: "/admin/images-gap", icon: "⚠" },
@@ -99,6 +110,100 @@ const showSubtitle = !!subtitle;
       </div>
 
       <div class="flex items-center gap-2 shrink-0">
+        <!-- Theme Picker Popover (DA-aware swatch grid + intensity) -->
+        <details id="admin-theme-picker" class="relative group">
+          <summary
+            class="list-none flex items-center gap-1.5 cursor-pointer rounded-full bg-neutral-50 hover:bg-neutral-100 text-neutral-700 text-[12px] font-bold pl-2.5 pr-3 py-1.5 border border-black/10 transition select-none"
+            aria-label="Sélectionner le thème et l'intensité de l'administration"
+            title="Thème de l'admin"
+          >
+            <span id="admin-theme-trigger-icon" class="text-[14px] leading-none" aria-hidden="true">🌳</span>
+            <span id="admin-theme-trigger-name" class="hidden md:inline">Standard</span>
+            <span
+              id="admin-theme-trigger-intensity"
+              class="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-neutral-400"
+              aria-hidden="true"
+            >
+              <span class="hidden sm:inline">·</span>
+              <span class="hidden sm:inline">Discret</span>
+            </span>
+            <svg class="w-3 h-3 text-neutral-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </summary>
+
+          <div
+            class="absolute right-0 mt-2 w-[280px] bg-white rounded-2xl shadow-card border border-black/5 p-3 z-50"
+            role="dialog"
+            aria-label="Sélection du thème et de l'intensité"
+          >
+            <p class="text-[10px] uppercase tracking-[0.18em] font-bold text-neutral-400 mb-2 px-1">
+              Thème
+            </p>
+            <div class="grid grid-cols-4 gap-1.5" role="radiogroup" aria-label="Thème">
+              {[
+                { v: "default",   icon: "🌳", name: "Standard",  swatchA: "#1C6B35", swatchB: "#8B1919" },
+                { v: "spring",    icon: "🌸", name: "Printemps", swatchA: "#7CB342", swatchB: "#FF7043" },
+                { v: "summer",    icon: "☀️",  name: "Été",      swatchA: "#FB8C00", swatchB: "#E91E63" },
+                { v: "autumn",    icon: "🍂", name: "Automne",   swatchA: "#D84315", swatchB: "#FF8F00" },
+                { v: "winter",    icon: "❄️",  name: "Hiver",    swatchA: "#1976D2", swatchB: "#E53935" },
+                { v: "ramadan",   icon: "🌙", name: "Ramadan",   swatchA: "#1C6B35", swatchB: "#FFD700" },
+                { v: "christmas", icon: "�", name: "Noël",      swatchA: "#2E7D32", swatchB: "#C62828" },
+                { v: "easter",    icon: "🐰", name: "Pâques",    swatchA: "#9C27B0", swatchB: "#FFC107" },
+              ].map((t) => (
+                <button
+                  type="button"
+                  data-theme-value={t.v}
+                  class="theme-swatch group/swatch relative flex flex-col items-center gap-1 p-2 rounded-xl border border-transparent hover:bg-neutral-50 hover:border-black/5 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-vert/40"
+                  role="radio"
+                  aria-checked="false"
+                  aria-label={t.name}
+                  title={t.name}
+                >
+                  <span class="relative w-9 h-9 rounded-full flex items-center justify-center overflow-hidden ring-1 ring-black/10">
+                    <span class="absolute inset-0" style={`background: linear-gradient(135deg, ${t.swatchA} 0%, ${t.swatchA} 50%, ${t.swatchB} 50%, ${t.swatchB} 100%);`}></span>
+                    <span class="relative text-[14px] drop-shadow-sm" aria-hidden="true">{t.icon}</span>
+                  </span>
+                  <span class="text-[10px] font-bold text-neutral-600 leading-tight text-center">{t.name}</span>
+                </button>
+              ))}
+            </div>
+
+            <hr class="my-3 border-black/5" />
+
+            <p class="text-[10px] uppercase tracking-[0.18em] font-bold text-neutral-400 mb-2 px-1">
+              Intensité
+            </p>
+            <div class="grid grid-cols-2 gap-1.5 bg-neutral-100 rounded-full p-1" role="radiogroup" aria-label="Intensité">
+              <button
+                type="button"
+                data-intensity-value="subtle"
+                class="intensity-pill flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-full text-[12px] font-bold transition"
+                role="radio"
+                aria-checked="true"
+                title="Discret : la marque vert/rouge reste, seuls les accents décoratifs changent."
+              >
+                <span aria-hidden="true">✦</span>
+                <span>Discret</span>
+              </button>
+              <button
+                type="button"
+                data-intensity-value="bold"
+                class="intensity-pill flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-full text-[12px] font-bold transition"
+                role="radio"
+                aria-checked="false"
+                title="Affirmé : la marque vert/rouge est remplacée par la palette du thème (prise de contrôle complète)."
+              >
+                <span aria-hidden="true">✸</span>
+                <span>Affirmé</span>
+              </button>
+            </div>
+            <p class="mt-2 text-[10.5px] leading-snug text-neutral-400 px-1">
+              <strong class="text-neutral-500 font-bold">Discret</strong> préserve la couleur de marque · <strong class="text-neutral-500 font-bold">Affirmé</strong> la remplace par celle du thème.
+            </p>
+          </div>
+        </details>
+
         <a
           href="/"
           class="text-[12px] text-neutral-500 hover:text-vert transition hidden md:inline-flex items-center gap-1"
@@ -135,6 +240,9 @@ const showSubtitle = !!subtitle;
             </a>
             <a href="/admin/actus" class="block px-3 py-2 rounded-lg text-[13px] hover:bg-white">
               Actualités & blog
+            </a>
+            <a href="/admin/contenu-home" class="block px-3 py-2 rounded-lg text-[13px] hover:bg-white">
+              Contenu page d'accueil
             </a>
             <a href="/admin/generateur-affiche" class="block px-3 py-2 rounded-lg text-[13px] hover:bg-white">
               Générateur d'affiches A4
@@ -210,6 +318,125 @@ const showSubtitle = !!subtitle;
     if (details) details.removeAttribute("open");
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "?", bubbles: true }));
   });
+
+  /* Theme picker — swatch grid + intensity toggle.
+   * Persists `admin_selected_theme` (string) and `admin_theme_intensity`
+   * ("subtle" | "bold") to localStorage and reflects them on
+   * <html data-admin-theme=...> and <html data-admin-intensity=...>. */
+  (() => {
+    type ThemeValue = "default" | "spring" | "summer" | "autumn" | "winter" | "ramadan" | "christmas" | "easter";
+    type Intensity = "subtle" | "bold";
+
+    const picker = document.getElementById("admin-theme-picker") as HTMLDetailsElement | null;
+    if (!picker) return;
+    const swatches = picker.querySelectorAll<HTMLButtonElement>("[data-theme-value]");
+    const pills = picker.querySelectorAll<HTMLButtonElement>("[data-intensity-value]");
+    const triggerIcon = document.getElementById("admin-theme-trigger-icon");
+    const triggerName = document.getElementById("admin-theme-trigger-name");
+    const triggerIntensity = document.getElementById("admin-theme-trigger-intensity");
+
+    const ICON_BY_THEME: Record<ThemeValue, string> = {
+      default: "🌳",
+      spring: "🌸",
+      summer: "☀️",
+      autumn: "🍂",
+      winter: "❄️",
+      ramadan: "🌙",
+      christmas: "🎄",
+      easter: "🐰",
+    };
+    const NAME_BY_THEME: Record<ThemeValue, string> = {
+      default: "Standard",
+      spring: "Printemps",
+      summer: "Été",
+      autumn: "Automne",
+      winter: "Hiver",
+      ramadan: "Ramadan",
+      christmas: "Noël",
+      easter: "Pâques",
+    };
+
+    function getStoredTheme(): ThemeValue {
+      const v = localStorage.getItem("admin_selected_theme") || "default";
+      return (Object.keys(ICON_BY_THEME).includes(v) ? v : "default") as ThemeValue;
+    }
+    function getStoredIntensity(): Intensity {
+      const v = localStorage.getItem("admin_theme_intensity");
+      return v === "bold" ? "bold" : "subtle";
+    }
+
+    function reflect(theme: ThemeValue, intensity: Intensity) {
+      // <html> attributes
+      if (theme === "default") {
+        document.documentElement.removeAttribute("data-admin-theme");
+      } else {
+        document.documentElement.setAttribute("data-admin-theme", theme);
+      }
+      if (intensity === "bold") {
+        document.documentElement.setAttribute("data-admin-intensity", "bold");
+      } else {
+        document.documentElement.removeAttribute("data-admin-intensity");
+      }
+      // localStorage
+      if (theme === "default") localStorage.removeItem("admin_selected_theme");
+      else localStorage.setItem("admin_selected_theme", theme);
+      if (intensity === "bold") localStorage.setItem("admin_theme_intensity", "bold");
+      else localStorage.removeItem("admin_theme_intensity");
+      // Trigger label
+      if (triggerIcon) triggerIcon.textContent = ICON_BY_THEME[theme];
+      if (triggerName) triggerName.textContent = NAME_BY_THEME[theme];
+      if (triggerIntensity) {
+        triggerIntensity.innerHTML = `
+          <span class="hidden sm:inline">·</span>
+          <span class="hidden sm:inline">${intensity === "bold" ? "Affirmé" : "Discret"}</span>
+        `;
+      }
+      // Active swatch styling
+      swatches.forEach((btn) => {
+        const isActive = btn.dataset.themeValue === theme;
+        btn.setAttribute("aria-checked", isActive ? "true" : "false");
+        btn.classList.toggle("bg-vert/10", isActive);
+        btn.classList.toggle("border-vert/30", isActive);
+      });
+      // Active intensity pill styling
+      pills.forEach((btn) => {
+        const isActive = btn.dataset.intensityValue === intensity;
+        btn.setAttribute("aria-checked", isActive ? "true" : "false");
+        btn.classList.toggle("bg-white", isActive);
+        btn.classList.toggle("text-noir", isActive);
+        btn.classList.toggle("shadow-card", isActive);
+        btn.classList.toggle("text-neutral-500", !isActive);
+      });
+    }
+
+    let currentTheme: ThemeValue = getStoredTheme();
+    let currentIntensity: Intensity = getStoredIntensity();
+    reflect(currentTheme, currentIntensity);
+
+    swatches.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        currentTheme = (btn.dataset.themeValue as ThemeValue) || "default";
+        reflect(currentTheme, currentIntensity);
+      });
+    });
+    pills.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        currentIntensity = (btn.dataset.intensityValue as Intensity) || "subtle";
+        reflect(currentTheme, currentIntensity);
+      });
+    });
+
+    // Close on outside click
+    document.addEventListener("click", (e) => {
+      if (!picker.open) return;
+      const target = e.target as Node | null;
+      if (target && !picker.contains(target)) picker.removeAttribute("open");
+    });
+    // Close on Escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && picker.open) picker.removeAttribute("open");
+    });
+  })();
 </script>
 
 <style>

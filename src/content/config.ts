@@ -24,6 +24,8 @@ const promos = defineCollection({
       'balkans-turques',
       'produits-courants',
       'surgeles',
+      'boulangerie',
+      'produits-laitiers',
     ]),
     magasin: z.enum(['tous', 'portet', 'toulouse-sud']).default('tous'),
     date_debut: z.string(),
@@ -128,6 +130,8 @@ const recettes = defineCollection({
       'balkans-turques',
       'produits-courants',
       'surgeles',
+      'boulangerie',
+      'produits-laitiers',
     ])),
     /** Rayon principal (pour la couleur/badge). */
     rayonPrincipal: z.enum([
@@ -141,6 +145,8 @@ const recettes = defineCollection({
       'balkans-turques',
       'produits-courants',
       'surgeles',
+      'boulangerie',
+      'produits-laitiers',
     ]),
     /** Origine géo/culturelle : "Sénégal", "Maghreb", "Corée"… */
     origine: z.string().optional(),

@@ -13,6 +13,12 @@
   --mo-white:       #FFFFFF;
   --mo-gray:        #71717A;
   --mo-border:      #E4E4E7;
+
+  /* Theme variables (set via inline styles on poster element) */
+  --theme-primary:  var(--mo-green);
+  --theme-secondary: var(--mo-green-dark);
+  --theme-accent:   var(--mo-red);
+  --theme-gold:     var(--mo-gold);
   
   --font-mo-display: "filson-pro", system-ui, -apple-system, sans-serif;
   --font-mo-body:    "filson-soft", system-ui, -apple-system, sans-serif;
@@ -65,14 +71,14 @@
 
 /* ---- TOP BAR (Brand Identity) ---------------------------- */
 .mo-poster__top {
-  background: var(--mo-green);
+  background: var(--theme-primary);
   color: var(--mo-white);
   padding: 0 14mm;
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: relative;
-  border-bottom: 2mm solid var(--mo-gold);
+  border-bottom: 2mm solid var(--theme-gold);
 }
 
 .mo-poster__brand {
@@ -106,12 +112,12 @@
   letter-spacing: 0.35em;
   text-transform: uppercase;
   margin-top: 1.2mm;
-  color: var(--mo-gold);
+  color: var(--theme-gold);
   font-weight: 700;
 }
 
 .mo-poster__top-badge {
-  background: var(--mo-red);
+  background: var(--theme-accent);
   color: var(--mo-white);
   padding: 2.2mm 6mm;
   border-radius: 6px;
@@ -159,13 +165,13 @@
   text-transform: uppercase;
   color: var(--mo-white);
   padding: 1.5mm 4mm;
-  background: var(--mo-green);
+  background: var(--theme-primary);
   border-radius: 4px;
 }
 
 /* Highlight eyebrow for promotions */
 .mo-poster[data-promo="true"] .mo-poster__eyebrow {
-  background: var(--mo-red);
+  background: var(--theme-accent);
 }
 
 .mo-poster__name {
@@ -204,7 +210,7 @@
 }
 
 .mo-poster__meta-item:not(:last-child)::after {
-  content: '·';
+  content: '\00b7';
   margin-left: 3mm;
   color: var(--mo-border);
 }
@@ -267,12 +273,12 @@
   font-weight: 800;
   font-size: 3.8mm;
   text-transform: uppercase;
-  color: var(--mo-green);
+  color: var(--theme-primary);
   letter-spacing: 0.02em;
 }
 
 .mo-poster[data-promo="true"] .mo-poster__qr-label strong {
-  color: var(--mo-red);
+  color: var(--theme-accent);
 }
 
 .mo-poster__qr-label span {
@@ -283,7 +289,7 @@
 
 /* RIGHT SECTION : Hero price block */
 .mo-poster__price-block {
-  background: var(--mo-green);
+  background: var(--theme-primary);
   color: var(--mo-white);
   display: flex;
   flex-direction: column;
@@ -295,9 +301,9 @@
   z-index: 1;
 }
 
-/* Switch price block to red for promotions */
+/* Switch price block to accent color for promotions */
 .mo-poster[data-promo="true"] .mo-poster__price-block {
-  background: var(--mo-red);
+  background: var(--theme-accent);
 }
 
 .mo-poster__old {
@@ -308,7 +314,7 @@
   color: rgba(255, 255, 255, 0.6);
   text-decoration: line-through;
   text-decoration-thickness: 1.2mm;
-  text-decoration-color: var(--mo-gold);
+  text-decoration-color: var(--theme-gold);
   margin-bottom: 2mm;
   display: flex;
   align-items: baseline;
@@ -389,7 +395,88 @@
   font-weight: 800;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--mo-gold);
+  color: var(--theme-gold);
+}
+
+/* Theme-specific decorative elements */
+.mo-poster[data-theme="spring"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 90% 10%, rgba(124, 179, 66, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 10% 90%, rgba(255, 112, 67, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mo-poster[data-theme="summer"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 152, 0, 0.15) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mo-poster[data-theme="autumn"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 0% 50%, rgba(216, 67, 21, 0.12) 0%, transparent 50%),
+              radial-gradient(circle at 100% 50%, rgba(255, 111, 0, 0.12) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mo-poster[data-theme="winter"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 100%, rgba(25, 118, 210, 0.1) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mo-poster[data-theme="ramadan"]::before {
+  content: '\1f319';
+  position: absolute;
+  top: 8mm;
+  right: 8mm;
+  font-size: 12mm;
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.mo-poster[data-theme="christmas"]::before {
+  content: '\1f384';
+  position: absolute;
+  top: 8mm;
+  right: 8mm;
+  font-size: 12mm;
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.mo-poster[data-theme="easter"]::before {
+  content: '\1f430';
+  position: absolute;
+  top: 8mm;
+  right: 8mm;
+  font-size: 12mm;
+  opacity: 0.3;
+  z-index: 0;
 }
 
 /* Promo ribbon diagonal in upper right corner */
@@ -398,7 +485,7 @@
   position: absolute;
   top: -24mm;
   right: -42mm;
-  background: var(--mo-gold);
+  background: var(--theme-gold);
   color: var(--mo-black);
   padding: 3.5mm 45mm;
   transform: rotate(40deg);
@@ -422,7 +509,7 @@
   position: absolute;
   bottom: 6mm;
   left: -12mm; /* Overlap content section nicely */
-  background: var(--mo-gold);
+  background: var(--theme-gold);
   color: var(--mo-black);
   border: 1.2mm solid var(--mo-white);
   width: 25mm;
@@ -444,7 +531,7 @@
 
 /* ---- BOTTOM BAR (Footer info) ---------------------------- */
 .mo-poster__bottom {
-  background: var(--mo-green-dark);
+  background: var(--theme-secondary);
   color: var(--mo-white);
   padding: 0 14mm;
   display: flex;
@@ -454,11 +541,11 @@
   letter-spacing: 0.15em;
   text-transform: uppercase;
   font-weight: 700;
-  border-top: 1mm solid var(--mo-gold);
+  border-top: 1mm solid var(--theme-gold);
 }
 
 .mo-poster__bottom strong {
-  color: var(--mo-gold);
+  color: var(--theme-gold);
   font-weight: 800;
 }
 

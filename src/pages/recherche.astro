@@ -182,6 +182,17 @@ const quickSuggestions = [
         </p>
       </div>
 
+      {/* Loading state */}
+      <div id="q-loading" class="hidden text-center py-10 md:py-16">
+        <div class="flex flex-col items-center justify-center text-neutral-500 gap-3">
+          <svg class="animate-spin h-8 w-8 text-vert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke-linecap="round"/>
+          </svg>
+          <span class="text-[14px] font-pro font-bold">Chargement du moteur de recherche...</span>
+        </div>
+      </div>
+
       {/* No matches (hidden until triggered) */}
       <div id="q-none" class="hidden text-center py-16 bg-white rounded-3xl shadow-card">
         <img
@@ -284,54 +295,63 @@ const quickSuggestions = [
     const clearBtn = document.getElementById("q-clear");
     const suggest = document.getElementById("q-suggest");
     const empty = document.getElementById("q-empty");
+    const loading = document.getElementById("q-loading");
     const none = document.getElementById("q-none");
     const results = document.getElementById("q-results");
     const chips = Array.from(
       document.querySelectorAll<HTMLButtonElement>(".q-chip"),
     );
 
-    function norm(s: string): string {
-      return s
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
-    }
+    let fuseProduits: any = null;
+    let fuseRayons: any = null;
+    let fuseRecettes: any = null;
+    let fuseActus: any = null;
+    let fuseLoaded = false;
+    let fusePromise: Promise<void> | null = null;
 
-    function score(entry: { title: string; [k: string]: any }, q: string): number {
-      const t = norm(entry.title);
-      if (t.startsWith(q)) return 100;
-      if (t.includes(" " + q)) return 80;
-      if (t.includes(q)) return 60;
-      /* Secondary fields */
-      const extra = norm(
-        [entry.origine, entry.badge, entry.rayon, entry.tagline, entry.categorie]
-          .filter(Boolean)
-          .join(" "),
-      );
-      if (extra.includes(q)) return 30;
-      return 0;
+    async function loadFuse() {
+      if (fuseLoaded) return;
+      if (fusePromise) return fusePromise;
+      
+      fusePromise = (async () => {
+        try {
+          const { default: Fuse } = await import("fuse.js");
+          
+          fuseProduits = new Fuse(idx.produits, {
+            keys: ["title", "rayon", "origine", "badge"],
+            threshold: 0.35,
+            distance: 100,
+          });
+          fuseRayons = new Fuse(idx.rayons, {
+            keys: ["title", "tagline"],
+            threshold: 0.35,
+          });
+          fuseRecettes = new Fuse(idx.recettes, {
+            keys: ["title", "rayon"],
+            threshold: 0.35,
+          });
+          fuseActus = new Fuse(idx.actus, {
+            keys: ["title", "categorie"],
+            threshold: 0.35,
+          });
+          fuseLoaded = true;
+        } catch (err) {
+          console.error("Error loading Fuse.js:", err);
+        }
+      })();
+      return fusePromise;
     }
 
     function searchAll(q: string) {
-      const nq = norm(q.trim());
-      if (!nq) return { produits: [], rayons: [], actus: [], recettes: [] };
-
-      function pick<T extends { title: string }>(arr: T[]): T[] {
-        return arr
-          .map((e) => ({ e, s: score(e as any, nq) }))
-          .filter((x) => x.s > 0)
-          .sort((a, b) => {
-            if (b.s !== a.s) return b.s - a.s;
-            return a.e.title.localeCompare(b.e.title, "fr");
-          })
-          .map((x) => x.e);
-      }
+      if (!fuseLoaded) return null;
+      const trimmed = q.trim();
+      if (!trimmed) return { produits: [], rayons: [], actus: [], recettes: [] };
 
       return {
-        produits: pick(idx.produits).slice(0, 30),
-        rayons: pick(idx.rayons).slice(0, 6),
-        actus: pick(idx.actus).slice(0, 6),
-        recettes: pick(idx.recettes).slice(0, 6),
+        produits: fuseProduits.search(trimmed).slice(0, 30).map((r: any) => r.item),
+        rayons: fuseRayons.search(trimmed).slice(0, 6).map((r: any) => r.item),
+        actus: fuseActus.search(trimmed).slice(0, 6).map((r: any) => r.item),
+        recettes: fuseRecettes.search(trimmed).slice(0, 6).map((r: any) => r.item),
       };
     }
 
@@ -384,7 +404,7 @@ const quickSuggestions = [
         .replace(/"/g, "&quot;");
     }
 
-    function render(res: ReturnType<typeof searchAll>, q: string) {
+    function render(res: Exclude<ReturnType<typeof searchAll>, null>, q: string) {
       const hasAny =
         res.produits.length ||
         res.rayons.length ||
@@ -418,11 +438,13 @@ const quickSuggestions = [
         if (listEl) {
           if (name === "actus") {
             listEl.innerHTML = res.actus
-              .map((a) => textRow(a.href, a.title, a.categorie))
+              .map((a: { href: string; title: string; categorie: string }) =>
+                textRow(a.href, a.title, a.categorie),
+              )
               .join("");
           } else if (name === "recettes") {
             listEl.innerHTML = res.recettes
-              .map((r) =>
+              .map((r: { href: string; title: string; rayon?: string }) =>
                 textRow(r.href, r.title, r.rayon || "Recette"),
               )
               .join("");
@@ -433,7 +455,23 @@ const quickSuggestions = [
 
     function update(q: string) {
       if (clearBtn) clearBtn.classList.toggle("hidden", !q);
-      render(searchAll(q), q);
+
+      const res = searchAll(q);
+      if (res === null) {
+        empty?.classList.add("hidden");
+        suggest?.classList.add("hidden");
+        none?.classList.add("hidden");
+        results?.classList.add("hidden");
+        loading?.classList.remove("hidden");
+        
+        loadFuse().then(() => {
+          update(q);
+        });
+        return;
+      }
+
+      loading?.classList.add("hidden");
+      render(res, q);
 
       /* URL state so the search is shareable & preserved on refresh. */
       const url = new URL(window.location.href);
@@ -464,12 +502,14 @@ const quickSuggestions = [
       }),
     );
 
-    /* Bootstrap from URL ?q= */
-    const urlQ = new URL(window.location.href).searchParams.get("q");
-    if (urlQ && input) {
-      input.value = urlQ;
-      update(urlQ);
-    }
+    // Bootstrap load of Fuse.js immediately so it's ready ASAP
+    loadFuse().then(() => {
+      const urlQ = new URL(window.location.href).searchParams.get("q");
+      if (urlQ && input) {
+        input.value = urlQ;
+        update(urlQ);
+      }
+    });
 
     /* Cmd/Ctrl+K focus shortcut */
     window.addEventListener("keydown", (e) => {

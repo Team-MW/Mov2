@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { adminFetch } from "./adminFetch.js";
+import { publishAdminEvent, ADMIN_EVENT } from "./admin-bus.js";
 
 const ALLOWED_RAYONS = [
   "boucherie-halal",
@@ -420,6 +421,16 @@ export default function CSVImporter({ rayonsOptions }) {
       }
     } catch {
       // harmless
+    }
+
+    /* Broadcast to other admin tabs / islands so AfficheGenerator,
+     * ProduitsManager, etc. instantly reflect the new catalogue
+     * state without a manual reload. Skipped if absolutely no chunk
+     * succeeded — nothing changed in the DB. */
+    if (successfulCount > 0) {
+      publishAdminEvent(ADMIN_EVENT.PRODUITS_UPDATED, {
+        entity: "produit:csv-import",
+      });
     }
   }
 

@@ -3,7 +3,8 @@ export const prerender = false;
 
 import Layout from "@layouts/Layout.astro";
 import AdminTopbar from "@components/admin/AdminTopbar.astro";
-import AfficheGenerator from "@components/islands/admin/AfficheGenerator.jsx";
+import AfficheGeneratorRaw from "@components/islands/admin/AfficheGenerator.jsx";
+const AfficheGenerator = AfficheGeneratorRaw as any;
 import { SITE } from "@/lib/site";
 import { isAuthenticated } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase";

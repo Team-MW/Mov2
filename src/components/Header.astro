@@ -12,10 +12,16 @@
  * - Category buttons have solid deep colored backgrounds, white text, and correct padding (no text wrapping).
  */
 import { RAYONS_LIST } from "@/lib/site";
+import { DEFAULT_STORE } from "@/lib/geo";
 
 const pathname = Astro.url.pathname;
 const isActive = (href: string) =>
   href === "/" ? pathname === "/" : pathname.startsWith(href);
+
+/* Use the default store on SSR / prerender — see Layout.astro for the
+ * full rationale (avoids the Astro.request.headers warning chain).
+ * Store-aware text is patched at runtime by enhanceStoreFromCookie. */
+const currentStore = DEFAULT_STORE;
 
 // Deep, rich shades matching each rayon for button backgrounds (ensures text-white is fully legible)
 const BUTTON_COLORS: Record<string, string> = {
@@ -27,13 +33,13 @@ const BUTTON_COLORS: Record<string, string> = {
   "saveur-mediterranee": "#1E5A8F", // Bleu Méditerranée
 };
 
-const BUTTON_EMOJIS: Record<string, string> = {
-  "boucherie-halal": "🥩",
-  "fruits-legumes": "🍉",
-  "epices-du-monde": "🌶️",
-  "saveurs-afrique": "🌍",
-  "saveurs-asie": "🍜",
-  "saveur-mediterranee": "🫒",
+const TWEMOJI_IDS: Record<string, string> = {
+  "boucherie-halal": "1f969",
+  "fruits-legumes": "1f349",
+  "epices-du-monde": "1f336",
+  "saveurs-afrique": "1f30d",
+  "saveurs-asie": "1f35c",
+  "saveur-mediterranee": "1fad2",
 };
 ---
 
@@ -64,7 +70,7 @@ const BUTTON_EMOJIS: Record<string, string> = {
   <!-- 1. Row 1: Navigation Bar -->
   <!-- Desktop Navigation Bar (Hidden on Mobile/Tablet) -->
   <div id="header-row-1" class="border-b border-black/5 hidden lg:block bg-white relative z-10">
-    <div class="container-mo py-4 flex items-center justify-between gap-6">
+    <div class="container-mo py-2 flex items-center justify-between gap-6">
       <!-- Left: Logo & Burger Menu -->
       <div class="flex items-center shrink-0">
         <a
@@ -77,9 +83,9 @@ const BUTTON_EMOJIS: Record<string, string> = {
             alt="Marché de Mo'"
             width="50"
             height="50"
-            class="w-[50px] h-[50px] object-contain shrink-0 bg-white rounded-full shadow-sm p-0.5"
+            class="logo-row-1 w-[50px] h-[50px] object-contain shrink-0 bg-white rounded-full shadow-sm p-0.5 transition-all duration-300"
           />
-          <div class="flex flex-col text-left font-soft shrink-0 ml-2.5">
+          <div class="logo-row-1-label flex flex-col text-left font-soft shrink-0 ml-2.5 transition-all duration-200">
             <span class="text-[16px] font-black text-vert-dark leading-none">Marché de Mo'</span>
             <span class="text-[10px] font-bold text-neutral-400 mt-1 leading-none uppercase tracking-wider">Supermarché du Monde</span>
           </div>
@@ -106,7 +112,7 @@ const BUTTON_EMOJIS: Record<string, string> = {
             type="text"
             name="q"
             placeholder="Rechercher un produit, une saveur, une recette..."
-            class="w-full pl-12 pr-20 py-3 bg-neutral-100 focus:bg-white text-[14px] text-neutral-800 rounded-full border border-black/10 focus:border-vert/30 focus:ring-4 focus:ring-vert/5 outline-none transition-all placeholder-neutral-400"
+            class="w-full pl-12 pr-20 py-2.5 bg-neutral-100 focus:bg-white text-[14px] text-neutral-800 rounded-full border border-black/10 focus:border-vert/30 focus:ring-4 focus:ring-vert/5 outline-none transition-all placeholder-neutral-400"
             autocomplete="off"
           />
           <svg class="w-5 h-5 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -129,9 +135,9 @@ const BUTTON_EMOJIS: Record<string, string> = {
       <div class="flex items-center gap-3 shrink-0">
         <a
           href="/promos"
-          class="inline-flex items-center hover:opacity-90 transition"
+          class="inline-flex items-center hover:opacity-90 transition relative z-20 my-[-20px]"
         >
-          <img src="/promos/promo_button-removebg-preview.png" alt="Promos" class="h-16 md:h-24 w-auto object-contain" />
+          <img src="/promos/promo_button-removebg-preview.png" alt="Promos" class="h-16 md:h-28 w-auto object-contain hover:scale-105 transition-transform duration-200" />
         </a>
         <a
           href="/magasins"
@@ -159,9 +165,9 @@ const BUTTON_EMOJIS: Record<string, string> = {
         alt="Marché de Mo'"
         width="36"
         height="36"
-        class="w-9 h-9 object-contain bg-white rounded-full shadow-sm p-0.5"
+        class="logo-row-mobile w-9 h-9 object-contain bg-white rounded-full shadow-sm p-0.5 transition-all duration-200"
       />
-      <div class="flex flex-col text-left font-soft">
+      <div class="logo-row-mobile-label flex flex-col text-left font-soft transition-all duration-200">
         <span class="text-[14px] font-black text-vert-dark leading-none">Marché de Mo'</span>
         <span class="text-[8px] font-bold text-neutral-400 mt-0.5 leading-none uppercase tracking-wider">Supermarché</span>
       </div>
@@ -185,9 +191,9 @@ const BUTTON_EMOJIS: Record<string, string> = {
       <!-- Promos button -->
       <a
         href="/promos"
-        class="inline-flex items-center hover:opacity-90 transition"
+        class="inline-flex items-center hover:opacity-90 transition relative z-20"
       >
-        <img src="/promos/promo_button-removebg-preview.png" alt="Promos" class="h-20 md:h-24 w-auto object-contain" />
+        <img src="/promos/promo_button-removebg-preview.png" alt="Promos" class="h-14 w-auto object-contain hover:scale-105 transition-transform duration-200" />
       </a>
 
       <!-- Magasins button -->
@@ -223,36 +229,46 @@ const BUTTON_EMOJIS: Record<string, string> = {
     class="header-logo-row w-full flex flex-col items-center overflow-hidden hidden lg:flex"
     style="background: radial-gradient(circle at center, rgba(46, 139, 74, 0.05) 0%, rgba(255, 255, 255, 0) 80%), url('data:image/svg+xml,%3Csvg width=\'120\' height=\'24\' viewBox=\'0 0 120 24\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 12 Q 30 0, 60 12 T 120 12\' fill=\'none\' stroke=\'%231c6b35\' stroke-width=\'1.5\' stroke-opacity=\'0.04\'/%3E%3C/svg%3E') repeat;"
   >
-    <a href="/" class="group flex flex-col items-center py-4">
+    <a href="/" class="group flex flex-col items-center py-1">
       <img
         src="/logos/logo-marchedemo-rond-contourgreen.png"
         alt="Marché de Mo'"
-        width="110"
-        height="110"
+        width="144"
+        height="144"
         fetchpriority="high"
-        class="w-24 h-24 lg:w-28 lg:h-28 object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300 bg-white rounded-full shadow-sm p-0.5"
+        class="w-28 h-28 lg:w-36 lg:h-36 object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300 bg-white rounded-full shadow-sm p-0.5"
       />
     </a>
   </div>
 
   <!-- 3. Row 3: Category Buttons & Auxiliary Links (Sticky below Row 1) -->
-  <div id="header-categories-row" class="border-t border-black/5 bg-neutral-50/80 py-2.5 relative z-10">
+  <div id="header-categories-row" class="border-t border-black/5 bg-neutral-50/80 py-1.5 relative z-10">
     <div id="header-categories-flex" class="container-mo flex items-center gap-6 transition-all duration-300">
       <!-- Scrollable category tabs bar (Centered by default in top state) -->
       <div 
         id="header-categories-container" 
-        class="overflow-x-auto whitespace-nowrap scrollbar-hide flex items-center gap-3 py-1 transition-all duration-300"
+        class="overflow-x-auto whitespace-nowrap scrollbar-hide flex items-center gap-3 py-0.5 transition-all duration-300"
       >
         {RAYONS_LIST.slice(0, 6).map((r) => {
           const bgCol = BUTTON_COLORS[r.slug] || BUTTON_COLORS["fruits-legumes"];
-          const emoji = BUTTON_EMOJIS[r.slug] || "";
+          const twemojiId = TWEMOJI_IDS[r.slug];
           return (
             <a
               href={`/rayons/${r.slug}`}
-              class="group/tab inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-[15px] font-soft font-bold text-white transition-all shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:-translate-y-[1px] hover:scale-[1.02] shrink-0"
+              class="group/tab inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-[15px] font-soft font-bold text-white transition-all shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:-translate-y-[1px] hover:scale-[1.02] shrink-0"
               style={`background-color: ${bgCol}; box-shadow: 0 4px 10px ${bgCol}25;`}
             >
-              <span class="whitespace-nowrap">{emoji} {r.nomCourt}</span>
+              <span class="inline-flex items-center gap-2.5 whitespace-nowrap">
+                {twemojiId && (
+                  <img
+                    src={`https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/${twemojiId}.png`}
+                    alt=""
+                    class="w-[20px] h-[20px] object-contain shrink-0"
+                    loading="lazy"
+                  />
+                )}
+                {r.nomCourt}
+              </span>
             </a>
           );
         })}
@@ -263,10 +279,8 @@ const BUTTON_EMOJIS: Record<string, string> = {
         id="header-scrolled-links"
         class="hidden items-center gap-5 text-[13.5px] font-soft font-bold text-neutral-500 font-pro shrink-0 transition-all duration-300 opacity-0 translate-x-5 pointer-events-none"
       >
-        <a href="/recettes" class="hover:text-vert transition-colors">Recettes</a>
         <a href="/actualites" class="hover:text-vert transition-colors">Actualités</a>
-        <a href="/recrutement" class="hover:text-vert transition-colors">Recrutement</a>
-        <a href="/franchise" class="hover:text-vert transition-colors text-vert-dark">Franchise</a>
+        <a href="/franchise" class="hover:text-vert transition-colors text-vert-dark font-black">Franchise</a>
         <a href="/programme-fidelite" class="hover:text-vert transition-colors">Fidélité</a>
       </div>
     </div>
@@ -288,7 +302,7 @@ const BUTTON_EMOJIS: Record<string, string> = {
           Le plus grand supermarché ethnique d'Occitanie
         </h4>
         <p class="text-[12px] font-normal text-neutral-500 mt-1 leading-normal">
-          Plus de 20 000 références et 12 rayons thématiques à Toulouse Sud. Ouvert 7j/7.
+          Plus de 20 000 références et 12 rayons thématiques à {currentStore.nomCourt.split(' — ')[0]}. Ouvert 7j/7.
         </p>
       </div>
 
@@ -475,6 +489,58 @@ const BUTTON_EMOJIS: Record<string, string> = {
     pointer-events: none;
   }
 
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  /* ---------------------------------------------------------------
+     Scrolled state — design rules
+     ---------------------------------------------------------------
+     Desktop & mobile share the SAME behaviour for visual consistency:
+       1. Burger STAYS visible (it's the only nav entry point).
+       2. The textual brand block beside the logo (logo-row-*-label) is
+          hidden — only logo + burger remain on the left.
+       3. The logo scales UP a notch so it stays the visual anchor.
+     This matches the user's request for parity between mobile and
+     desktop scrolled headers.
+     --------------------------------------------------------------- */
+  /* Desktop scrolled */
+  #site-header.is-header-scrolled .logo-row-1 {
+    width: 72px !important;
+    height: 72px !important;
+  }
+  #site-header.is-header-scrolled .logo-row-1-label {
+    opacity: 0;
+    transform: translateX(-8px);
+    max-width: 0;
+    margin-left: 0;
+    pointer-events: none;
+    overflow: hidden;
+    visibility: hidden;
+  }
+
+  /* Mobile scrolled — mirrors desktop behaviour */
+  #site-header.is-header-scrolled .logo-row-mobile {
+    width: 44px !important;
+    height: 44px !important;
+  }
+  #site-header.is-header-scrolled .logo-row-mobile-label {
+    opacity: 0;
+    transform: translateX(-6px);
+    max-width: 0;
+    margin-left: 0;
+    pointer-events: none;
+    overflow: hidden;
+    visibility: hidden;
+  }
+
   @keyframes pulse-glow {
     0%, 100% {
       box-shadow: 0 0 5px rgba(139, 25, 25, 0.4), 0 0 10px rgba(28, 107, 53, 0.2);
@@ -531,6 +597,10 @@ const BUTTON_EMOJIS: Record<string, string> = {
 <script>
   let searchIndex: any = null;
   let isFetchingIndex = false;
+  let fuseProduits: any = null;
+  let fuseRayons: any = null;
+  let fuseRecettes: any = null;
+  let fuseActus: any = null;
 
   const ensureSearchIndex = async () => {
     if (searchIndex || isFetchingIndex) return;
@@ -539,34 +609,31 @@ const BUTTON_EMOJIS: Record<string, string> = {
       const res = await fetch("/api/search");
       if (res.ok) {
         searchIndex = await res.json();
+        const { default: Fuse } = await import("fuse.js");
+        
+        fuseProduits = new Fuse(searchIndex.produits, {
+          keys: ["title", "rayon", "origine", "badge"],
+          threshold: 0.35,
+          distance: 100,
+        });
+        fuseRayons = new Fuse(searchIndex.rayons, {
+          keys: ["title", "tagline"],
+          threshold: 0.35,
+        });
+        fuseRecettes = new Fuse(searchIndex.recettes, {
+          keys: ["title", "rayon"],
+          threshold: 0.35,
+        });
+        fuseActus = new Fuse(searchIndex.actus, {
+          keys: ["title", "categorie"],
+          threshold: 0.35,
+        });
       }
     } catch (err) {
       console.error("Error loading search index:", err);
     } finally {
       isFetchingIndex = false;
     }
-  };
-
-  const normalizeString = (str: string): string => {
-    return str
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase();
-  };
-
-  const matchQuery = (item: any, queryWords: string[]): boolean => {
-    let searchText = "";
-    if (item.type === "produit") {
-      searchText = `${item.title} ${item.rayon} ${item.origine} ${item.badge}`;
-    } else if (item.type === "rayon") {
-      searchText = `${item.title} ${item.tagline}`;
-    } else if (item.type === "actu") {
-      searchText = `${item.title} ${item.categorie}`;
-    } else if (item.type === "recette") {
-      searchText = `${item.title} ${item.rayon}`;
-    }
-    const normText = normalizeString(searchText);
-    return queryWords.every((word) => normText.includes(word));
   };
 
   const setupHeader = () => {
@@ -678,7 +745,7 @@ const BUTTON_EMOJIS: Record<string, string> = {
         showDesktopSuggestions();
       }
 
-      if (!searchIndex) {
+      if (!searchIndex || !fuseProduits) {
         resultsContainer.innerHTML = `
           <div class="flex items-center justify-center py-10 text-neutral-500 gap-2">
             <svg class="animate-spin h-5 w-5 text-vert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -694,13 +761,10 @@ const BUTTON_EMOJIS: Record<string, string> = {
         return;
       }
 
-      const normalizedQuery = normalizeString(trimmed);
-      const queryWords = normalizedQuery.split(/\s+/).filter(Boolean);
-
-      const matchingProduits = searchIndex.produits.filter((p: any) => matchQuery(p, queryWords)).slice(0, 6);
-      const matchingRayons = searchIndex.rayons.filter((r: any) => matchQuery(r, queryWords)).slice(0, 4);
-      const matchingRecettes = searchIndex.recettes.filter((r: any) => matchQuery(r, queryWords)).slice(0, 4);
-      const matchingActus = searchIndex.actus.filter((a: any) => matchQuery(a, queryWords)).slice(0, 4);
+      const matchingProduits = fuseProduits.search(trimmed).slice(0, 6).map((r: any) => r.item);
+      const matchingRayons = fuseRayons.search(trimmed).slice(0, 4).map((r: any) => r.item);
+      const matchingRecettes = fuseRecettes.search(trimmed).slice(0, 4).map((r: any) => r.item);
+      const matchingActus = fuseActus.search(trimmed).slice(0, 4).map((r: any) => r.item);
 
       const totalMatches = matchingProduits.length + matchingRayons.length + matchingRecettes.length + matchingActus.length;
 
@@ -845,7 +909,7 @@ const BUTTON_EMOJIS: Record<string, string> = {
       }
     }
 
-    // Prefetch focus
+    // Prefetch focus / hover
     if (desktopSearchInput) {
       if (!desktopSearchInput.dataset.focusListenerAttached) {
         desktopSearchInput.dataset.focusListenerAttached = "true";
@@ -855,6 +919,9 @@ const BUTTON_EMOJIS: Record<string, string> = {
             showDesktopSuggestions();
           }
         });
+        desktopSearchInput.addEventListener("mouseenter", () => {
+          ensureSearchIndex();
+        });
       }
     }
 
@@ -862,6 +929,9 @@ const BUTTON_EMOJIS: Record<string, string> = {
       if (!mobileSearchInput.dataset.focusListenerAttached) {
         mobileSearchInput.dataset.focusListenerAttached = "true";
         mobileSearchInput.addEventListener("focus", () => {
+          ensureSearchIndex();
+        });
+        mobileSearchInput.addEventListener("mouseenter", () => {
           ensureSearchIndex();
         });
       }

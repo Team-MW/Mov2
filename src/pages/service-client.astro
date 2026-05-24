@@ -95,7 +95,10 @@ const bc = breadcrumbSchema([{ name: "Service client", url: "/service-client" }]
       <div class="lg:col-span-7">
         <form id="contact-form" method="POST" action="/api/contact" class="bg-white rounded-3xl p-6 md:p-8 shadow-card space-y-5">
           <!-- Honeypot anti-spam -->
-          <input type="text" name="phone_confirm" class="hidden" tabindex="-1" autocomplete="off" style="display: none !important" />
+          <div style="position: absolute; left: -9999px; top: -9999px; opacity: 0; width: 0; height: 0; overflow: hidden; pointer-events: none;" aria-hidden="true">
+            <label for="phone_confirm">Confirmer le numéro de téléphone</label>
+            <input type="text" name="phone_confirm" id="phone_confirm" tabindex="-1" autocomplete="off" />
+          </div>
           <div class="grid md:grid-cols-2 gap-4">
             <div>
               <label for="prenom" class="block text-[13px] font-bold mb-1.5">Prénom *</label>

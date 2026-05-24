@@ -8,7 +8,6 @@ import type { APIRoute } from "astro";
  *
  * `prerender = false` required in hybrid mode (cf login.ts).
  */
-import type { APIRoute } from "astro";
 import { isRateLimited } from "../../lib/rate-limit";
 
 export const prerender = false;

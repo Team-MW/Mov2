@@ -29,6 +29,7 @@
     "@zxing/library": "^0.21.3",
     "astro": "^4.16.10",
     "chart.js": "^4.5.1",
+    "fuse.js": "^7.3.0",
     "jsbarcode": "^3.12.3",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",

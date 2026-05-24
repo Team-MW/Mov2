@@ -46,7 +46,10 @@ const isDark = variant === "dark";
           class="newsletter-inline-form flex flex-col md:flex-row gap-3"
         >
           <!-- Honeypot anti-spam -->
-          <input type="text" name="phone_confirm" class="hidden" tabindex="-1" autocomplete="off" style="display: none !important" />
+          <div style="position: absolute; left: -9999px; top: -9999px; opacity: 0; width: 0; height: 0; overflow: hidden; pointer-events: none;" aria-hidden="true">
+            <label for="phone_confirm_inline">Confirmer le numéro de téléphone</label>
+            <input type="text" name="phone_confirm" id="phone_confirm_inline" tabindex="-1" autocomplete="off" />
+          </div>
           <label class="sr-only" for="newsletter-email-inline">Votre email</label>
           <input
             id="newsletter-email-inline"

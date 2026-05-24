@@ -17,7 +17,15 @@
  */
 import { supabaseAdmin } from "@/lib/supabase";
 
-export type AdminEntity = "promo" | "produit" | "media" | "import" | "auth" | "actu";
+export type AdminEntity =
+  | "promo"
+  | "produit"
+  | "media"
+  | "import"
+  | "auth"
+  | "actu"
+  | "home_slide"
+  | "home_marquee";
 
 export type AdminAction =
   | "create"
@@ -252,7 +260,16 @@ export async function dailyActivityCounts(
     buckets.push({
       date: d.toISOString().slice(0, 10),
       total: 0,
-      byEntity: { promo: 0, produit: 0, media: 0, import: 0, auth: 0, actu: 0 },
+      byEntity: {
+        promo: 0,
+        produit: 0,
+        media: 0,
+        import: 0,
+        auth: 0,
+        actu: 0,
+        home_slide: 0,
+        home_marquee: 0,
+      },
       byAction: {
         create: 0,
         update: 0,

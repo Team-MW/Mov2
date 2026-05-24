@@ -106,24 +106,20 @@ export const TAXONOMIE: Record<RayonSlug, RayonTaxonomie> = {
     "Poissons": null,
     "Desserts": null,
   },
+
+  "boulangerie": {
+    "Pains du monde": ["Pain traditionnel", "Pains plats", "Wraps"],
+    "Viennoiseries": null,
+    "Pâtisseries orientales": null,
+  },
+
+  "produits-laitiers": {
+    "Laits & yaourts": null,
+    "Fromages du monde": ["AOP", "Frais", "À pâte dure"],
+    "Beurres & crèmes": null,
+    "Œufs": null,
+  },
 };
-
-/* Rayons à venir (présents dans le schema.sql mais pas encore dans
-   site.ts). Quand ils seront ajoutés à RAYONS, déplacer ces entrées
-   dans TAXONOMIE ci-dessus :
-
-   "boulangerie": {
-     "Pains du monde": ["Pain traditionnel", "Pains plats", "Wraps"],
-     "Viennoiseries": null,
-     "Pâtisseries orientales": null,
-   },
-   "produits-laitiers": {
-     "Laits & yaourts": null,
-     "Fromages du monde": ["AOP", "Frais", "À pâte dure"],
-     "Beurres & crèmes": null,
-     "Œufs": null,
-   },
-*/
 
 /* --------------------------------------------------------------
    Slugify — label "Fruits exotiques" → "fruits-exotiques"

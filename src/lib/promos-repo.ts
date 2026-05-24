@@ -29,6 +29,9 @@ export interface PromoData {
   date_debut: string;
   date_fin: string;
   mise_en_avant: boolean;
+  /** Single-slot urgent ticker under the PromoHero (only one promotion
+   *  can occupy this slot at once — enforced by the admin API). */
+  ticker_semaine: boolean;
   actif: boolean;
   ordre: number;
 }
@@ -59,6 +62,7 @@ function rowToEntry(row: any): PromoEntry {
       date_debut: row.date_debut,
       date_fin: row.date_fin,
       mise_en_avant: !!row.mise_en_avant,
+      ticker_semaine: !!row.ticker_semaine,
       actif: !!row.actif,
       ordre: Number(row.ordre ?? 0),
     },
@@ -106,6 +110,9 @@ async function fromContentCollection(): Promise<PromoEntry[]> {
         date_debut: p.data.date_debut,
         date_fin: p.data.date_fin,
         mise_en_avant: !!p.data.mise_en_avant,
+        /* Content Collection items never carry the ticker flag — only
+         * Supabase rows can occupy the homepage urgent banner. */
+        ticker_semaine: false,
         actif: !!p.data.actif,
         ordre: 0, /* Content Collection doesn't have ordre — default 0 */
       },

@@ -5,7 +5,7 @@ let audioCtx = null;
 function ctx() {
   if (audioCtx) return audioCtx;
   try {
-    const Ctor = window.AudioContext || window.webkitAudioContext;
+    const Ctor = window.AudioContext || window['webkitAudioContext'];
     if (Ctor) audioCtx = new Ctor();
   } catch {}
   return audioCtx;

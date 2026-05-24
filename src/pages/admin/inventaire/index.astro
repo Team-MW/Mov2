@@ -144,13 +144,14 @@ import Layout from '../../../layouts/admin/InventaireLayout.astro';
   <script>
     // Quick stats fetch with skeleton loading state.
     (async () => {
-      const fmtPrice = (v) => v.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €';
+      const fmtPrice = (v: number) => v.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €';
 
       // Hide skeletons + spinners, reveal real values
       const reveal = () => {
         document.querySelectorAll('#quick-stats .qs-skel').forEach((s) => s.remove());
         document.querySelectorAll('#quick-stats .qs-spinner').forEach((s) => s.remove());
-        document.querySelectorAll('#quick-stats .qs-val').forEach((v) => {
+        document.querySelectorAll('#quick-stats .qs-val').forEach((el) => {
+          const v = el as HTMLElement;
           v.classList.remove('hidden');
           // Petit fade-in pour adoucir l'apparition
           v.style.opacity = '0';
@@ -160,10 +161,11 @@ import Layout from '../../../layouts/admin/InventaireLayout.astro';
       };
 
       // Show "indisponible" state with a Retry button
-      const showError = (msg) => {
+      const showError = (msg: string) => {
         document.querySelectorAll('#quick-stats .qs-skel').forEach((s) => s.remove());
         document.querySelectorAll('#quick-stats .qs-spinner').forEach((s) => s.remove());
-        document.querySelectorAll('#quick-stats .qs-val').forEach((v) => {
+        document.querySelectorAll('#quick-stats .qs-val').forEach((el) => {
+          const v = el as HTMLElement;
           v.classList.remove('hidden');
           v.classList.remove('text-slate-900', 'text-amber-600', 'text-red-600', 'text-red-700');
           v.classList.add('text-slate-300');
@@ -176,7 +178,7 @@ import Layout from '../../../layouts/admin/InventaireLayout.astro';
           banner.className = 'col-span-2 md:col-span-4 -mt-1 text-center text-xs text-slate-500';
           banner.innerHTML = `${msg} · <button id="qs-retry" class="underline font-semibold text-vert hover:text-vert-800">Réessayer</button>`;
           host.appendChild(banner);
-          document.getElementById('qs-retry').addEventListener('click', () => window.location.reload());
+          document.getElementById('qs-retry')?.addEventListener('click', () => window.location.reload());
         }
       };
 
@@ -186,10 +188,16 @@ import Layout from '../../../layouts/admin/InventaireLayout.astro';
         const res = await fetch('/api/admin/inventaire/stats?top=0');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const { total = 0, value = 0, low = 0, out = 0 } = await res.json();
-        document.getElementById('qs-total').textContent = total;
-        document.getElementById('qs-value').textContent = fmtPrice(value);
-        document.getElementById('qs-low').textContent   = low;
-        document.getElementById('qs-out').textContent   = out;
+        
+        const elTotal = document.getElementById('qs-total');
+        const elValue = document.getElementById('qs-value');
+        const elLow = document.getElementById('qs-low');
+        const elOut = document.getElementById('qs-out');
+        if (elTotal) elTotal.textContent = total;
+        if (elValue) elValue.textContent = fmtPrice(value);
+        if (elLow) elLow.textContent   = low;
+        if (elOut) elOut.textContent   = out;
+        
         reveal();
       } catch (e) {
         console.error('Quick stats fetch failed:', e);

@@ -31,6 +31,13 @@ export default function LocalVideoPlayer({ src, title, href }) {
     setMuted(nextMuted);
   };
 
+  const isMp4 = src && src.endsWith(".mp4");
+  /* WebM transcodes are intentionally disabled until ffmpeg-produced
+   * .webm siblings exist in /public/videos. Emitting <source
+   * type="video/webm"> for non-existent files generated a 404 per video
+   * on every page render. To re-enable, transcode to VP9/Opus and
+   * uncomment the webmSrc <source> below. */
+
   if (!src || failed) {
     return href ? (
       <a
@@ -52,14 +59,15 @@ export default function LocalVideoPlayer({ src, title, href }) {
       <video
         ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover"
-        src={src}
         playsInline
         muted
         autoPlay
         loop
         preload="metadata"
         onError={() => setFailed(true)}
-      />
+      >
+        <source src={src} type={isMp4 ? "video/mp4" : undefined} />
+      </video>
 
       <button
         type="button"

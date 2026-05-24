@@ -40,8 +40,18 @@ function isPublic(pathname) {
 }
 
 export const onRequest = async (context, next) => {
-  const { cookies, redirect, locals, url } = context;
+  const { cookies, redirect, url } = context;
   const pathname = url.pathname;
+
+  /* NOTE on geo-IP detection : we intentionally don't expose
+   * `request.headers` via locals from middleware. Doing so triggers
+   * the noisy "Astro.request.headers is unavailable in static output
+   * mode" warning during build (middleware runs at prerender time
+   * with a fake Request whose .headers getter complains). On-demand
+   * pages that need IP geolocation can read `Astro.request.headers`
+   * directly without warning. Prerendered pages fall back to the
+   * cookie + default-store resolution in `resolveStore()`, which is
+   * what we want anyway since their HTML is cached. */
 
   if (isPublic(pathname)) {
     return next();

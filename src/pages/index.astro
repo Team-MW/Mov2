@@ -21,42 +21,31 @@ import { FAQ_HOME } from "@/lib/faqs";
 import { organizationSchema, websiteSchema, allMagasinsSchema, offerSchema } from "@/lib/schema";
 import { getActivePromos } from "@/lib/promos-repo";
 import { getProduitsVedettes } from "@/lib/produits-repo";
+import { getHomeEditorialSlides, getHomeMarqueeItems } from "@/lib/home-content";
 
 /* Promos : Supabase-first (actif=true), fallback Content Collection.
-   featuredPromo = first mise_en_avant row, used for OfferSchema JSON-LD. */
+   featuredPromo (red ticker under PromoHero) is selected from the
+   admin: a promo with `ticker_semaine = true` wins, falling back to
+   the first `mise_en_avant`, then any active promo. The single-slot
+   constraint is enforced server-side by the promos API. */
 const allPromos = await getActivePromos();
-const featuredPromo = allPromos.find((p) => p.data.mise_en_avant) ?? allPromos[0];
+const featuredPromo =
+  allPromos.find((p) => p.data.ticker_semaine) ??
+  allPromos.find((p) => p.data.mise_en_avant) ??
+  allPromos[0];
 const promosHome = allPromos.slice(0, 6);
 const promosHero = allPromos.filter((p) => p.data.mise_en_avant).slice(0, 4);
 
 /* Editorial slides for PromoHero — non-promo narratives (app, fidelity,
-   new store). Shown after the mise_en_avant promos. */
-const heroEditorialSlides: ExtraSlide[] = [
-  {
-    kind: "editorial",
-    eyebrow: "Dernier-né du Groupe",
-    titre: "Toulouse Sud Cépière. Ouvert.",
-    description:
-      "1 200 m² d'espace de vente, rayon Saveurs d'Asie étendu, espace traiteur halal sur place. Votre nouveau rendez-vous au cœur de l'Hippodrome.",
-    image: "/images/magasins/toulouse-sud.jpg",
-    imageAlt: "Nouveau magasin Marché de Mo' Toulouse Sud Cépière",
-    ctaLabel: "Découvrir le magasin",
-    ctaHref: "/magasins/toulouse-sud",
-    accent: "#1C6B35",
-  },
-  {
-    kind: "editorial",
-    eyebrow: "Programme fidélité",
-    titre: "5€ offerts à chaque 100€.",
-    description:
-      "La carte Marché de Mo' : un avantage direct, sans condition. Vous faites vos courses, on vous remercie.",
-    image: "/images/rayons/fruits-legumes.jpg",
-    imageAlt: "Carte fidélité Marché de Mo'",
-    ctaLabel: "Rejoindre le programme",
-    ctaHref: "/fidelite",
-    accent: "#C53030",
-  },
-];
+ * new store, etc). Now editable in the admin via /admin/contenu-home,
+ * stored in `public.home_editorial_slides`. The repo function falls
+ * back to the previous hardcoded list when Supabase is unreachable, so
+ * preview deploys / Supabase outages still render the home page. */
+const heroEditorialSlides: ExtraSlide[] = await getHomeEditorialSlides();
+
+/* Marquee labels (KineticMarquee between rayons grid and actus) — also
+ * admin-editable. Falls back to a static list on Supabase failures. */
+const marqueeItems = await getHomeMarqueeItems();
 
 /* Produits vedettes : Supabase-first (ordre asc), fallback static list. */
 const PRODUITS_VEDETTES = await getProduitsVedettes(8);
@@ -100,7 +89,7 @@ const schemas = [
 
   {/* ====================== 2 · TICKER PROMO (urgency strip) ====================== */}
   {featuredPromo && (
-    <section class="relative overflow-hidden bg-rouge text-white">
+    <section class="relative overflow-hidden bg-rouge text-white animate-fade-up">
       <div class="container-mo py-4 md:py-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] md:text-[14px] font-pro">
         <span class="inline-flex items-center gap-2 font-bold">
           <span class="badge-promo !bg-white !text-rouge !shadow-none !min-w-0 !h-auto !px-2 !py-0.5 !text-[12px]">
@@ -119,12 +108,10 @@ const schemas = [
     </section>
   )}
 
-
-
   {/* ====================== VIDEOS TIKTOK — social proof ====================== */}
   {/* Position 3 : Directement après les promos de la semaine */}
   {videos.length > 0 && (
-    <section class="section bg-blanc">
+    <section class="section bg-blanc animate-fade-up">
       <div class="container-mo">
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 reveal">
           <div class="max-w-2xl">
@@ -150,6 +137,30 @@ const schemas = [
             );
           })}
         </div>
+      </div>
+    </section>
+  )}
+
+  {/* ====================== PROMOS DE LA SEMAINE — IMPULSE BUY ====================== */}
+  {promosHome.length > 0 && (
+    <section class="section bg-white">
+      <div class="container-mo">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 reveal">
+          <div class="max-w-2xl">
+            <span class="eyebrow !text-rouge">Promos de la semaine</span>
+            <h2 class="display-lg mt-4 text-balance">
+              Les <span class="text-rouge">vraies promos</span> du moment.
+            </h2>
+            <p class="mt-3 text-[15px] text-neutral-600">
+              Mises à jour chaque semaine. Affichées à l'euro près, dans nos 2 magasins.
+            </p>
+          </div>
+          <a href="/promos" class="btn btn-rouge shrink-0">
+            Voir toutes les promos
+          </a>
+        </div>
+
+        <PromoCarousel promos={promosHome} />
       </div>
     </section>
   )}
@@ -309,34 +320,34 @@ const schemas = [
                 </div>
 
                 <!-- Product Grid -->
-                <div class="grid grid-cols-2 gap-2">
+                <div class="grid grid-cols-2 gap-2" id="sim-product-grid">
                   <!-- Product 1 -->
-                  <div class="bg-white/5 rounded-xl p-2 border border-white/5 flex flex-col justify-between">
+                  <div class="bg-white/5 rounded-xl p-2 border border-white/5 flex flex-col justify-between" id="sim-p1">
                     <div>
                       <div class="aspect-square rounded-lg bg-neutral-900 overflow-hidden relative mb-1.5">
-                        <img src="/images/promos/mangue.jpg" class="object-cover w-full h-full" alt="Mangue José" />
+                        <img id="sim-p1-img" src="/images/promos/mangue.jpg" class="object-cover w-full h-full" alt="Mangue José" />
                       </div>
-                      <div class="font-bold text-[9px] truncate">Mangue José</div>
-                      <div class="text-[7.5px] text-neutral-400">Île de la Réunion</div>
+                      <div id="sim-p1-title" class="font-bold text-[9px] truncate">Mangue José</div>
+                      <div id="sim-p1-desc" class="text-[7.5px] text-neutral-400">Île de la Réunion</div>
                     </div>
                     <div class="mt-2 flex items-center justify-between">
-                      <span class="font-bold text-vert">3,90€</span>
+                      <span id="sim-p1-price" class="font-bold text-vert">3,90€</span>
                       <button id="sim-add-btn" class="bg-vert text-white text-[7.5px] font-bold px-2 py-1 rounded-md transition-colors hover:bg-vert/80 shadow-sm">Ajouter</button>
                     </div>
                   </div>
 
                   <!-- Product 2 -->
-                  <div class="bg-white/5 rounded-xl p-2 border border-white/5 flex flex-col justify-between">
+                  <div class="bg-white/5 rounded-xl p-2 border border-white/5 flex flex-col justify-between" id="sim-p2">
                     <div>
                       <div class="aspect-square rounded-lg bg-neutral-900 overflow-hidden relative mb-1.5">
-                        <img src="/images/promos/agneau-halal.jpg" class="object-cover w-full h-full" alt="Bifteck de Bœuf" />
+                        <img id="sim-p2-img" src="/images/promos/agneau-halal.jpg" class="object-cover w-full h-full" alt="Bifteck de Bœuf" />
                       </div>
-                      <div class="font-bold text-[9px] truncate">Bifteck de Bœuf</div>
-                      <div class="text-[7.5px] text-neutral-400">Halal, origine France</div>
+                      <div id="sim-p2-title" class="font-bold text-[9px] truncate">Bifteck de Bœuf</div>
+                      <div id="sim-p2-desc" class="text-[7.5px] text-neutral-400">Halal, origine France</div>
                     </div>
                     <div class="mt-2 flex items-center justify-between">
-                      <span class="font-bold text-vert">14,90€</span>
-                      <button class="bg-white/10 text-white text-[7.5px] font-bold px-2 py-1 rounded-md">Ajouter</button>
+                      <span id="sim-p2-price" class="font-bold text-vert">14,90€</span>
+                      <button id="sim-add-btn-2" class="bg-white/10 text-white text-[7.5px] font-bold px-2 py-1 rounded-md">Ajouter</button>
                     </div>
                   </div>
                 </div>
@@ -420,30 +431,6 @@ const schemas = [
     </div>
   </section>
 
-  {/* ====================== PROMOS DE LA SEMAINE — IMPULSE BUY ====================== */}
-  {promosHome.length > 0 && (
-    <section class="section bg-white">
-      <div class="container-mo">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 reveal">
-          <div class="max-w-2xl">
-            <span class="eyebrow !text-rouge">Promos de la semaine</span>
-            <h2 class="display-lg mt-4 text-balance">
-              Les <span class="text-rouge">vraies promos</span> du moment.
-            </h2>
-            <p class="mt-3 text-[15px] text-neutral-600">
-              Mises à jour chaque semaine. Affichées à l'euro près, dans nos 2 magasins.
-            </p>
-          </div>
-          <a href="/promos" class="btn btn-rouge shrink-0">
-            Voir toutes les promos
-          </a>
-        </div>
-
-        <PromoCarousel promos={promosHome} />
-      </div>
-    </section>
-  )}
-
   {/* ====================== NOS RAYONS ====================== */}
   <section class="section bg-blanc">
     <div class="container-mo">
@@ -488,14 +475,7 @@ const schemas = [
       Typographie display massive qui défile. Casse le rythme visuel après
       le mur des 12 rayons et annonce le chapitre "actualités". */}
   <KineticMarquee
-    items={[
-      "Saveurs du monde",
-      "Arrivages quotidiens",
-      "Boucherie halal sur carcasse",
-      "Fruits exotiques",
-      "20 000+ références",
-      "60 ans d'expérience",
-    ]}
+    items={marqueeItems}
     variant="vert"
     speed={25}
   />
@@ -943,6 +923,7 @@ const schemas = [
     const progress = document.getElementById("sim-delivery-progress");
     const status = document.getElementById("sim-delivery-status");
     const addBtn = document.getElementById("sim-add-btn");
+    const addBtn2 = document.getElementById("sim-add-btn-2");
     const laser = document.getElementById("sim-barcode-laser");
     const scanOverlay = document.getElementById("sim-scan-overlay");
     const pointsEl = document.getElementById("sim-loyalty-points");
@@ -957,6 +938,26 @@ const schemas = [
       timeouts = [];
     };
 
+    // Dynamic category product catalog mapping to make simulator lively
+    const categoryProducts = [
+      {
+        p1: { title: "Mangue José", desc: "Île de la Réunion", price: "3,90€", img: "/images/promos/mangue.jpg" },
+        p2: { title: "Banane Plantain", desc: "Arrivage Côte d'Ivoire", price: "1,99€", img: "/images/rayons/fruits-legumes.jpg" }
+      },
+      {
+        p1: { title: "Épaule d'Agneau", desc: "Halal, découpe du jour", price: "12,90€", img: "/images/rayons/boucherie-halal.jpg" },
+        p2: { title: "Bifteck de Bœuf", desc: "Halal, origine France", price: "14,90€", img: "/images/rayons/boucherie-halal/11062b-603fa6aa568c43e08182a6e546211812f000.jpg" }
+      },
+      {
+        p1: { title: "Ras el Hanout", desc: "Mélange maison premium", price: "4,50€", img: "/images/rayons/epices-du-monde.jpg" },
+        p2: { title: "Safran Pur Pistils", desc: "Import direct d'Iran", price: "8,90€", img: "/images/rayons/epices-du-monde/marche-aux-epices-dubai.jpg" }
+      },
+      {
+        p1: { title: "Sauce Soja Kikkoman", desc: "Bouteille en verre 150ml", price: "2,80€", img: "/images/rayons/saveurs-asie.jpg" },
+        p2: { title: "Nouilles Udon", desc: "Nouilles fraîches 200g", price: "1,50€", img: "/images/rayons/saveurs-asie/image-de-jason-leung.jpg" }
+      }
+    ];
+
     const setCategoryActive = (idx: number) => {
       for (let i = 0; i < 4; i++) {
         const cat = document.getElementById(`sim-cat-${i}`);
@@ -968,6 +969,29 @@ const schemas = [
           cat.classList.remove("bg-white/15", "border-vert/30", "scale-[1.03]");
           cat.classList.add("bg-white/5", "border-white/5");
         }
+      }
+
+      // Update product cards dynamic images and text for realistic simulator feel
+      const prodData = categoryProducts[idx];
+      if (prodData) {
+        const p1Img = document.getElementById("sim-p1-img") as HTMLImageElement | null;
+        const p1Title = document.getElementById("sim-p1-title");
+        const p1Desc = document.getElementById("sim-p1-desc");
+        const p1Price = document.getElementById("sim-p1-price");
+        const p2Img = document.getElementById("sim-p2-img") as HTMLImageElement | null;
+        const p2Title = document.getElementById("sim-p2-title");
+        const p2Desc = document.getElementById("sim-p2-desc");
+        const p2Price = document.getElementById("sim-p2-price");
+
+        if (p1Img) p1Img.src = prodData.p1.img;
+        if (p1Title) p1Title.textContent = prodData.p1.title;
+        if (p1Desc) p1Desc.textContent = prodData.p1.desc;
+        if (p1Price) p1Price.textContent = prodData.p1.price;
+
+        if (p2Img) p2Img.src = prodData.p2.img;
+        if (p2Title) p2Title.textContent = prodData.p2.title;
+        if (p2Desc) p2Desc.textContent = prodData.p2.desc;
+        if (p2Price) p2Price.textContent = prodData.p2.price;
       }
     };
 
@@ -983,6 +1007,11 @@ const schemas = [
       cartBadge.classList.remove("scale-100");
       cartBadge.classList.add("scale-0");
       if (addBtn) addBtn.textContent = "Ajouter";
+      if (addBtn2) {
+        addBtn2.textContent = "Ajouter";
+        addBtn2.classList.remove("bg-vert");
+        addBtn2.classList.add("bg-white/10", "text-white");
+      }
       mainScroll.scrollTo({ top: 0, behavior: "auto" });
       progress.style.transition = "none";
       progress.style.width = "25%";
@@ -1077,11 +1106,17 @@ const schemas = [
         setCategoryActive(2);
       }, 9500);
 
-      // Step 12: Add second item
+      // Step 12: Add second item (click Product 2 button in Viandes category - which is actually Épices now)
       delay(() => {
         cartBadge.textContent = "2";
         cartBadge.classList.add("scale-125");
         setTimeout(() => cartBadge.classList.remove("scale-125"), 200);
+
+        if (addBtn2) {
+          addBtn2.textContent = "Ajouté !";
+          addBtn2.classList.remove("bg-white/10", "text-white");
+          addBtn2.classList.add("bg-vert", "text-white");
+        }
 
         // Update float text to show second item added
         const floatTextEl = floatBadge.querySelector("span");

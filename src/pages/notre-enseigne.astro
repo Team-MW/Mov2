@@ -75,23 +75,83 @@ const PILIERS = [
 >
   <Breadcrumb items={[{ name: "Notre enseigne" }]} />
 
-  <!-- HERO -->
-  <section class="bg-blanc pb-8 relative overflow-hidden">
-    <img src="/logos/favicon-marchedemo.png" alt="" aria-hidden="true" class="absolute -right-24 top-0 w-[620px] opacity-[0.04] pointer-events-none select-none" />
-    <div class="container-mo relative">
-      <span class="eyebrow">Notre histoire</span>
-      <h1 class="display-xl mt-4 text-balance max-w-5xl" data-split-reveal>
-        Une famille.<br/>
-        Une <span class="text-vert">vision</span>.<br/>
-        20 000+ références.
-      </h1>
-      <p class="mt-6 max-w-2xl text-[17px] text-neutral-600 leading-relaxed">
-        Le Marché de Mo' est né en août 2024 à Toulouse.
-        Depuis, <strong>20 000+ références</strong> et une équipe de
-        <strong>24 passionnés</strong> racontent la même histoire : celle d'un
-        commerçant indépendant, engagé, qui croit aux saveurs du monde.
-      </p>
+  <!-- HERO — two-column on desktop : copy (left) + brand lockup (right).
+       The previous version had a faint favicon watermark floating outside
+       the container which left a large empty void on the right. We now
+       fill it with a real on-brand logo card so the section composition
+       is balanced. On mobile the lockup stacks above the copy. -->
+  <section class="bg-blanc relative overflow-hidden pt-2 pb-10 md:pb-12">
+    <div class="container-mo relative grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      <div class="lg:col-span-7">
+        <span class="eyebrow">Notre histoire</span>
+        <h1 class="display-xl mt-4 text-balance" data-split-reveal>
+          Une famille.<br/>
+          Une <span class="text-vert">vision</span>.<br/>
+          20 000+ références.
+        </h1>
+        <p class="mt-6 max-w-2xl text-[16px] md:text-[17px] text-neutral-600 leading-relaxed">
+          Le Marché de Mo' est né en août 2024 à Toulouse.
+          Depuis, <strong>20 000+ références</strong> et une équipe de
+          <strong>24 passionnés</strong> racontent la même histoire : celle d'un
+          commerçant indépendant, engagé, qui croit aux saveurs du monde.
+        </p>
+      </div>
+
+      <!-- Brand lockup — radial vert glow + ring + logo. On mobile we
+           show a smaller, centered version above the copy. -->
+      <aside
+        class="lg:col-span-5 order-first lg:order-none flex justify-center lg:justify-end"
+        aria-hidden="true"
+      >
+        <div class="notre-enseigne-brand-card relative aspect-square w-[180px] sm:w-[220px] md:w-[260px] lg:w-[340px] xl:w-[380px] rounded-full flex items-center justify-center select-none">
+          <img
+            src="/logos/logo-marchedemo-rond-contourgreen.png"
+            alt=""
+            class="relative z-10 w-[78%] h-[78%] object-contain drop-shadow-[0_18px_36px_rgba(28,107,53,0.25)]"
+            loading="eager"
+            fetchpriority="high"
+            width="380"
+            height="380"
+          />
+        </div>
+      </aside>
     </div>
+
+    <style>
+      /* Soft radial brand halo + concentric ring. We use a pseudo-element
+         so the halo can extend beyond the logo's bounding box without
+         affecting layout. The ring is a thin vert outline for cohesion
+         with the rounded green logo. */
+      .notre-enseigne-brand-card::before {
+        content: "";
+        position: absolute;
+        inset: -8%;
+        border-radius: 9999px;
+        background:
+          radial-gradient(circle at center,
+            rgba(28, 107, 53, 0.18) 0%,
+            rgba(28, 107, 53, 0.06) 35%,
+            rgba(28, 107, 53, 0) 70%);
+        z-index: 0;
+        pointer-events: none;
+      }
+      .notre-enseigne-brand-card::after {
+        content: "";
+        position: absolute;
+        inset: 6%;
+        border-radius: 9999px;
+        border: 1px dashed rgba(28, 107, 53, 0.25);
+        z-index: 0;
+        pointer-events: none;
+        animation: notre-enseigne-spin 60s linear infinite;
+      }
+      @keyframes notre-enseigne-spin {
+        to { transform: rotate(360deg); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .notre-enseigne-brand-card::after { animation: none; }
+      }
+    </style>
   </section>
 
   <Stats />

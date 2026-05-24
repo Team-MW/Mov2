@@ -11,6 +11,7 @@ import { adminFetch, clearDraft, loadDraft, saveDraft } from "./adminFetch.js";
 import { compareRows, useAdminListState } from "./useAdminListState.js";
 import { derivePrices } from "../../../lib/priceDerivation";
 import { humanizeError } from "../../../lib/admin-errors";
+import { publishAdminEvent, subscribeAdminEvents, ADMIN_EVENT } from "./admin-bus.js";
 
 /**
  * PromosManager — interactive admin table for the public.promos table.
@@ -41,6 +42,8 @@ const EMPTY_PROMO = {
   date_debut: todayISO(),
   date_fin: inDaysISO(14),
   mise_en_avant: false,
+  /* Single-slot urgent banner under the homepage PromoHero. */
+  ticker_semaine: false,
   actif: true,
   ordre: 0,
 };
@@ -195,11 +198,34 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
     setTimeout(() => setToast(null), 3800);
   }
 
-  /* ---------------- Toggle actif / mise_en_avant (inline) ---------------- */
+  /* Refetch the full promos list from the server. Used both as a
+   * defensive resync after API errors AND as the cross-tab handler
+   * triggered by the broadcast bus. */
+  async function refreshPromos() {
+    try {
+      const res = await adminFetch(`/api/admin/promos`);
+      if (!res.ok) throw new Error(res.statusText);
+      const data = await res.json();
+      setPromos(data.promos ?? []);
+    } catch (err) {
+      notify("err", `Erreur rafraîchissement : ${humanizeError(err)}`);
+    }
+  }
+
+  /* ---------------- Toggle actif / mise_en_avant / ticker_semaine (inline) ---------------- */
   async function togglePromoField(row, field) {
     const next = { ...row, [field]: !row[field] };
-    /* Optimistic update */
-    setPromos((cur) => cur.map((p) => (p.id === row.id ? next : p)));
+    /* Optimistic update. For the single-slot ticker, also clear the flag
+     * on every other row immediately so the UI mirrors the API constraint. */
+    setPromos((cur) =>
+      cur.map((p) => {
+        if (p.id === row.id) return next;
+        if (field === "ticker_semaine" && next.ticker_semaine) {
+          return { ...p, ticker_semaine: false };
+        }
+        return p;
+      }),
+    );
     try {
       const res = await adminFetch(`/api/admin/promos/${row.id}`, {
         method: "PATCH",
@@ -209,6 +235,16 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
       if (!res.ok) throw new Error((await res.json()).error || res.statusText);
       const { promo } = await res.json();
       setPromos((cur) => cur.map((p) => (p.id === row.id ? promo : p)));
+      publishAdminEvent(ADMIN_EVENT.PROMOS_UPDATED, {
+        entity: `promo:toggle-${field}`,
+        ids: [row.id],
+      });
+      /* If we just enabled the ticker, the API also flipped every other
+       * row’s ticker_semaine to false in the DB — do a full resync so
+       * the UI matches truth. */
+      if (field === "ticker_semaine" && next.ticker_semaine) {
+        await refreshPromos();
+      }
     } catch (err) {
       /* Rollback */
       setPromos((cur) => cur.map((p) => (p.id === row.id ? row : p)));
@@ -240,6 +276,10 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
       if (!res.ok && res.status !== 204) {
         throw new Error((await res.json().catch(() => ({}))).error || res.statusText);
       }
+      publishAdminEvent(ADMIN_EVENT.PROMOS_UPDATED, {
+        entity: "promo:deleted",
+        ids: [row.id],
+      });
       notify("ok", `Promo « ${row.titre} » supprimée.`);
     } catch (err) {
       setPromos((cur) => (cur.some((p) => p.id === row.id) ? cur : [...cur, row]));
@@ -272,6 +312,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
       date_debut: form.date_debut,
       date_fin: form.date_fin,
       mise_en_avant: !!form.mise_en_avant,
+      ticker_semaine: !!form.ticker_semaine,
       actif: form.actif !== false,
       ordre: Number(form.ordre) || 0,
     };
@@ -306,6 +347,16 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
       }
       clearDraft(draftKey);
       setEditing(null);
+      publishAdminEvent(ADMIN_EVENT.PROMOS_UPDATED, {
+        entity: isNew ? "promo:created" : "promo:updated",
+        ids: promo?.id ? [promo.id] : undefined,
+      });
+      /* If the saved promo took the urgent ticker slot, every other
+       * row’s `ticker_semaine` was just reset server-side. Resync to
+       * keep the table consistent. */
+      if (promo?.ticker_semaine) {
+        await refreshPromos();
+      }
       notify("ok", isNew ? "Promo créée." : "Promo mise à jour.");
     } catch (err) {
       notify("err", `Erreur : ${humanizeError(err)}`);
@@ -326,6 +377,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
       const refreshed = await adminFetch(`/api/admin/promos`).then((r) => r.json());
       setPromos(refreshed.promos ?? []);
       setImporting(false);
+      publishAdminEvent(ADMIN_EVENT.PROMOS_UPDATED, { entity: "promo:bulk-import" });
       notify("ok", `${count} promo(s) importée(s).`);
     } catch (err) {
       notify("err", `Erreur import : ${humanizeError(err)}`);
@@ -380,6 +432,10 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
         clearSelection();
         notify("ok", `${affected} promo(s) mise(s) à jour.`);
       }
+      publishAdminEvent(ADMIN_EVENT.PROMOS_UPDATED, {
+        entity: `promo:bulk-${action}`,
+        ids,
+      });
     } catch (err) {
       setPromos(snapshot);
       notify("err", `Erreur : ${humanizeError(err)}`);
@@ -401,6 +457,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
       if (!res.ok) throw new Error((await res.json()).error || res.statusText);
       const refreshed = await adminFetch(`/api/admin/promos`).then((r) => r.json());
       setPromos(refreshed.promos ?? []);
+      publishAdminEvent(ADMIN_EVENT.PROMOS_UPDATED, { entity: "promo:undo-bulk-delete" });
       notify("ok", `${rows.length} promo(s) restaurée(s).`);
     } catch (err) {
       notify("err", `Restauration impossible : ${humanizeError(err)}`);
@@ -418,6 +475,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
         body: JSON.stringify({ rows: payload }),
       });
       if (!res.ok) throw new Error((await res.json()).error || res.statusText);
+      publishAdminEvent(ADMIN_EVENT.PROMOS_UPDATED, { entity: "promo:reordered" });
     } catch (err) {
       notify("err", `Erreur réorganisation : ${humanizeError(err)}`);
     }
@@ -553,6 +611,16 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
       return changed ? nxt : cur;
     });
   }, [promos]);
+
+  /* Cross-tab / cross-island sync : when another window mutates promos
+   * (e.g. CSVImporter or PromosManager in another tab), refetch. The
+   * shared bus suppresses self-echoes via senderId. */
+  useEffect(() => {
+    return subscribeAdminEvents([ADMIN_EVENT.PROMOS_UPDATED], () => {
+      void refreshPromos();
+    });
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
 
   /* =========================================================== */
   return (
@@ -880,7 +948,18 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
                       )}
                     </td>
                     <td className="px-4 py-3 max-w-[280px]">
-                      <p className="font-bold text-noir truncate">{p.titre}</p>
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <p className="font-bold text-noir truncate">{p.titre}</p>
+                        {p.ticker_semaine && (
+                          <span
+                            className="shrink-0 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-rouge text-white text-[9.5px] font-black uppercase tracking-wider shadow-sm"
+                            title="Affichée dans le bandeau urgent rouge sous le PromoHero (un seul slot disponible)"
+                          >
+                            <span aria-hidden="true">🚨</span>
+                            Bandeau
+                          </span>
+                        )}
+                      </div>
                       <p className="text-[11px] text-neutral-400 truncate">{p.slug}</p>
                     </td>
                     <td className="px-4 py-3 text-neutral-600">{rayonNom(p.rayon)}</td>
@@ -919,11 +998,24 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
                           onClick={() => togglePromoField(p, "mise_en_avant")}
                           className={`px-2 py-0.5 rounded-full text-[11px] font-bold transition ${
                             p.mise_en_avant
-                              ? "bg-rouge/15 text-rouge hover:bg-rouge/25"
+                              ? "bg-amber-100 text-amber-800 hover:bg-amber-200"
                               : "bg-transparent text-neutral-400 hover:bg-neutral-100 border border-neutral-200"
                           }`}
+                          title="Mise en avant : apparaît dans le carrousel hero (peut s’accumuler avec d’autres)."
                         >
                           ★ Vedette
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => togglePromoField(p, "ticker_semaine")}
+                          className={`px-2 py-0.5 rounded-full text-[11px] font-bold transition ${
+                            p.ticker_semaine
+                              ? "bg-rouge text-white hover:bg-rouge-dark shadow-sm"
+                              : "bg-transparent text-neutral-400 hover:bg-neutral-100 border border-neutral-200"
+                          }`}
+                          title="Bandeau urgent rouge sous le PromoHero — une seule promo à la fois (le clic désactive automatiquement les autres)."
+                        >
+                          🚨 Bandeau
                         </button>
                       </div>
                     </td>
@@ -1363,9 +1455,9 @@ function EditModal({ promo, rayonsOptions, magasinsOptions, onCancel, onSave }) 
                 type="checkbox"
                 checked={!!form.mise_en_avant}
                 onChange={(e) => set("mise_en_avant", e.target.checked)}
-                className="w-4 h-4 rounded accent-rouge"
+                className="w-4 h-4 rounded accent-amber-500"
               />
-              <span>Mise en avant (featured)</span>
+              <span>Mise en avant (carrousel héro)</span>
             </label>
             <Field label="Ordre" hint="Petit = en premier." inline>
               <input
@@ -1376,6 +1468,42 @@ function EditModal({ promo, rayonsOptions, magasinsOptions, onCancel, onSave }) 
                 className="input w-20"
               />
             </Field>
+          </div>
+
+          {/* Single-slot ticker (Bandeau de la semaine) — prominent block */}
+          <div
+            className={`rounded-2xl border p-4 transition ${
+              form.ticker_semaine
+                ? "bg-rouge/5 border-rouge/30"
+                : "bg-neutral-50 border-black/5 hover:border-rouge/20"
+            }`}
+          >
+            <label className="flex items-start gap-3 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={!!form.ticker_semaine}
+                onChange={(e) => set("ticker_semaine", e.target.checked)}
+                className="mt-0.5 w-5 h-5 rounded accent-rouge"
+              />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-soft font-bold text-[14px] text-rouge">
+                    🚨 Offre de la semaine — bandeau rouge
+                  </span>
+                  <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-rouge/10 text-rouge">
+                    1 seul slot
+                  </span>
+                </div>
+                <p className="mt-1 text-[12.5px] text-neutral-600 leading-snug">
+                  Cette promotion sera affichée dans le bandeau défilant rouge
+                  sous le PromoHero de la page d’accueil.
+                  <br />
+                  <strong className="text-rouge">Attention :</strong> activer
+                  cette option désactivera automatiquement le bandeau de toute
+                  autre promo en cours.
+                </p>
+              </div>
+            </label>
           </div>
 
           <div className="flex gap-3 pt-3 sticky bottom-0 bg-white border-t border-black/5 -mx-6 px-6 py-4">
