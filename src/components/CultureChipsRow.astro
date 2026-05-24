@@ -1,0 +1,177 @@
+---
+/**
+ * CultureChipsRow — section wrapper that lays out an array of
+ * `CultureChip`s with consistent typographic chrome (eyebrow + title +
+ * optional intro) and a responsive grid → mobile carousel.
+ *
+ * Responsive behaviour :
+ *   - Desktop (>= 1024 px) : flexbox row, chips share width, max 4
+ *     visible at once with a 900 px cap so the chips never grow huge.
+ *   - Tablet (641–1023 px) : 3-column grid.
+ *   - Mobile (<= 640 px)   : horizontal snap-scroll with edge-fade
+ *     mask. Each chip is 62 vw wide (≈ 2 visible at once) so the user
+ *     understands by visual cue there is more to swipe.
+ *
+ * Accessibility :
+ *   - The horizontal scroller exposes its scrollable nature via
+ *     `tabindex="0"` so keyboard users can scroll it with arrow keys.
+ *   - The whole section gets `aria-labelledby` tied to its h2 for SR
+ *     navigation.
+ */
+import type { Banner } from "@/lib/banners";
+import CultureChip from "./CultureChip.astro";
+
+interface Props {
+  /** Banners to render. If empty, the whole section is suppressed. */
+  banners: Banner[];
+  /** Short uppercase label above the title. */
+  eyebrow?: string;
+  /** Section heading. */
+  title?: string;
+  /** Optional intro paragraph under the title. */
+  intro?: string;
+  /** Section background variant. */
+  bg?: "white" | "blanc" | "noir-soft";
+  /** Chip variant — propagates to children. */
+  chipVariant?: "default" | "compact";
+  /** DOM id for anchor scrolling (defaults derived from the title). */
+  id?: string;
+}
+
+const {
+  banners,
+  eyebrow = "Cultures du rayon",
+  title = "Explorez par culture",
+  intro,
+  bg = "blanc",
+  chipVariant = "default",
+  id,
+} = Astro.props as Props;
+
+if (!banners || banners.length === 0) return null;
+
+const bgClass =
+  bg === "white" ? "bg-white" : bg === "noir-soft" ? "bg-noir-section" : "bg-blanc";
+const onDark = bg === "noir-soft";
+
+/* Derive a deterministic heading id for aria-labelledby. */
+const headingId = id ?? `culture-chips-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
+---
+
+<section
+  class:list={["culture-chips-section", bgClass, "py-10 md:py-14"]}
+  aria-labelledby={headingId}
+  id={id}
+>
+  <div class="container-mo">
+    <div class="max-w-2xl mb-7 md:mb-10">
+      <span class:list={["eyebrow", onDark && "!text-vert-light"]}>{eyebrow}</span>
+      <h2
+        id={headingId}
+        class:list={["display-sm mt-3 text-balance", onDark && "!text-white"]}
+      >
+        {title}
+      </h2>
+      {intro && (
+        <p
+          class:list={[
+            "mt-4 text-[15px] leading-relaxed",
+            onDark ? "text-neutral-300" : "text-neutral-600",
+          ]}
+        >
+          {intro}
+        </p>
+      )}
+    </div>
+
+    <div class="culture-chips-grid" role="list" tabindex="0">
+      {banners.map((b) => (
+        <div role="listitem" class="culture-chips-grid__item">
+          <CultureChip banner={b} variant={chipVariant} />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ---------------------------------------------------------------
+     Layout — desktop/tablet : flex-wrap row with FIXED-width chips
+     (220 px). This makes 1, 2, 3, or 4-chip rows all look intentional :
+     the chips never balloon to fill empty space, they just sit on the
+     left of the row. Mobile : horizontal snap scroller with edge-fade.
+  ---------------------------------------------------------------- */
+  .culture-chips-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+  .culture-chips-grid__item {
+    /* Fixed basis ; can shrink but won't grow. Keeps chip = bookmark. */
+    flex: 0 1 220px;
+    max-width: 240px;
+    min-width: 0;
+  }
+
+  /* Tablet — slightly tighter chips so 3 fit comfortably on a 768 px
+     viewport. */
+  @media (min-width: 641px) and (max-width: 1023px) {
+    .culture-chips-grid__item {
+      flex-basis: 200px;
+    }
+  }
+
+  /* Mobile — horizontal snap scroller. Two-and-a-half chips visible
+     per screen on a 390 px viewport (cue to swipe). Edge-fade mask
+     visually signals overflow. */
+  @media (max-width: 640px) {
+    .culture-chips-grid {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-left: 4vw;
+      padding: 4px 4vw 14px;
+      margin-left: -4vw;
+      margin-right: -4vw;
+      gap: 14px;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+      mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 4vw,
+        #000 calc(100% - 4vw),
+        transparent 100%
+      );
+      -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 4vw,
+        #000 calc(100% - 4vw),
+        transparent 100%
+      );
+    }
+    .culture-chips-grid__item {
+      flex: 0 0 62vw;
+      max-width: 220px;
+      scroll-snap-align: start;
+    }
+    .culture-chips-grid::-webkit-scrollbar {
+      height: 3px;
+    }
+    .culture-chips-grid::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.12);
+      border-radius: 2px;
+    }
+    .culture-chips-grid::-webkit-scrollbar-track {
+      background: transparent;
+    }
+  }
+
+  /* Focus ring for the scroller itself — keeps keyboard nav legible. */
+  .culture-chips-grid:focus-visible {
+    outline: 2px solid var(--color-vert, #1C6B35);
+    outline-offset: 6px;
+    border-radius: 4px;
+  }
+</style>

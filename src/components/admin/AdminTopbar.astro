@@ -44,6 +44,7 @@ const navItems = [
   { id: "contenu-home", label: "Accueil",        href: "/admin/contenu-home", icon: "🏠" },
   { id: "produits",   label: "Produits",         href: "/admin/produits",   icon: "🛒" },
   { id: "medias",     label: "Images",           href: "/admin/medias",     icon: "🖼" },
+  { id: "banners",    label: "Bannières",        href: "/admin/banners",    icon: "🎨" },
   { id: "images-gap", label: "Manquantes",       href: "/admin/images-gap", icon: "⚠" },
   { id: "affiches",   label: "Affiches A4",      href: "/admin/generateur-affiche", icon: "🖨" },
 ] as const;
@@ -237,6 +238,9 @@ const showSubtitle = !!subtitle;
             </a>
             <a href="/admin/medias" class="block px-3 py-2 rounded-lg text-[13px] hover:bg-white">
               Images
+            </a>
+            <a href="/admin/banners" class="block px-3 py-2 rounded-lg text-[13px] hover:bg-white">
+              Bannières (cultures & catégories)
             </a>
             <a href="/admin/actus" class="block px-3 py-2 rounded-lg text-[13px] hover:bg-white">
               Actualités & blog

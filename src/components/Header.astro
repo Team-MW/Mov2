@@ -153,66 +153,23 @@ const TWEMOJI_IDS: Record<string, string> = {
     </div>
   </div>
 
-  <!-- Mobile/Tablet Layout (Premium Clean Glassmorphic, matching Desktop style) -->
+  <!-- Mobile/Tablet Layout — captivating 3-zone grid.
+       Left  : burger + big promo image
+       Center: BIG centered logo (the visual anchor)
+       Right : search + magasins (magasins flush to the edge)
+       Header is intentionally thick (96px) to let the logo & promo breathe.
+       No scroll-state transitions on mobile — the design stays as-is. -->
   <div
     id="header-row-mobile"
-    class="lg:hidden w-full h-[64px] border-b border-black/5 bg-white/95 backdrop-blur-sm flex items-center justify-between px-4 select-none relative z-20"
+    class="lg:hidden w-full h-[96px] border-b border-black/5 bg-white/95 backdrop-blur-sm grid grid-cols-[1fr_auto_1fr] items-center px-3 select-none relative z-20"
   >
-    <!-- Left: Brand Logo & Title -->
-    <a href="/" class="flex items-center gap-2" title="Retour à l'accueil">
-      <img
-        src="/logos/logo-marchedemo-rond-contourgreen.png"
-        alt="Marché de Mo'"
-        width="36"
-        height="36"
-        class="logo-row-mobile w-9 h-9 object-contain bg-white rounded-full shadow-sm p-0.5 transition-all duration-200"
-      />
-      <div class="logo-row-mobile-label flex flex-col text-left font-soft transition-all duration-200">
-        <span class="text-[14px] font-black text-vert-dark leading-none">Marché de Mo'</span>
-        <span class="text-[8px] font-bold text-neutral-400 mt-0.5 leading-none uppercase tracking-wider">Supermarché</span>
-      </div>
-    </a>
-
-    <!-- Right: Actions (Search, Promos, Magasins, Burger/Menu) -->
-    <div class="flex items-center gap-2">
-      <!-- Search button -->
-      <button
-        id="mobile-search-trigger"
-        class="w-9 h-9 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-800 active:bg-neutral-200 transition-colors"
-        title="Rechercher"
-        aria-label="Rechercher"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.35-4.35" />
-        </svg>
-      </button>
-
-      <!-- Promos button -->
-      <a
-        href="/promos"
-        class="inline-flex items-center hover:opacity-90 transition relative z-20"
-      >
-        <img src="/promos/promo_button-removebg-preview.png" alt="Promos" class="h-14 w-auto object-contain hover:scale-105 transition-transform duration-200" />
-      </a>
-
-      <!-- Magasins button -->
-      <a
-        href="/magasins"
-        class="w-9 h-9 rounded-full border border-vert text-vert flex items-center justify-center transition active:bg-vert/10"
-        title="Magasins"
-      >
-        <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-          <circle cx="12" cy="10" r="3" />
-        </svg>
-      </a>
-
+    <!-- LEFT zone : burger + promo button (big) -->
+    <div class="flex items-center gap-2 justify-self-start min-w-0">
       <!-- Burger Menu button -->
       <button
         id="burger-btn-mobile"
         aria-label="Ouvrir le menu"
-        class="burger-btn w-9 h-9 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-850 active:bg-neutral-200 transition-colors"
+        class="burger-btn w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-850 active:bg-neutral-200 transition-colors shrink-0"
       >
         <div class="burger-icon relative w-5 h-3.5 flex flex-col justify-between shrink-0">
           <span class="bar bar-1 w-full h-[2px] bg-neutral-800 rounded transition-all duration-300"></span>
@@ -220,6 +177,64 @@ const TWEMOJI_IDS: Record<string, string> = {
           <span class="bar bar-3 w-full h-[2px] bg-neutral-800 rounded transition-all duration-300"></span>
         </div>
       </button>
+
+      <!-- Promos button (big, captivating) -->
+      <a
+        href="/promos"
+        class="inline-flex items-center hover:opacity-90 active:scale-95 transition shrink-0"
+        aria-label="Voir les promos"
+      >
+        <img
+          src="/promos/promo_button-removebg-preview.png"
+          alt="Promos"
+          class="h-16 w-auto object-contain"
+        />
+      </a>
+    </div>
+
+    <!-- CENTER zone : big centered logo (visual anchor) -->
+    <a
+      href="/"
+      class="flex items-center justify-center justify-self-center"
+      title="Retour à l'accueil"
+    >
+      <img
+        src="/logos/logo-marchedemo-rond-contourgreen.png"
+        alt="Marché de Mo'"
+        width="72"
+        height="72"
+        fetchpriority="high"
+        class="logo-row-mobile w-[72px] h-[72px] object-contain bg-white rounded-full shadow-sm p-0.5"
+      />
+    </a>
+
+    <!-- RIGHT zone : search + location (location flush to the right edge) -->
+    <div class="flex items-center gap-2 justify-self-end min-w-0">
+      <!-- Search button -->
+      <button
+        id="mobile-search-trigger"
+        class="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-800 active:bg-neutral-200 transition-colors shrink-0"
+        title="Rechercher"
+        aria-label="Rechercher"
+      >
+        <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+      </button>
+
+      <!-- Magasins (location) — closest to right border -->
+      <a
+        href="/magasins"
+        class="w-10 h-10 rounded-full border border-vert text-vert flex items-center justify-center transition active:bg-vert/10 shrink-0"
+        title="Magasins"
+        aria-label="Magasins"
+      >
+        <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
+      </a>
     </div>
   </div>
 
@@ -526,20 +541,12 @@ const TWEMOJI_IDS: Record<string, string> = {
     visibility: hidden;
   }
 
-  /* Mobile scrolled — mirrors desktop behaviour */
-  #site-header.is-header-scrolled .logo-row-mobile {
-    width: 44px !important;
-    height: 44px !important;
-  }
-  #site-header.is-header-scrolled .logo-row-mobile-label {
-    opacity: 0;
-    transform: translateX(-6px);
-    max-width: 0;
-    margin-left: 0;
-    pointer-events: none;
-    overflow: hidden;
-    visibility: hidden;
-  }
+  /* Mobile scrolled — INTENTIONALLY no transitions.
+     The mobile header is captivating-by-default : big centered logo +
+     big promo on the left + actions on the right. We want that design
+     to STAY as the user scrolls, not collapse like the desktop one.
+     If you ever want to re-introduce a mobile scroll-collapse, scope
+     the rules to (max-width: 1023px) and target .logo-row-mobile. */
 
   @keyframes pulse-glow {
     0%, 100% {

@@ -22,6 +22,7 @@ import RecetteCard from "@components/RecetteCard.astro";
 import FAQAccordion from "@components/FAQAccordion.astro";
 import NewsletterInline from "@components/NewsletterInline.astro";
 import LocalVideoPlayer from "@components/islands/LocalVideoPlayer.jsx";
+import CultureChipsRow from "@components/CultureChipsRow.astro";
 import { getCollection } from "astro:content";
 import { RAYONS, RAYONS_LIST, SITE, type RayonSlug } from "@/lib/site";
 import { faqsForRayon } from "@/lib/faqs";
@@ -29,6 +30,7 @@ import { breadcrumbSchema } from "@/lib/schema";
 import { supabase } from "@/lib/supabase";
 import { getPromosForRayon } from "@/lib/promos-repo";
 import { getRecettesForRayon } from "@/lib/recettes";
+import { bannersForRayon, crossRefBannersForRayon } from "@/lib/banners";
 import {
   TAXONOMIE,
   getCategories,
@@ -256,6 +258,75 @@ if (needsProducts && produits.length === 0) {
     suggestionsRayon = data ?? [];
   } catch {}
 }
+
+/* ------------------------------------------------------------
+   Cultural banners (level 1 only)
+   ------------------------------------------------------------
+   Two banner sets per rayon :
+     - `primaryBanners`   : full chips, shown as "Cultures du rayon"
+                             (e.g. Maghreb + Italie on saveur-mediterranee)
+     - `crossRefBanners`  : compact chips, shown as "Voyages dans le
+                             rayon" (e.g. Maghreb + Inde on
+                             epices-du-monde) — narrative DA reuse so
+                             that spices mentioned by name keep their
+                             cultural identity even outside the parent
+                             cultural rayon.
+   Per-rayon section copy is defined in CULTURE_COPY below so the
+   editorial tone matches the rayon (e.g. "Les deux faces de la
+   Méditerranée" only makes sense on saveur-mediterranee). Fallback
+   copy is used for any rayon not explicitly listed. */
+const primaryBanners = level === 1 ? bannersForRayon(rayonSlug) : [];
+const crossRefBanners = level === 1 ? crossRefBannersForRayon(rayonSlug) : [];
+
+interface CultureCopy {
+  eyebrow: string;
+  title: string;
+  intro: string;
+}
+const CULTURE_COPY: Partial<Record<RayonSlug, { primary?: CultureCopy; crossRef?: CultureCopy }>> = {
+  "saveurs-afrique": {
+    primary: {
+      eyebrow: "Au-delà de l'Afrique",
+      title: "L'Afrique, et la Caraïbe au passage.",
+      intro:
+        "Notre rayon embrasse aussi les saveurs créoles — Antilles, Réunion, Caraïbes. Les ingrédients qu'il faut pour cuisiner antillais, sans changer de rayon.",
+    },
+  },
+  "saveurs-asie": {
+    primary: {
+      eyebrow: "Cultures du rayon",
+      title: "L'Asie, ses voisins, ses épices.",
+      intro:
+        "Du Pacifique à l'océan Indien — un rayon, deux grammaires culinaires. Japon, Corée, Thaïlande, Vietnam, Chine — et l'Inde, qui mérite sa propre identité.",
+    },
+  },
+  "saveur-mediterranee": {
+    primary: {
+      eyebrow: "Les deux faces de la Méditerranée",
+      title: "Du Maghreb à l'Italie.",
+      intro:
+        "Un même soleil, deux cuisines. Olives, huile d'olive, harissa, pâtes, antipasti — l'épicerie méditerranéenne dans toute sa richesse, sans hiérarchie.",
+    },
+  },
+  "epices-du-monde": {
+    crossRef: {
+      eyebrow: "Voyages dans le rayon",
+      title: "Les épices voyagent — du Maghreb à l'Inde.",
+      intro:
+        "Ras el hanout, za'atar, piment berbère, harissa · curry de Madras, garam masala, cardamome, safran iranien. L'offre la plus complète de l'agglomération, importée en direct, sans intermédiaire.",
+    },
+  },
+  "produits-courants": {
+    primary: {
+      eyebrow: "Au-delà de l'alimentaire",
+      title: "L'essentiel du quotidien.",
+      intro:
+        "Hygiène, soins, entretien — les marques connues du quotidien, à prix discount, sans transiger sur la qualité.",
+    },
+  },
+};
+const culturePrimaryCopy = CULTURE_COPY[rayonSlug]?.primary;
+const cultureCrossRefCopy = CULTURE_COPY[rayonSlug]?.crossRef;
 
 /* Other rayons pour cross-linking */
 const otherRayons = RAYONS_LIST.filter((r) => r.slug !== rayonSlug).slice(0, 4);
@@ -487,6 +558,37 @@ const pageDesc = (() => {
         </div>
       </div>
     </section>
+  )}
+
+  {/* CULTURES DU RAYON — vertical banner chips that anchor the cultural
+      sub-identities of a rayon. See `src/lib/banners.ts` for the
+      registry, and `src/styles/rayons/cultural-palettes.css` for the
+      scoped palette tokens. Only rendered on level 1 since deeper
+      levels already focus on a specific category.
+
+      Two distinct rows :
+        - Primary : full chips, the canonical "cultures of this rayon".
+        - Cross-ref : compact chips, narrative DA reuse (e.g. Maghreb +
+          Inde on the epices rayon — same palette as on their parent
+          cultural rayons, so the visitor recognises the visual codes). */}
+  {level === 1 && primaryBanners.length > 0 && (
+    <CultureChipsRow
+      banners={primaryBanners}
+      eyebrow={culturePrimaryCopy?.eyebrow ?? "Cultures du rayon"}
+      title={culturePrimaryCopy?.title ?? "Explorez par culture"}
+      intro={culturePrimaryCopy?.intro}
+      bg="blanc"
+    />
+  )}
+  {level === 1 && crossRefBanners.length > 0 && (
+    <CultureChipsRow
+      banners={crossRefBanners}
+      eyebrow={cultureCrossRefCopy?.eyebrow ?? "Voyages dans le rayon"}
+      title={cultureCrossRefCopy?.title ?? "Cultures référencées dans le rayon"}
+      intro={cultureCrossRefCopy?.intro}
+      bg="white"
+      chipVariant="compact"
+    />
   )}
 
   {/* PRODUITS DU MOMENT — grille sensorielle fruits-legumes (plan § IV).

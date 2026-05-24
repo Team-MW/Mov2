@@ -1,0 +1,147 @@
+---
+/**
+ * /admin/banners — read-only gallery of the cultural & category banner
+ * library.
+ *
+ * Why read-only ?
+ * ---------------
+ * Per the design freeze (May 2026), the banner registry lives in
+ * `src/lib/banners.ts` as a static module. This keeps the integration
+ * cycle tight while the visual design is validated against real
+ * traffic. Once the visual contract is stable, we'll add migration
+ * 007 (`banners` table) + CRUD API + an editable island so the office
+ * can swap banners without a deploy.
+ *
+ * In the meantime, this page is the *truth surface* : it shows the
+ * office exactly which artworks are in play, where they appear on the
+ * public site, and what palette tokens they expose. Each card links
+ * directly to the public-facing rayon page so QA can hop between
+ * "admin metadata" and "what the visitor sees" without searching.
+ */
+export const prerender = false;
+
+import Layout from "@layouts/Layout.astro";
+import AdminTopbar from "@components/admin/AdminTopbar.astro";
+import BannerCard from "@components/admin/BannerCard.astro";
+import { SITE } from "@/lib/site";
+import { isAuthenticated } from "@/lib/auth";
+import { BANNERS } from "@/lib/banners";
+
+if (!(await isAuthenticated(Astro.cookies))) {
+  return Astro.redirect("/admin/login");
+}
+
+const cultures = BANNERS.filter((b) => b.kind === "culture");
+const categories = BANNERS.filter((b) => b.kind === "category");
+---
+
+<Layout
+  title={`Bannières (cultures & catégories) · ${SITE.name} — Admin`}
+  description="Galerie des bannières culturelles et catégorielles utilisées sur le site public."
+  noIndex
+  hideChrome
+>
+  <div class="min-h-screen bg-white">
+    <AdminTopbar current="banners" />
+
+    <main class="container-mo py-8 md:py-12">
+      <!-- Hero -->
+      <section class="mb-10">
+        <span class="eyebrow">Bibliothèque visuelle</span>
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mt-3">
+          <div class="max-w-2xl">
+            <h1 class="display-sm leading-tight">
+              Bannières culturelles & catégorielles
+            </h1>
+            <p class="text-[13.5px] text-neutral-500 mt-3 leading-relaxed">
+              {BANNERS.length} bannières au total · {cultures.length} cultures
+              ({cultures.map((c) => c.label).join(", ")}) ·
+              {categories.length} catégories ({categories.map((c) => c.label).join(", ")}).
+              Chaque bannière expose une palette (4 jetons CSS) que le
+              site public réutilise pour teinter les chips, les badges en
+              ligne et les fonds de sous-sections.
+            </p>
+          </div>
+          <p class="text-[12px] text-neutral-400 max-w-xs md:text-right leading-relaxed">
+            Stockage : <code class="bg-neutral-100 px-1.5 py-0.5 rounded text-[11px]">src/lib/banners.ts</code>
+            + fichiers dans <code class="bg-neutral-100 px-1.5 py-0.5 rounded text-[11px]">public/images/banners/</code>.
+            Édition via PR pour le moment ; passage en base prévu après
+            validation du design (migration 007).
+          </p>
+        </div>
+      </section>
+
+      <!-- Filter / anchor nav -->
+      <nav class="flex items-center gap-2 mb-8 flex-wrap" aria-label="Filtrer par type">
+        <a
+          href="#section-cultures"
+          class="px-4 py-2 rounded-full bg-vert text-white text-[13px] font-bold shadow-sm hover:-translate-y-0.5 transition"
+        >
+          Cultures · {cultures.length}
+        </a>
+        <a
+          href="#section-categories"
+          class="px-4 py-2 rounded-full bg-white border border-black/10 text-[13px] font-bold text-neutral-700 hover:bg-neutral-50 hover:-translate-y-0.5 transition"
+        >
+          Catégories · {categories.length}
+        </a>
+      </nav>
+
+      {cultures.length > 0 && (
+        <section id="section-cultures" class="mb-12 scroll-mt-24">
+          <div class="flex flex-wrap items-center gap-3 mb-5">
+            <span class="text-[22px]" aria-hidden="true">🎭</span>
+            <h2 class="font-soft font-bold text-[20px] text-noir">Cultures</h2>
+            <span class="text-[12px] text-neutral-400 font-pro">
+              {cultures.length} bannières — chips affichés sur les rayons culturels parents
+            </span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {cultures.map((b) => <BannerCard banner={b} />)}
+          </div>
+        </section>
+      )}
+
+      {categories.length > 0 && (
+        <section id="section-categories" class="mb-12 scroll-mt-24">
+          <div class="flex flex-wrap items-center gap-3 mb-5">
+            <span class="text-[22px]" aria-hidden="true">🏷</span>
+            <h2 class="font-soft font-bold text-[20px] text-noir">Catégories</h2>
+            <span class="text-[12px] text-neutral-400 font-pro">
+              {categories.length} bannières — chips transverses ou attachées à un rayon
+            </span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {categories.map((b) => <BannerCard banner={b} />)}
+          </div>
+        </section>
+      )}
+
+      <!-- Phase 2 reminder -->
+      <aside class="rounded-3xl border border-dashed border-vert/30 bg-vert/5 p-6 md:p-7 mt-8">
+        <div class="flex items-start gap-4">
+          <span
+            class="shrink-0 w-10 h-10 rounded-full bg-vert/15 text-vert flex items-center justify-center text-[18px]"
+            aria-hidden="true"
+          >
+            🔮
+          </span>
+          <div>
+            <p class="font-soft font-bold text-[15px] text-noir">
+              Édition en base de données — Phase 2
+            </p>
+            <p class="text-[13px] text-neutral-600 mt-1.5 leading-relaxed max-w-3xl">
+              Pour l'instant les bannières sont en lecture seule (statique).
+              Quand la direction artistique sera validée, on activera la
+              <strong>migration 007</strong>
+              (table <code class="bg-white px-1 rounded text-[11px]">public.banners</code>)
+              et l'API CRUD associée, ce qui permettra à l'équipe de
+              remplacer une bannière ou d'ajuster sa palette directement
+              depuis cette page, sans déploiement.
+            </p>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+</Layout>

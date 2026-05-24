@@ -4,11 +4,20 @@ import RayonCard from "@components/RayonCard.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
 import FAQAccordion from "@components/FAQAccordion.astro";
 import NewsletterInline from "@components/NewsletterInline.astro";
+import CultureChipsRow from "@components/CultureChipsRow.astro";
 import { RAYONS_LIST, SITE } from "@/lib/site";
 import { FAQ_RAYONS_GENERAL } from "@/lib/faqs";
 import { breadcrumbSchema } from "@/lib/schema";
+import { transversalCategoryBanners } from "@/lib/banners";
 
 const bc = breadcrumbSchema([{ name: "Nos rayons", url: "/rayons" }]);
+
+/* Transversal category banners (Sauces & Soupes, Huiles & Condiments).
+ * These categories cut across multiple rayons so they don't belong to
+ * any single one — we surface them as a dedicated row on the rayons
+ * index page instead, between the main grid and the "complementary
+ * rayons" stubs. See `src/lib/banners.ts` for the registry. */
+const transversalBanners = transversalCategoryBanners();
 ---
 
 <Layout
@@ -42,6 +51,18 @@ const bc = breadcrumbSchema([{ name: "Nos rayons", url: "/rayons" }]);
       ))}
     </div>
   </section>
+
+  {/* Transversal categories — banners that cut across rayons.
+      Currently : Sauces & Soupes + Huiles & Condiments. */}
+  {transversalBanners.length > 0 && (
+    <CultureChipsRow
+      banners={transversalBanners}
+      eyebrow="Et transversalement"
+      title="Des catégories qui traversent tous les rayons."
+      intro="Sauces, soupes, huiles, condiments : ces familles d'ingrédients existent dans presque chaque cuisine. Plutôt que les disperser dans 12 rayons, on les met en avant pour vous aider à composer un menu cohérent du monde."
+      bg="white"
+    />
+  )}
 
   <!-- Rayons complémentaires — stubs SEO (boulangerie, produits laitiers).
        Pas de catalogue e-commerce (Mo' est un vitrine), mais pages dédiées

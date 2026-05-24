@@ -1,0 +1,122 @@
+/**
+ * Cultural palette tokens — scoped via `[data-culture]` on any
+ * container, mirroring the registry in `src/lib/banners.ts`.
+ *
+ * Usage:
+ *   <section data-culture="maghreb"> ... </section>
+ *   <span class="culture-badge" data-culture="inde">Curry de Madras</span>
+ *
+ * Inside any [data-culture=...] subtree these tokens are available:
+ *   --culture-from        gradient stop 1
+ *   --culture-to          gradient stop 2
+ *   --culture-accent      solid accent (borders, dots, focus rings)
+ *   --culture-on-light    accent variant that reads on a white surface
+ *
+ * Brand vert/rouge always remain the global accents — these tokens
+ * only colour *decor* and *narrative emphasis* inside a section. They
+ * never override the global brand chrome (header, footer, primary CTA).
+ */
+
+[data-culture="creole"] {
+  --culture-from: #E8C390;
+  --culture-to: #7FBED4;
+  --culture-accent: #1C6B35;
+  --culture-on-light: #1C6B35;
+}
+
+[data-culture="asie"] {
+  --culture-from: #F2EDD8;
+  --culture-to: #A3B85C;
+  --culture-accent: #4F6E1C;
+  --culture-on-light: #4F6E1C;
+}
+
+[data-culture="inde"] {
+  --culture-from: #5C1A1F;
+  --culture-to: #C09060;
+  --culture-accent: #A86B1E;
+  --culture-on-light: #5C1A1F;
+}
+
+[data-culture="maghreb"] {
+  --culture-from: #F4A37A;
+  --culture-to: #E2735C;
+  --culture-accent: #8B2500;
+  --culture-on-light: #8B2500;
+}
+
+[data-culture="italie"] {
+  --culture-from: #009246;
+  --culture-to: #CE2B37;
+  --culture-accent: #009246;
+  --culture-on-light: #009246;
+}
+
+[data-culture="hygiene"] {
+  --culture-from: #F5C7C9;
+  --culture-to: #FFE8EA;
+  --culture-accent: #B85257;
+  --culture-on-light: #B85257;
+}
+
+[data-culture="sauces-soupes"] {
+  --culture-from: #F4C7B5;
+  --culture-to: #FFE8DC;
+  --culture-accent: #A85710;
+  --culture-on-light: #A85710;
+}
+
+[data-culture="huiles-condiments"] {
+  --culture-from: #A8D85F;
+  --culture-to: #7BC141;
+  --culture-accent: #2E8B4A;
+  --culture-on-light: #2E8B4A;
+}
+
+/* ---------------------------------------------------------------
+   Helpers
+---------------------------------------------------------------- */
+
+/* Gradient surface using the active palette. Apply on any container
+   that also has [data-culture] set. */
+.culture-bg {
+  background: linear-gradient(
+    135deg,
+    var(--culture-from, #1C6B35),
+    var(--culture-to, #A85710)
+  );
+}
+
+/* Small inline badge to cross-reference a culture inside narrative
+   text (e.g. mentioning "Ras el hanout" inside the epices rayon).
+   The badge always remains readable on a white surface thanks to
+   --culture-on-light. */
+.culture-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-family: var(--font-pro, inherit);
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  background: color-mix(in srgb, var(--culture-on-light, #1C6B35) 10%, #ffffff);
+  color: var(--culture-on-light, #1C6B35);
+  border: 1px solid color-mix(in srgb, var(--culture-on-light, #1C6B35) 22%, transparent);
+  white-space: nowrap;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.culture-badge:hover {
+  background: color-mix(in srgb, var(--culture-on-light, #1C6B35) 16%, #ffffff);
+  transform: translateY(-1px);
+}
+.culture-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--culture-on-light, #1C6B35);
+  flex-shrink: 0;
+}

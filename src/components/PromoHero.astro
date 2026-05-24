@@ -34,6 +34,9 @@ export interface Slide {
   description: string;
   eyebrow: string;
   image: string;
+  /** Optional phone-tailored image (vertical/portrait aspect).
+   * When provided, swapped in via <picture><source media> at < 768px. */
+  imageMobile: string | null;
   imageAlt: string;
   ctaLabel: string;
   ctaHref: string;
@@ -71,13 +74,16 @@ interface Props {
 
 const { promos = [], extraSlides = [], autoAdvanceMs = 2800 } = Astro.props as Props;
 
-/* Featured rectangular banner — always first slide. */
+/* Featured rectangular banner — always first slide.
+ * `imageMobile` is swapped in via <picture><source media> below 768px.
+ * Both files live in /public/promos/ and are served by Astro static. */
 const agneauBannerSlide = {
   kind: "banner" as const,
   titre: "Promo Agneau Aïd el Kebir",
   description: "",
   eyebrow: "",
   image: "/promos/promo_rectangulaire.webp",
+  imageMobile: "/promos/promo_mobile_marchedemo.jpeg" as string | null,
   imageAlt: "Promo agneau Aïd — 290€ prix coûtant, Marché de Mo'",
   ctaLabel: "",
   ctaHref: "/promos",
@@ -95,6 +101,7 @@ const promoSlides = promos.slice(0, 5).map((p) => ({
   description: p.data.description || `${p.data.prix_promo}€ au lieu de ${p.data.prix_original}€`,
   eyebrow: `Promo · ${magasinLabel(p.data.magasin)}`,
   image: p.data.image,
+  imageMobile: null as string | null,
   imageAlt: p.data.titre,
   ctaLabel: "Voir la promo →",
   ctaHref: "/promos",
@@ -111,6 +118,7 @@ const editorialSlides = extraSlides.map((s) => ({
   description: s.description,
   eyebrow: s.eyebrow,
   image: s.image,
+  imageMobile: null as string | null,
   imageAlt: s.imageAlt ?? s.titre,
   ctaLabel: s.ctaLabel,
   ctaHref: s.ctaHref,
@@ -128,6 +136,7 @@ const videoSlide = {
   description: "Boucherie halal sur carcasse, fruits & légumes exotiques, épices du monde. Ouvert 7j/7.",
   eyebrow: "Vidéo · Marché de Mo'",
   image: "/images/home/hero.jpg",
+  imageMobile: null as string | null,
   imageAlt: "Vidéo Marché de Mo'",
   ctaLabel: "Voir nos rayons",
   ctaHref: "/rayons",
@@ -266,18 +275,26 @@ const heroSources = loopSlides.map((s) =>
               /* Image promo / banner slide */
               <>
                 <div class="promo-hero-slide-image-wrap">
-                  <img
-                    src={heroSources[i].src || slide.image}
-                    srcset={heroSources[i].srcset || undefined}
-                    sizes={heroSizes}
-                    alt={slide.imageAlt}
-                    loading={realIndex === 0 && !isClone ? "eager" : "lazy"}
-                    fetchpriority={realIndex === 0 && !isClone ? "high" : undefined}
-                    decoding="async"
-                    class="promo-hero-slide-image"
-                    width={isBanner ? "1200" : "1920"}
-                    height={isBanner ? "510" : "820"}
-                  />
+                  <picture>
+                    {slide.imageMobile && (
+                      <source
+                        media="(max-width: 767px)"
+                        srcset={slide.imageMobile}
+                      />
+                    )}
+                    <img
+                      src={heroSources[i].src || slide.image}
+                      srcset={heroSources[i].srcset || undefined}
+                      sizes={heroSizes}
+                      alt={slide.imageAlt}
+                      loading={realIndex === 0 && !isClone ? "eager" : "lazy"}
+                      fetchpriority={realIndex === 0 && !isClone ? "high" : undefined}
+                      decoding="async"
+                      class="promo-hero-slide-image"
+                      width={isBanner ? "1200" : "1920"}
+                      height={isBanner ? "510" : "820"}
+                    />
+                  </picture>
                   {!isBanner && (
                     <div
                       class="promo-hero-slide-overlay"
@@ -412,17 +429,39 @@ const heroSources = loopSlides.map((s) =>
   .promo-hero-slide--banner {
     /* Height and aspect ratio overrides removed to inherit from .promo-hero-slide */
   }
-  @media (max-width: 768px) {
-    .promo-hero-slide {
-      flex: 0 0 84vw;
-      width: 84vw;
-      aspect-ratio: 16 / 11;
-      max-height: min(48vh, 340px);
-      min-height: 200px;
-      border-radius: 16px;
+  /* Tablet (768-1023px) — inherits desktop sizing automatically. */
+
+  /* Phone (< 768px) — Grand Frais-style long mobile hero.
+     Slides get really tall (≈ 60vh) so they captivate above the fold,
+     and stretch nearly full-width. The banner slide swaps to a
+     phone-tailored vertical image via <picture><source media>, so we
+     override `contain` (used on desktop to letterbox the wide artwork)
+     with `cover` for an edge-to-edge phone experience. */
+  @media (max-width: 767px) {
+    .promo-hero-track {
+      padding: 0 2vw;
+      gap: 10px;
     }
-    .promo-hero-slide--banner {
-      /* Height and aspect ratio overrides removed to inherit from .promo-hero-slide */
+    .promo-hero-slide {
+      flex: 0 0 96vw;
+      width: 96vw;
+      aspect-ratio: auto;
+      /* `dvh` keeps the height stable when the URL bar collapses on
+         iOS Safari ; `vh` is the fallback for older browsers. */
+      height: clamp(380px, 60vh, 560px);
+      height: clamp(380px, 60dvh, 560px);
+      max-height: 78dvh;
+      min-height: 380px;
+      border-radius: 18px;
+    }
+    /* Banner slide — uses the mobile image (vertical aspect).
+       Override the desktop `contain` rule so the artwork fills the
+       slide edge-to-edge on phone. The mobile asset is intentionally
+       cropped/composed for this aspect, so `cover` is safe here. */
+    .promo-hero-slide--banner .promo-hero-slide-image {
+      object-fit: cover;
+      object-position: center;
+      padding: 0;
     }
   }
 
