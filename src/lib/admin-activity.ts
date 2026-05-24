@@ -25,7 +25,8 @@ export type AdminEntity =
   | "auth"
   | "actu"
   | "home_slide"
-  | "home_marquee";
+  | "home_marquee"
+  | "site_setting";
 
 export type AdminAction =
   | "create"
@@ -269,6 +270,7 @@ export async function dailyActivityCounts(
         actu: 0,
         home_slide: 0,
         home_marquee: 0,
+        site_setting: 0,
       },
       byAction: {
         create: 0,

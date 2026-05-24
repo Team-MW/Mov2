@@ -3,8 +3,7 @@ export const prerender = false;
 
 import Layout from "@layouts/Layout.astro";
 import AdminTopbar from "@components/admin/AdminTopbar.astro";
-import AfficheGeneratorRaw from "@components/islands/admin/AfficheGenerator.jsx";
-const AfficheGenerator = AfficheGeneratorRaw as any;
+import AfficheGenerator from "@components/islands/admin/AfficheGenerator.jsx";
 import { SITE } from "@/lib/site";
 import { isAuthenticated } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase";
@@ -148,6 +147,3 @@ if (supabaseInventaire) {
     </main>
   </div>
 </Layout>
-
-{/* Global QRCode Library CDN Call inside HEAD (non-blocking, fast cache) */}
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js" is:inline></script>

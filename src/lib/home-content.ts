@@ -133,3 +133,37 @@ export async function getHomeMarqueeItems(): Promise<string[]> {
     return FALLBACK_MARQUEE;
   }
 }
+
+export interface HomeSeoSettings {
+  title: string;
+  description: string;
+  ogImage: string;
+}
+
+const FALLBACK_SEO: HomeSeoSettings = {
+  title: "Marché de Mo' — Plus grand supermarché ethnique d'Occitanie · Toulouse",
+  description: "Boucherie halal sur carcasse, fruits & légumes exotiques, épices du monde — Toulouse. Ouvert 7j/7, même dimanche matin.",
+  ogImage: "/logos/logo-marchedemo-rond-contourgreen.png",
+};
+
+/**
+ * Returns the homepage SEO settings (Title, Description, ogImage) from Supabase,
+ * falling back to the default static definitions if the DB is unreachable.
+ */
+export async function getHomeSeoSettings(): Promise<HomeSeoSettings> {
+  try {
+    const { data, error } = await supabase
+      .from("site_settings")
+      .select("key, value");
+    if (error || !data || data.length === 0) return FALLBACK_SEO;
+
+    const title = data.find((r: any) => r.key === "home_seo_title")?.value ?? FALLBACK_SEO.title;
+    const description = data.find((r: any) => r.key === "home_seo_description")?.value ?? FALLBACK_SEO.description;
+    const ogImage = data.find((r: any) => r.key === "home_seo_og_image")?.value ?? FALLBACK_SEO.ogImage;
+
+    return { title, description, ogImage };
+  } catch {
+    return FALLBACK_SEO;
+  }
+}
+

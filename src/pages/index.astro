@@ -21,7 +21,7 @@ import { FAQ_HOME } from "@/lib/faqs";
 import { organizationSchema, websiteSchema, allMagasinsSchema, offerSchema } from "@/lib/schema";
 import { getActivePromos } from "@/lib/promos-repo";
 import { getProduitsVedettes } from "@/lib/produits-repo";
-import { getHomeEditorialSlides, getHomeMarqueeItems } from "@/lib/home-content";
+import { getHomeEditorialSlides, getHomeMarqueeItems, getHomeSeoSettings } from "@/lib/home-content";
 
 /* Promos : Supabase-first (actif=true), fallback Content Collection.
    featuredPromo (red ticker under PromoHero) is selected from the
@@ -46,6 +46,9 @@ const heroEditorialSlides: ExtraSlide[] = await getHomeEditorialSlides();
 /* Marquee labels (KineticMarquee between rayons grid and actus) — also
  * admin-editable. Falls back to a static list on Supabase failures. */
 const marqueeItems = await getHomeMarqueeItems();
+
+/* SEO Settings (Title, description, social OG Image) dynamically loaded from DB settings. */
+const seoSettings = await getHomeSeoSettings();
 
 /* Produits vedettes : Supabase-first (ordre asc), fallback static list. */
 const PRODUITS_VEDETTES = await getProduitsVedettes(8);
@@ -72,8 +75,9 @@ const schemas = [
 ---
 
 <Layout
-  title={`${SITE.name} — Plus grand supermarché ethnique d'Occitanie · Toulouse`}
-  description={SITE.shortPitch + ". Boucherie halal, fruits & légumes exotiques, épices du monde — Toulouse."}
+  title={seoSettings.title}
+  description={seoSettings.description}
+  ogImage={seoSettings.ogImage}
   faqItems={FAQ_HOME}
   schema={schemas}
   heroImage="/images/rayons/epices-du-monde/marche-aux-epices-dubai.jpg"

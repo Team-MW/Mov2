@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import QRCode from 'qrcode';
 import { subscribeAdminEvents, ADMIN_EVENT } from './admin-bus.js';
 
 // Standard Rayon mappings from Slug to Short French names
@@ -120,6 +121,14 @@ const THEMES = {
   }
 };
 
+/**
+ * AfficheGenerator component.
+ *
+ * @param {Object} props
+ * @param {any[]} [props.initialProduits]
+ * @param {any[]} [props.initialPromos]
+ * @param {any[]} [props.initialArticles]
+ */
 export default function AfficheGenerator({ initialProduits = [], initialPromos = [], initialArticles = [] }) {
   // ----- Dynamic Synchronized State -----
   const [liveProduits, setLiveProduits] = useState(initialProduits);
@@ -347,13 +356,8 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
       setQrCodeDataUrl('');
       return;
     }
-    if (typeof window === 'undefined' || !window.QRCode) {
-      // If QRCode script is not fully loaded, retry shortly
-      const timer = setTimeout(() => setQrUrlGenerated(qrUrlGenerated + ' '), 400);
-      return () => clearTimeout(timer);
-    }
 
-    window.QRCode.toDataURL(qrUrlGenerated, {
+    QRCode.toDataURL(qrUrlGenerated, {
       width: 600,
       margin: 0,
       errorCorrectionLevel: 'M',

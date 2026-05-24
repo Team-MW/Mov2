@@ -206,3 +206,52 @@ html[data-admin-theme="easter"][data-admin-intensity="bold"] {
   --color-rouge-dark:  #F9A825;
   --color-rouge-light: #FFE082;
 }
+
+/* ----------------------------------------------------------------
+   Admin Aesthetic Skinning & Premium Visual Upgrades
+   ---------------------------------------------------------------- */
+html[data-admin-theme] body {
+  background: radial-gradient(circle at 10% 20%, color-mix(in srgb, var(--accent) 3%, transparent) 0%, var(--color-neutral-50) 90%);
+  min-height: 100vh;
+}
+
+/* Global transitions for theme toggles to prevent harsh snaps */
+html[data-admin-theme],
+html[data-admin-theme] *,
+html[data-admin-theme] *::before,
+html[data-admin-theme] *::after {
+  transition: background-color 0.28s cubic-bezier(0.4, 0, 0.2, 1), 
+              border-color 0.28s cubic-bezier(0.4, 0, 0.2, 1), 
+              color 0.18s ease-in-out,
+              box-shadow 0.28s ease;
+}
+
+/* Glassmorphism elements for premium admin panels */
+html[data-admin-theme] .shadow-card {
+  backdrop-filter: blur(12px) saturate(1.1);
+  -webkit-backdrop-filter: blur(12px) saturate(1.1);
+  background: color-mix(in srgb, var(--color-blanc) 85%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 8%, transparent);
+  box-shadow: 
+    0 10px 30px color-mix(in srgb, var(--accent) 4%, transparent),
+    0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+/* Hover scales and premium touches */
+html[data-admin-theme] .btn,
+html[data-admin-theme] button[type="submit"] {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              background-color 0.2s ease, 
+              box-shadow 0.2s ease !important;
+}
+
+html[data-admin-theme] .btn:hover,
+html[data-admin-theme] button[type="submit"]:hover {
+  transform: translateY(-1px);
+}
+
+html[data-admin-theme] .btn:active,
+html[data-admin-theme] button[type="submit"]:active {
+  transform: translateY(1px);
+}
+

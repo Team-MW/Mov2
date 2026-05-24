@@ -298,6 +298,7 @@ export default function HomeContentManager({ initialSlides = [], initialMarquee 
         {[
           { v: "slides", label: "Slides éditoriales", count: slides.length },
           { v: "marquee", label: "Marquise", count: marquee.length },
+          { v: "seo", label: "SEO & Métadonnées", count: null },
         ].map((t) => (
           <button
             key={t.v}
@@ -310,13 +311,15 @@ export default function HomeContentManager({ initialSlides = [], initialMarquee 
             }`}
           >
             <span>{t.label}</span>
-            <span
-              className={`text-[11px] px-1.5 rounded-full ${
-                tab === t.v ? "bg-white/20" : "bg-neutral-200"
-              }`}
-            >
-              {t.count}
-            </span>
+            {t.count !== null && (
+              <span
+                className={`text-[11px] px-1.5 rounded-full ${
+                  tab === t.v ? "bg-white/20" : "bg-neutral-200"
+                }`}
+              >
+                {t.count}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -339,6 +342,10 @@ export default function HomeContentManager({ initialSlides = [], initialMarquee 
           onMove={moveMarquee}
           onDelete={deleteMarqueeItem}
         />
+      )}
+
+      {tab === "seo" && (
+        <SeoPanel notify={notify} />
       )}
 
       {editingSlide && (
@@ -824,3 +831,140 @@ function Field({ label, hint, required, children }) {
     </label>
   );
 }
+
+/* ================================================================ */
+/* SEO / Metadata panel                                              */
+/* ================================================================ */
+function SeoPanel({ notify }) {
+  const [settings, setSettings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [dbError, setDbError] = useState(null);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await adminFetch("/api/admin/settings");
+        if (!res.ok) {
+          const errBody = await res.json().catch(() => ({}));
+          throw new Error(errBody.error || res.statusText);
+        }
+        const data = await res.json();
+        setSettings(data.settings ?? []);
+      } catch (err) {
+        setDbError(err.message || String(err));
+        notify("err", `Erreur chargement des paramètres SEO : ${humanizeError(err)}`);
+      } finally {
+        setLoading(false);
+      }
+    }
+    void load();
+  }, [notify]);
+
+  const seoTitle = settings.find((s) => s.key === "home_seo_title")?.value ?? "";
+  const seoDesc = settings.find((s) => s.key === "home_seo_description")?.value ?? "";
+  const seoImage = settings.find((s) => s.key === "home_seo_og_image")?.value ?? "";
+
+  async function updateSetting(key, val) {
+    setSaving(true);
+    try {
+      const res = await adminFetch("/api/admin/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, value: val }),
+      });
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody.error || res.statusText);
+      }
+      const data = await res.json();
+      setSettings((cur) =>
+        cur.map((s) => (s.key === key ? data.setting : s))
+      );
+      notify("ok", "Configuration SEO mise à jour.");
+    } catch (err) {
+      notify("err", `Erreur de sauvegarde SEO : ${humanizeError(err)}`);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (loading) {
+    return <div className="text-neutral-400 italic text-[13px] py-8">Chargement de la configuration SEO...</div>;
+  }
+
+  if (dbError) {
+    const isMissingTable = dbError.includes("site_settings") || dbError.includes("does not exist") || dbError.includes("relation");
+    return (
+      <div className="bg-rouge/5 border border-rouge/20 text-rouge rounded-3xl p-6 border-dashed flex flex-col gap-3">
+        <h3 className="font-bold text-[15px]">⚠️ Configuration SEO non disponible</h3>
+        <p className="text-[13px] text-neutral-600 leading-relaxed">
+          {isMissingTable ? (
+            <>
+              La table <code className="bg-rouge/5 px-1 py-0.5 rounded font-mono font-bold text-rouge">public.site_settings</code> est absente de la base de données.
+              Pour activer la configuration dynamique de l'accueil, veuillez appliquer la migration{" "}
+              <code className="bg-rouge/5 px-1 py-0.5 rounded font-mono font-bold text-rouge">supabase/migrations/007_add_site_settings.sql</code> dans l'éditeur SQL de votre Supabase Studio.
+            </>
+          ) : (
+            `Impossible de charger les paramètres SEO : ${dbError}`
+          )}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-3xl shadow-card p-6 border border-black/5 flex flex-col gap-6">
+      <div>
+        <h2 className="text-[16px] font-bold text-neutral-900">Métadonnées de la page d'accueil</h2>
+        <p className="text-[12.5px] text-neutral-500 mt-1">
+          Ajustez en temps réel le titre, la description de recherche et l'image de partage Open Graph (Facebook, WhatsApp, LinkedIn, X).
+        </p>
+      </div>
+
+      <Field label="Titre de la page (Title tag)" required hint="Recommandé : entre 50 et 60 caractères.">
+        <input
+          type="text"
+          className="input font-bold"
+          value={seoTitle}
+          onChange={(e) => {
+            const val = e.target.value;
+            setSettings((cur) => cur.map((s) => (s.key === "home_seo_title" ? { ...s, value: val } : s)));
+          }}
+          onBlur={() => updateSetting("home_seo_title", seoTitle)}
+          maxLength={150}
+          disabled={saving}
+        />
+      </Field>
+
+      <Field label="Meta Description" required hint="Recommandé : entre 150 et 160 caractères.">
+        <textarea
+          rows={3}
+          className="input min-h-[80px]"
+          value={seoDesc}
+          onChange={(e) => {
+            const val = e.target.value;
+            setSettings((cur) => cur.map((s) => (s.key === "home_seo_description" ? { ...s, value: val } : s)));
+          }}
+          onBlur={() => updateSetting("home_seo_description", seoDesc)}
+          maxLength={300}
+          disabled={saving}
+        />
+      </Field>
+
+      <InlineImageUpload
+        folder="logos"
+        label="Image de partage social (Open Graph)"
+        hint="Image affichée sur les réseaux lors du partage du site. Recommandé : 1200×630 px."
+        value={seoImage}
+        onChange={(val) => {
+          setSettings((cur) => cur.map((s) => (s.key === "home_seo_og_image" ? { ...s, value: val } : s)));
+          void updateSetting("home_seo_og_image", val);
+        }}
+        renameTo="home-og-share"
+        disabled={saving}
+      />
+    </div>
+  );
+}
+
