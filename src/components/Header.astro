@@ -15,6 +15,7 @@ import { RAYONS_LIST } from "@/lib/site";
 import { DEFAULT_STORE } from "@/lib/geo";
 
 const pathname = Astro.url.pathname;
+const isHome = pathname === "/";
 const isActive = (href: string) =>
   href === "/" ? pathname === "/" : pathname.startsWith(href);
 
@@ -45,13 +46,12 @@ const TWEMOJI_IDS: Record<string, string> = {
 
 <header
   id="site-header"
-  class="sticky lg:fixed top-0 left-0 z-[60] w-full border-b border-black/5 bg-white/95 backdrop-blur-sm transition-[box-shadow] duration-200"
+  class={`sticky lg:fixed top-0 left-0 z-[60] w-full border-b border-black/5 bg-white/95 backdrop-blur-sm transition-[box-shadow] duration-200 ${!isHome ? "is-header-scrolled header-scrolled" : ""}`}
 >
   <!-- 0. Row 0: Top bar discrete (Desktop only, slides up on scroll) -->
   <div id="header-top-bar" class="header-top-bar border-b border-black/5 bg-white overflow-hidden hidden lg:block">
     <div class="container-mo flex items-center justify-between py-2 text-[12px] text-neutral-500 font-pro">
       <span class="flex items-center gap-2">
-        <span class="inline-block w-1.5 h-1.5 rounded-full bg-vert animate-pulse"></span>
         Bienvenue chez <strong class="text-neutral-900 font-bold">Marché de Mo'</strong>
         · Le plus grand supermarché ethnique d'Occitanie
       </span>
@@ -370,7 +370,7 @@ const TWEMOJI_IDS: Record<string, string> = {
   <!-- Full-screen Mobile Search Overlay -->
   <div
     id="mobile-search-overlay"
-    class="fixed inset-0 bg-white/98 z-[60] backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300 flex flex-col"
+    class="fixed inset-0 bg-white z-[60] backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300 flex flex-col"
   >
     <!-- Overlay Header -->
     <div class="container-mo py-4 flex items-center gap-4 border-b border-black/5">
@@ -1010,6 +1010,15 @@ const TWEMOJI_IDS: Record<string, string> = {
     const evaluate = () => {
       const header = document.getElementById("site-header");
       if (!header) return;
+
+      const isHomePage = window.location.pathname === "/";
+      if (!isHomePage) {
+        if (!header.classList.contains("is-header-scrolled")) {
+          header.classList.add("is-header-scrolled", "header-scrolled");
+        }
+        return;
+      }
+
       const y = window.scrollY;
       const wasScrolled = header.classList.contains("is-header-scrolled");
       if (!wasScrolled && y >= SCROLL_DOWN) {
@@ -1024,22 +1033,32 @@ const TWEMOJI_IDS: Record<string, string> = {
       window.removeEventListener("scroll", (window as any).__headerScrollEvaluate);
     }
 
-    // Assign the new evaluate and add it
-    (window as any).__headerScrollEvaluate = evaluate;
-    window.addEventListener("scroll", (window as any).__headerScrollEvaluate, { passive: true });
+    const isHomePage = window.location.pathname === "/";
+    if (isHomePage) {
+      // Assign the new evaluate and add it
+      (window as any).__headerScrollEvaluate = evaluate;
+      window.addEventListener("scroll", (window as any).__headerScrollEvaluate, { passive: true });
+    }
 
     // Measure and set spacer height
     const header = document.getElementById("site-header");
     const spacer = document.getElementById("header-spacer");
     if (header && spacer) {
-      const wasScrolled = header.classList.contains("is-header-scrolled");
-      if (wasScrolled) {
-        header.classList.remove("is-header-scrolled", "header-scrolled");
-      }
-      const naturalHeight = header.offsetHeight;
-      spacer.style.height = `${naturalHeight}px`;
-      if (wasScrolled) {
-        header.classList.add("is-header-scrolled", "header-scrolled");
+      if (isHomePage) {
+        const wasScrolled = header.classList.contains("is-header-scrolled");
+        if (wasScrolled) {
+          header.classList.remove("is-header-scrolled", "header-scrolled");
+        }
+        const naturalHeight = header.offsetHeight;
+        spacer.style.height = `${naturalHeight}px`;
+        if (wasScrolled) {
+          header.classList.add("is-header-scrolled", "header-scrolled");
+        }
+      } else {
+        if (!header.classList.contains("is-header-scrolled")) {
+          header.classList.add("is-header-scrolled", "header-scrolled");
+        }
+        spacer.style.height = `${header.offsetHeight}px`;
       }
     }
 

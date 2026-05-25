@@ -37,13 +37,14 @@ const { promos } = Astro.props as Props;
 
 <div class="promo-carousel relative -mx-5 md:-mx-8 lg:mx-0">
   {/* Prev button — overlayed left */}
+  {/* Prev button — overlayed left */}
   <button
     type="button"
     class="promo-nav promo-nav-prev"
     aria-label="Promo précédente"
     data-promo-prev
   >
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
       <path d="m15 18-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
   </button>
@@ -103,14 +104,13 @@ const { promos } = Astro.props as Props;
     aria-label="Promo suivante"
     data-promo-next
   >
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
       <path d="m9 18 6-6-6-6" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
   </button>
 
   <div class="hidden md:flex items-center justify-end gap-2 mt-4 text-[12px] text-neutral-400 font-pro">
     <span class="inline-flex items-center gap-1.5">
-      <span class="w-1.5 h-1.5 rounded-full bg-vert animate-pulse" aria-hidden="true"></span>
       Glissez · flèches · défilement auto
     </span>
   </div>
@@ -170,6 +170,12 @@ const { promos } = Astro.props as Props;
     z-index: 10;
     width: 44px;
     height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    max-width: 44px;
+    max-height: 44px;
+    aspect-ratio: 1/1;
+    flex-shrink: 0;
     border-radius: 9999px;
     background: white;
     color: #0F0F0F;
@@ -180,6 +186,8 @@ const { promos } = Astro.props as Props;
     transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
     opacity: 0;
     pointer-events: none;
+    border: none;
+    cursor: pointer;
   }
   /* Show buttons on hover of the whole carousel (desktop), always on mobile */
   .promo-carousel:hover .promo-nav,
@@ -193,6 +201,10 @@ const { promos } = Astro.props as Props;
       pointer-events: auto;
       width: 38px;
       height: 38px;
+      min-width: 38px;
+      min-height: 38px;
+      max-width: 38px;
+      max-height: 38px;
     }
   }
   .promo-nav:hover {
@@ -207,6 +219,11 @@ const { promos } = Astro.props as Props;
   .promo-nav svg {
     width: 20px;
     height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    flex-shrink: 0;
   }
   .promo-nav-prev { left: 8px; }
   .promo-nav-next { right: 8px; }
@@ -249,7 +266,11 @@ const { promos } = Astro.props as Props;
 
       /* --- seamless loop wrap --- */
       let wrapLocked = false;
+      let isNavigating = false;
+      let navigationTimeout: any;
+
       const wrapIfNeeded = () => {
+        if (isNavigating) return; // Skip wrapping during smooth navigation
         if (wrapLocked) return;
         const h = halfWidth();
         if (h <= 0) return;
@@ -263,6 +284,27 @@ const { promos } = Astro.props as Props;
           requestAnimationFrame(() => { wrapLocked = false; });
         }
       };
+
+      const safeScrollBy = (left: number) => {
+        isNavigating = true;
+        clearTimeout(navigationTimeout);
+        track.scrollBy({ left, behavior: "smooth" });
+
+        // Fallback in case scrollend doesn't fire or isn't supported
+        navigationTimeout = window.setTimeout(() => {
+          if (isNavigating) {
+            isNavigating = false;
+            wrapIfNeeded();
+          }
+        }, 500);
+      };
+
+      track.addEventListener("scrollend", () => {
+        if (isNavigating) {
+          isNavigating = false;
+          wrapIfNeeded();
+        }
+      });
 
       /* --- auto scroll (rAF driven) ---
        *
@@ -322,11 +364,11 @@ const { promos } = Astro.props as Props;
       /* --- arrow buttons --- */
       prev?.addEventListener("click", () => {
         nudgePause();
-        track.scrollBy({ left: -slotWidth(), behavior: "smooth" });
+        safeScrollBy(-slotWidth());
       });
       next?.addEventListener("click", () => {
         nudgePause();
-        track.scrollBy({ left: slotWidth(), behavior: "smooth" });
+        safeScrollBy(slotWidth());
       });
 
       /* --- drag to scroll (desktop) --- */
@@ -375,11 +417,11 @@ const { promos } = Astro.props as Props;
         if (e.key === "ArrowLeft") {
           e.preventDefault();
           nudgePause();
-          track.scrollBy({ left: -slotWidth(), behavior: "smooth" });
+          safeScrollBy(-slotWidth());
         } else if (e.key === "ArrowRight") {
           e.preventDefault();
           nudgePause();
-          track.scrollBy({ left: slotWidth(), behavior: "smooth" });
+          safeScrollBy(slotWidth());
         }
       });
 
