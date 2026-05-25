@@ -22,7 +22,6 @@ import RecetteCard from "@components/RecetteCard.astro";
 import FAQAccordion from "@components/FAQAccordion.astro";
 import NewsletterInline from "@components/NewsletterInline.astro";
 import LocalVideoPlayer from "@components/islands/LocalVideoPlayer.jsx";
-import CultureChipsRow from "@components/CultureChipsRow.astro";
 import { getCollection } from "astro:content";
 import { RAYONS, RAYONS_LIST, SITE, type RayonSlug } from "@/lib/site";
 import { faqsForRayon } from "@/lib/faqs";
@@ -684,36 +683,7 @@ const pageDesc = (() => {
     </section>
   )}
 
-  {/* CULTURES DU RAYON — vertical banner chips that anchor the cultural
-      sub-identities of a rayon. See `src/lib/banners.ts` for the
-      registry, and `src/styles/rayons/cultural-palettes.css` for the
-      scoped palette tokens. Only rendered on level 1 since deeper
-      levels already focus on a specific category.
 
-      Two distinct rows :
-        - Primary : full chips, the canonical "cultures of this rayon".
-        - Cross-ref : compact chips, narrative DA reuse (e.g. Maghreb +
-          Inde on the epices rayon — same palette as on their parent
-          cultural rayons, so the visitor recognises the visual codes). */}
-  {level === 1 && primaryBanners.length > 0 && (
-    <CultureChipsRow
-      banners={primaryBanners}
-      eyebrow={culturePrimaryCopy?.eyebrow ?? "Cultures du rayon"}
-      title={culturePrimaryCopy?.title ?? "Explorez par culture"}
-      intro={culturePrimaryCopy?.intro}
-      bg="blanc"
-    />
-  )}
-  {level === 1 && crossRefBanners.length > 0 && (
-    <CultureChipsRow
-      banners={crossRefBanners}
-      eyebrow={cultureCrossRefCopy?.eyebrow ?? "Voyages dans le rayon"}
-      title={cultureCrossRefCopy?.title ?? "Cultures référencées dans le rayon"}
-      intro={cultureCrossRefCopy?.intro}
-      bg="white"
-      chipVariant="compact"
-    />
-  )}
 
   {/* PRODUITS DU MOMENT — grille sensorielle fruits-legumes (plan § IV).
       Vitrine visuelle, pas un catalogue. Level 1 uniquement. Images
