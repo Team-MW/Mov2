@@ -30,7 +30,7 @@ import { breadcrumbSchema } from "@/lib/schema";
 import { supabase } from "@/lib/supabase";
 import { getPromosForRayon } from "@/lib/promos-repo";
 import { getRecettesForRayon } from "@/lib/recettes";
-import { bannersForRayon, crossRefBannersForRayon } from "@/lib/banners";
+import { bannersForRayon, crossRefBannersForRayon, type Banner } from "@/lib/banners";
 import {
   TAXONOMIE,
   getCategories,
@@ -278,6 +278,89 @@ if (needsProducts && produits.length === 0) {
 const primaryBanners = level === 1 ? bannersForRayon(rayonSlug) : [];
 const crossRefBanners = level === 1 ? crossRefBannersForRayon(rayonSlug) : [];
 
+/* Determine section-level cultures for theme propagation at all levels */
+const sectionPrimaryBanners = bannersForRayon(rayonSlug);
+const sectionCrossRefBanners = crossRefBannersForRayon(rayonSlug);
+const pageBanners = sectionPrimaryBanners.length > 0 ? sectionPrimaryBanners : (sectionCrossRefBanners.length > 1 ? sectionCrossRefBanners : []);
+
+const promoCulture = pageBanners.length > 0 ? pageBanners[0].slug : undefined;
+const promoCultureLabel = pageBanners.length > 0 ? pageBanners[0].label : undefined;
+
+const catalogueCulture = pageBanners.length > 1 ? pageBanners[1].slug : (pageBanners.length === 1 ? pageBanners[0].slug : undefined);
+const catalogueCultureLabel = pageBanners.length > 1 ? pageBanners[1].label : (pageBanners.length === 1 ? pageBanners[0].label : undefined);
+
+const videoCulture = pageBanners.length > 0 ? pageBanners[0].slug : undefined;
+const videoCultureLabel = pageBanners.length > 0 ? pageBanners[0].label : undefined;
+
+const recetteCulture = pageBanners.length > 1 ? pageBanners[1].slug : (pageBanners.length === 1 ? pageBanners[0].slug : undefined);
+const recetteCultureLabel = pageBanners.length > 1 ? pageBanners[1].label : (pageBanners.length === 1 ? pageBanners[0].label : undefined);
+
+/* ------------------------------------------------------------
+   Hero section-BG cultural DA (boss's directive : "tu doit copier
+   la disgin / suivre la même DA").
+   ------------------------------------------------------------
+   On level-1 cultural rayons, the hero <section> gets an extra
+   absolutely-positioned backdrop layer (`.rayon-hero-bg`) that
+   crossfades the registry banner artwork (/images/banners/*.jpg)
+   behind everything. The right-side 4:5 photographic slideshow
+   STAYS UNCHANGED — both DAs coexist : palette + cultural artwork
+   in the backdrop, rayon photography in the foreground card.
+
+   Rotation rules — pure CSS, reuses the .rayon-slideshow keyframes
+   (8 s cycle for N=2, 12 s for N=3, 16 s for N=4) :
+     · ≥ 2 primary banners       → banner A ⇄ banner B
+       (saveurs-asie: asie ⇄ inde ; saveur-mediterranee: maghreb ⇄ italie)
+     · exactly 1 primary banner  → "current hero look" ⇄ banner
+       (saveurs-afrique: empty ⇄ créole ; produits-courants: empty ⇄ hygiène)
+       The "empty" slide is a transparent placeholder so the crossfade
+       reveals the palette gradient + .rayon-motif underneath — i.e.
+       exactly what the page looked like before this DA layer existed.
+     · 0 primary + ≥ 2 cross-ref → cross-ref A ⇄ cross-ref B
+       (epices-du-monde: maghreb ⇄ inde — same artwork as parent rayons)
+
+   Level > 1 (cat / sous-cat) keeps the unchanged hero — deeper
+   levels focus on a specific category and the banner DA would
+   compete with the in-rayon narrative. */
+const heroBgBanners: Banner[] = (() => {
+  if (level !== 1) return [];
+  if (primaryBanners.length >= 1) return primaryBanners;
+  if (crossRefBanners.length >= 2) return crossRefBanners;
+  return [];
+})();
+const heroHasBgDa = heroBgBanners.length > 0;
+
+/* Slide spec for the backdrop slideshow. `kind: "empty"` is the
+   transparent placeholder used on single-banner rayons so the
+   rotation alternates current-hero ⇄ banner-DA per the user's
+   explicit request for saveurs-afrique. */
+type HeroBgSlide =
+  | { kind: "banner"; src: string; alt: string; banner: Banner }
+  | { kind: "empty"; banner: Banner };
+const heroBgSlides: HeroBgSlide[] = heroHasBgDa
+  ? (heroBgBanners.length === 1
+      ? [
+          { kind: "empty" as const, banner: heroBgBanners[0] },
+          {
+            kind: "banner" as const,
+            src: heroBgBanners[0].image,
+            alt: `Décor culturel ${heroBgBanners[0].label} — Marché de Mo'`,
+            banner: heroBgBanners[0],
+          },
+        ]
+      : heroBgBanners.map((b) => ({
+          kind: "banner" as const,
+          src: b.image,
+          alt: `Décor culturel ${b.label} — Marché de Mo'`,
+          banner: b,
+        })))
+  : [];
+const heroBgSlideCount = Math.min(heroBgSlides.length, 4);
+
+/* Primary banner = first slide's banner. Drives the static palette
+   tokens on the .rayon-hero-bg container so the gradient overlay
+   keeps the right hue even mid-crossfade. */
+const heroBgPrimaryBanner = heroBgBanners[0];
+
 interface CultureCopy {
   eyebrow: string;
   title: string;
@@ -382,14 +465,53 @@ const pageDesc = (() => {
   heroImage={rayon.image}
   bodyDataRayon={rayonSlug}
 >
-  <Breadcrumb items={breadcrumbItemsLast} />
-
   <!-- HERO : persiste visuellement entre niveaux via View Transitions -->
   <section
     class={`rayon-hero ${heroTheme} relative overflow-hidden ${heroCompact ? "rayon-hero--compact" : ""}`}
     transition:name={`rayon-hero-${rayonSlug}`}
   >
+    {/* Cultural-DA backdrop : reproduces the banner artwork as the
+        hero section's background. Each slide is the actual banner JPG
+        (object-fit: cover so the rotated culture word zone dominates
+        the visible band, palette flanks crop). The palette overlay on
+        top guarantees text contrast on the left where the title lives,
+        while the right half stays clear so the artwork reads through.
+        Slideshow rotation reuses the global .rayon-slideshow keyframes.
+        See heroBgSlides spec in the script block above. */}
+    {heroHasBgDa && heroBgPrimaryBanner && (
+      <div
+        class="rayon-hero-bg absolute inset-0 pointer-events-none"
+        data-culture={heroBgPrimaryBanner.slug}
+        style={`--culture-from: ${heroBgPrimaryBanner.palette.from}; --culture-to: ${heroBgPrimaryBanner.palette.to}; --culture-accent: ${heroBgPrimaryBanner.palette.accent};`}
+        aria-hidden="true"
+      >
+        <div class="rayon-hero-bg__slides rayon-slideshow" data-slides={heroBgSlideCount}>
+          {heroBgSlides.slice(0, 4).map((s) => (
+            <div
+              class:list={[
+                "rayon-slide",
+                "rayon-hero-bg__slide",
+                `rayon-hero-bg__slide--${s.kind}`,
+              ]}
+              data-culture={s.banner.slug}
+              aria-hidden="true"
+            >
+              {s.kind === "banner" && (
+                <>
+                  <div class="rayon-hero-bg__motif" aria-hidden="true"></div>
+                  <span class="rayon-hero-bg__word" aria-hidden="true">{s.banner.label}</span>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+        <div class="rayon-hero-bg__overlay"></div>
+      </div>
+    )}
+
     <div class="rayon-motif absolute inset-0 pointer-events-none"></div>
+
+    <Breadcrumb items={breadcrumbItemsLast} darkText={isCulturel} />
 
     <div class={`container-mo relative z-10 grid lg:grid-cols-12 gap-10 items-center ${heroCompact ? "py-8 md:py-10" : "py-14 md:py-20"}`}>
       <div class={heroCompact ? "lg:col-span-8" : "lg:col-span-7"}>
@@ -530,11 +652,12 @@ const pageDesc = (() => {
     <section
       id="promos"
       class="section bg-blanc"
+      data-culture={promoCulture}
       transition:name={`rayon-promos-${rayonSlug}`}
     >
       <div class="container-mo">
-        <span class="eyebrow !text-rouge reveal">Promos {rayon.nomCourt}</span>
-        <h2 class="display-md mt-4 max-w-2xl text-balance reveal">
+        <span class:list={["eyebrow reveal", !promoCulture && "!text-rouge"]}>Promos {rayon.nomCourt}</span>
+        <h2 class="display-md mt-4 max-w-2xl text-balance reveal" data-watermark={promoCultureLabel}>
           Les offres du rayon cette semaine.
         </h2>
 
@@ -654,7 +777,15 @@ const pageDesc = (() => {
   )}
 
   <!-- CATALOGUE : drill-down -->
-  <section id="catalogue" class="section bg-white" transition:animate="slide">
+  {promos.length > 0 && catalogueCulture && (
+    <div class="culture-divider" data-culture={catalogueCulture} />
+  )}
+  <section
+    id="catalogue"
+    class="section bg-white"
+    data-culture={catalogueCulture}
+    transition:animate="slide"
+  >
     <div class="container-mo">
       <!-- En-tête catalogue + navigation textuelle rapide -->
       <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
@@ -664,7 +795,7 @@ const pageDesc = (() => {
             {level === 2 && `${catLabel}`}
             {level === 3 && `${subLabel} · ${catLabel}`}
           </span>
-          <h2 class="display-md mt-4 text-balance reveal">
+          <h2 class="display-md mt-4 text-balance reveal" data-watermark={catalogueCultureLabel}>
             {level === 1 && (<>Choisissez une catégorie<br/><span class="text-vert">pour affiner.</span></>)}
             {level === 2 && sousCategoriesNiveau2 && visibleSousCategories && (<>{visibleSousCategories.length} sélection{visibleSousCategories.length > 1 ? "s" : ""}<br/><span class="text-vert">{catLabel}.</span></>)}
             {level === 2 && !sousCategoriesNiveau2 && produits.length > 0 && (<>{produits.length} produits<br/><span class="text-vert">en {catLabel}.</span></>)}
@@ -933,57 +1064,66 @@ const pageDesc = (() => {
 
   <!-- VIDEOS : uniquement sur level 1 pour ne pas alourdir -->
   {level === 1 && videos.length > 0 && (
-    <section class="section bg-white">
-      <div class="container-mo">
-        <span class="eyebrow reveal">En vidéo</span>
-        <h2 class="display-md mt-4 max-w-2xl text-balance reveal">Découvrez le rayon en images.</h2>
+    <>
+      {videoCulture && <div class="culture-divider" data-culture={videoCulture} />}
+      <section class="section bg-white" data-culture={videoCulture}>
+        <div class="container-mo">
+          <span class="eyebrow reveal">En vidéo</span>
+          <h2 class="display-md mt-4 max-w-2xl text-balance reveal" data-watermark={videoCultureLabel}>Découvrez le rayon en images.</h2>
 
-        <div class="mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl" data-reveal-stagger>
-          {videos.map((v) => {
-            return (
-              <div class="reveal">
-                <LocalVideoPlayer
-                  client:visible
-                  src={v.data.src_local}
-                  title={v.data.titre}
-                  href={v.data.url_tiktok}
-                />
-              </div>
-            );
-          })}
+          <div class="mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl" data-reveal-stagger>
+            {videos.map((v) => {
+              return (
+                <div class="reveal">
+                  <LocalVideoPlayer
+                    client:visible
+                    src={v.data.src_local}
+                    title={v.data.titre}
+                    href={v.data.url_tiktok}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   )}
 
   <!-- RECETTES : cross-link produits → cuisine, level 1 only -->
   {level === 1 && recettesRayon.length > 0 && (
-    <section class="section bg-blanc border-t border-black/5">
-      <div class="container-mo">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-          <div class="max-w-2xl">
-            <span class="eyebrow reveal">Cuisine du rayon</span>
-            <h2 class="display-md mt-4 text-balance reveal">
-              <span class="text-vert">Que cuisiner</span> avec les produits du rayon {rayon.nomCourt} ?
-            </h2>
-            <p class="mt-3 text-[15px] text-neutral-600 reveal">
-              Recettes authentiques qui utilisent les ingrédients de ce rayon.
-              Tous les produits sont disponibles dans notre magasin à Toulouse Sud — Cépière.
-            </p>
-          </div>
-          <a href="/recettes" class="btn btn-secondary shrink-0 btn-sheen">
-            Toutes les recettes
-          </a>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-          {recettesRayon.map((r, i) => (
-            <div class="reveal reveal-scale" style={`--reveal-delay: ${i * 80}ms`}>
-              <RecetteCard recette={r} />
+    <>
+      {recetteCulture && <div class="culture-divider" data-culture={recetteCulture} />}
+      <section
+        class:list={["section bg-blanc", !recetteCulture && "border-t border-black/5"]}
+        data-culture={recetteCulture}
+      >
+        <div class="container-mo">
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+            <div class="max-w-2xl">
+              <span class="eyebrow reveal">Cuisine du rayon</span>
+              <h2 class="display-md mt-4 text-balance reveal" data-watermark={recetteCultureLabel}>
+                <span class:list={[!recetteCulture && "text-vert"]}>Que cuisiner</span> avec les produits du rayon {rayon.nomCourt} ?
+              </h2>
+              <p class="mt-3 text-[15px] text-neutral-600 reveal">
+                Recettes authentiques qui utilisent les ingrédients de ce rayon.
+                Tous les produits sont disponibles dans notre magasin à Toulouse Sud — Cépière.
+              </p>
             </div>
-          ))}
+            <a href="/recettes" class="btn btn-secondary shrink-0 btn-sheen">
+              Toutes les recettes
+            </a>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+            {recettesRayon.map((r, i) => (
+              <div class="reveal reveal-scale" style={`--reveal-delay: ${i * 80}ms`}>
+                <RecetteCard recette={r} />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   )}
 
   <!-- AUTRES RAYONS : uniquement sur level 1 pour garder l'UX focus -->
@@ -1033,5 +1173,306 @@ const pageDesc = (() => {
   }
   .rayon-hero--compact {
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  /* ============================================================
+     Hero section-BG cultural DA — boss's directive : "tu doit
+     copier la disgin / suivre la même DA".
+     ------------------------------------------------------------
+     Activated on level-1 cultural rayons :
+       saveurs-asie (asie ⇄ inde) · saveurs-afrique (∅ ⇄ créole)
+       saveur-mediterranee (maghreb ⇄ italie)
+       epices-du-monde (maghreb ⇄ inde)
+       produits-courants (∅ ⇄ hygiène)
+
+     The hero <section> already has its rayon-palette background
+     and .rayon-motif overlay. We add two layers between them :
+       1. .rayon-hero-bg__slides : crossfading banner artwork,
+          object-fit: cover so the rotated culture word + central
+          illustration zones fill the hero's visible band.
+       2. .rayon-hero-bg__overlay : palette-tinted gradient that
+          fades from solid (left, where text lives) to transparent
+          (right, where the photo card overlays anyway), keeping
+          contrast on the headline without burying the artwork.
+
+     The right-side 4:5 photo slideshow stays UNTOUCHED — it sits
+     in the foreground at z-10 alongside the title.
+     ============================================================ */
+  .rayon-hero-bg {
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .rayon-hero-bg__slides,
+  .rayon-hero-bg__slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .rayon-hero-bg__slide {
+    will-change: opacity;
+    overflow: hidden;
+  }
+
+  /* Empty placeholder slide — used on single-banner rayons (saveurs-
+     afrique, produits-courants). Fully transparent so the rayon
+     palette + .rayon-motif underneath stay visible during this
+     slide's window in the cycle, alternating with the cultural DA. */
+  .rayon-hero-bg__slide--empty {
+    background: transparent;
+  }
+
+  /* Decorative motif layer — each culture sets its own SVG pattern
+     via background-image below. Sits between the palette base and
+     the rotated culture word. */
+  .rayon-hero-bg__motif {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  /* Massive rotated culture word — the typographic centrepiece of
+     every banner. Centred on the slide, rotated -90deg so it reads
+     bottom-up like the registry artwork. Sized to dominate the
+     hero band visually without overlapping the title text on the
+     left (overflow-hidden on the slide clips long words like
+     "MAGHREB" gracefully). */
+  .rayon-hero-bg__word {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    margin: 0 auto;
+    width: max-content;
+    font-family: 'Mulish', system-ui, -apple-system, sans-serif;
+    font-weight: 900;
+    font-size: clamp(180px, 32vh, 360px);
+    letter-spacing: -0.04em;
+    line-height: 0.82;
+    text-transform: uppercase;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: center;
+  }
+
+  /* Bottom-anchored fade — every banner has a subtle darker zone at
+     the foot where the cultural illustration sits. We approximate
+     that depth cue with a transparent-to-shadow gradient so the
+     section feels grounded even without the bespoke artwork. */
+  .rayon-hero-bg__slide--banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      transparent 60%,
+      rgba(0, 0, 0, 0.18) 100%
+    );
+  }
+
+  /* ============================================================
+     Per-culture DA — algorithmic reproduction of each banner.
+     Palette + motif + word colour, all in pure CSS. The cultural
+     illustration scenes (camel, ramen, dahl, Colosseum, drum,
+     soap kit) are bespoke artwork and stay out of scope here.
+     ============================================================ */
+
+  /* Asie : cream / beige base, bamboo silhouette descending from
+     the top-right corner, dark "ASIE" word.
+     Source banner : /images/banners/asie.jpg */
+  .rayon-hero-bg__slide[data-culture="asie"] {
+    background:
+      radial-gradient(ellipse at 20% 0%, #F6EDD1 0%, transparent 60%),
+      linear-gradient(180deg, #F1E7C6 0%, #E2D1A2 100%);
+  }
+  .rayon-hero-bg__slide[data-culture="asie"] .rayon-hero-bg__motif {
+    background-position: top right;
+    background-size: 55% auto;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><g fill='%23355E33' fill-opacity='0.55'><path d='M380 0 Q360 60 340 120 T300 260 T240 380' stroke='%23355E33' stroke-width='2' fill='none'/><ellipse cx='350' cy='40' rx='52' ry='6' transform='rotate(-32 350 40)'/><ellipse cx='320' cy='110' rx='62' ry='7' transform='rotate(-46 320 110)'/><ellipse cx='285' cy='185' rx='58' ry='6' transform='rotate(-52 285 185)'/><ellipse cx='250' cy='265' rx='66' ry='7' transform='rotate(-56 250 265)'/><ellipse cx='220' cy='340' rx='54' ry='6' transform='rotate(-60 220 340)'/></g></svg>");
+  }
+  .rayon-hero-bg__slide[data-culture="asie"] .rayon-hero-bg__word {
+    color: #1A1A1A;
+    opacity: 0.32;
+  }
+
+  /* Inde : deep maroon base, mandala lattice, white "INDE" word.
+     Source banner : /images/banners/inde.jpg */
+  .rayon-hero-bg__slide[data-culture="inde"] {
+    background:
+      radial-gradient(ellipse at 30% 50%, #6A1F1F 0%, #3D0F0F 80%);
+  }
+  .rayon-hero-bg__slide[data-culture="inde"] .rayon-hero-bg__motif {
+    background-position: center;
+    background-size: 280px 280px;
+    background-repeat: repeat;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><g transform='translate(100 100)' fill='none' stroke='%23E8C4A2' stroke-width='1.2' stroke-opacity='0.55'><circle r='14'/><circle r='32'/><circle r='52'/><circle r='72'/><circle r='90'/><g><path d='M0 -90 L8 -52 L0 -32 L-8 -52 Z'/><path d='M0 -72 L6 -42 L0 -28 L-6 -42 Z' fill='%23E8C4A2' fill-opacity='0.25' stroke='none'/></g><g transform='rotate(30)'><path d='M0 -90 L8 -52 L0 -32 L-8 -52 Z'/></g><g transform='rotate(60)'><path d='M0 -90 L8 -52 L0 -32 L-8 -52 Z'/></g><g transform='rotate(90)'><path d='M0 -90 L8 -52 L0 -32 L-8 -52 Z'/></g><g transform='rotate(120)'><path d='M0 -90 L8 -52 L0 -32 L-8 -52 Z'/></g><g transform='rotate(150)'><path d='M0 -90 L8 -52 L0 -32 L-8 -52 Z'/></g><g transform='rotate(180)'><path d='M0 -90 L8 -52 L0 -32 L-8 -52 Z'/></g><g transform='rotate(210)'><path d='M0 -90 L8 -52 L0 -32 L-8 -52 Z'/></g><g transform='rotate(240)'><path d='M0 -90 L8 -52 L0 -32 L-8 -52 Z'/></g><g transform='rotate(270)'><path d='M0 -90 L8 -52 L0 -32 L-8 -52 Z'/></g><g transform='rotate(300)'><path d='M0 -90 L8 -52 L0 -32 L-8 -52 Z'/></g><g transform='rotate(330)'><path d='M0 -90 L8 -52 L0 -32 L-8 -52 Z'/></g></g></svg>");
+    opacity: 0.42;
+  }
+  .rayon-hero-bg__slide[data-culture="inde"] .rayon-hero-bg__word {
+    color: #FFFFFF;
+    opacity: 0.32;
+  }
+
+  /* Italie : tricolore vertical stripes, black "ITALIE" word
+     anchored on the white middle stripe.
+     Source banner : /images/banners/italie.jpg */
+  .rayon-hero-bg__slide[data-culture="italie"] {
+    background: linear-gradient(
+      90deg,
+      #009246 0%, #009246 33.33%,
+      #F4F1E9 33.33%, #F4F1E9 66.66%,
+      #CE2B37 66.66%, #CE2B37 100%
+    );
+  }
+  .rayon-hero-bg__slide[data-culture="italie"] .rayon-hero-bg__motif {
+    /* Italy silhouette echo — abstract boot outline rendered as a
+       low-opacity stroke spanning the central white stripe. */
+    background-position: center;
+    background-size: 30% auto;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 320'><g fill='none' stroke='%23B4986A' stroke-width='2.5' stroke-opacity='0.45'><path d='M70 30 Q90 60 105 95 T125 175 Q130 215 110 245 T70 290 Q55 305 65 270 Q80 240 75 205 T55 165 Q40 135 50 110 T70 30 Z'/></g></svg>");
+  }
+  .rayon-hero-bg__slide[data-culture="italie"] .rayon-hero-bg__word {
+    color: #1A1A1A;
+    opacity: 0.45;
+  }
+
+  /* Maghreb : warm coral / terracotta base with subtle desert sun
+     glow at upper-left, white "MAGHREB" word.
+     Source banner : /images/banners/maghreb.jpg */
+  .rayon-hero-bg__slide[data-culture="maghreb"] {
+    background:
+      radial-gradient(circle at 18% 30%, rgba(255, 220, 170, 0.4) 0%, transparent 45%),
+      linear-gradient(180deg, #E07050 0%, #B95838 100%);
+  }
+  .rayon-hero-bg__slide[data-culture="maghreb"] .rayon-hero-bg__motif {
+    /* Dune silhouette anchored to the bottom edge — abstract two-
+       layered horizon line in muted brown. */
+    background-position: bottom;
+    background-size: 100% 35%;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200' preserveAspectRatio='none'><path d='M0 200 L0 130 Q100 95 220 110 T420 100 T600 120 L600 200 Z' fill='%23722F18' fill-opacity='0.45'/><path d='M0 200 L0 160 Q150 140 300 150 T600 155 L600 200 Z' fill='%23541F0E' fill-opacity='0.55'/></svg>");
+  }
+  .rayon-hero-bg__slide[data-culture="maghreb"] .rayon-hero-bg__word {
+    color: #FFFFFF;
+    opacity: 0.32;
+  }
+
+  /* Créole : sky-to-sand vertical gradient evoking a Caribbean
+     beach horizon, white "CRÉOLE" word.
+     Source banner : /images/banners/creole.jpg */
+  .rayon-hero-bg__slide[data-culture="creole"] {
+    background: linear-gradient(
+      180deg,
+      #5DA0C9 0%,
+      #9CBCC3 45%,
+      #C7B68F 70%,
+      #DEC598 100%
+    );
+  }
+  .rayon-hero-bg__slide[data-culture="creole"] .rayon-hero-bg__motif {
+    /* Sun disc + palm hint — the source banner has a sun and palm
+       leaves, we approximate with a soft solar disc and a stylised
+       palm-frond silhouette anchored to the bottom-left. */
+    background-position: bottom left;
+    background-size: 60% 70%;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'><circle cx='320' cy='80' r='38' fill='%23F6E5B4' fill-opacity='0.55'/><g fill='%231F4A2B' fill-opacity='0.45'><path d='M40 280 Q60 220 30 170 Q70 200 90 250 Z'/><path d='M40 280 Q90 240 130 200 Q90 250 80 280 Z'/><path d='M40 280 Q20 240 0 220 Q20 260 30 280 Z'/></g></svg>");
+  }
+  .rayon-hero-bg__slide[data-culture="creole"] .rayon-hero-bg__word {
+    color: #FFFFFF;
+    opacity: 0.32;
+  }
+
+  /* Hygiène : pastel pink base with bubble texture, dark "HYGIÈNE"
+     word.
+     Source banner : /images/banners/hygiene.jpg */
+  .rayon-hero-bg__slide[data-culture="hygiene"] {
+    background: linear-gradient(180deg, #F4D7DD 0%, #E0BCC3 100%);
+  }
+  .rayon-hero-bg__slide[data-culture="hygiene"] .rayon-hero-bg__motif {
+    background-size: 220px 220px;
+    background-repeat: repeat;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><g fill='none' stroke='%23E89AAF' stroke-width='1.4' stroke-opacity='0.45'><circle cx='40' cy='50' r='14'/><circle cx='110' cy='70' r='9'/><circle cx='160' cy='40' r='17'/><circle cx='70' cy='130' r='12'/><circle cx='150' cy='150' r='20'/><circle cx='30' cy='170' r='8'/></g></svg>");
+    opacity: 0.85;
+  }
+  .rayon-hero-bg__slide[data-culture="hygiene"] .rayon-hero-bg__word {
+    color: #1A1A1A;
+    opacity: 0.36;
+  }
+
+  /* Sauces & Soupes : warm orange-peach linear gradient, soup bowl repeating motif, dark word */
+  .rayon-hero-bg__slide[data-culture="sauces-soupes"] {
+    background: linear-gradient(180deg, #F4C7B5 0%, #FFE8DC 100%);
+  }
+  .rayon-hero-bg__slide[data-culture="sauces-soupes"] .rayon-hero-bg__motif {
+    background-size: 240px 240px;
+    background-repeat: repeat;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><g fill='none' stroke='%23A85710' stroke-width='1.4' stroke-opacity='0.4'><circle cx='50' cy='60' r='20'/><path d='M30 60 L70 60'/><circle cx='150' cy='60' r='20'/><path d='M130 60 L170 60'/><circle cx='100' cy='150' r='20'/><path d='M80 150 L120 150'/></g></svg>");
+    opacity: 0.75;
+  }
+  .rayon-hero-bg__slide[data-culture="sauces-soupes"] .rayon-hero-bg__word {
+    color: #1A1A1A;
+    opacity: 0.3;
+  }
+
+  /* Huiles & Condiments : fresh green linear gradient, olive branch/drop repeating motif, light word */
+  .rayon-hero-bg__slide[data-culture="huiles-condiments"] {
+    background: linear-gradient(180deg, #A8D85F 0%, #7BC141 100%);
+  }
+  .rayon-hero-bg__slide[data-culture="huiles-condiments"] .rayon-hero-bg__motif {
+    background-size: 200px 200px;
+    background-repeat: repeat;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><g fill='none' stroke='%232E8B4A' stroke-width='1.4' stroke-opacity='0.4'><path d='M40 80 Q60 50 80 80 T120 80'/><circle cx='80' cy='65' r='5' fill='%232E8B4A' fill-opacity='0.3'/><path d='M140 140 Q160 110 180 140 T220 140'/><circle cx='180' cy='125' r='5' fill='%232E8B4A' fill-opacity='0.3'/></g></svg>");
+    opacity: 0.75;
+  }
+  .rayon-hero-bg__slide[data-culture="huiles-condiments"] .rayon-hero-bg__word {
+    color: #FFFFFF;
+    opacity: 0.3;
+  }
+
+  /* ============================================================
+     Foreground contrast overlay — keeps the hero title legible on
+     every slide regardless of palette. Strong palette tint on the
+     left where the title lives, fading to transparent on the right
+     where the photo card overlays anyway. The tint colour uses
+     the active rayon's --culture-from / --culture-to tokens (set
+     once on the wrapper from heroBgPrimaryBanner) so the overlay
+     stays harmonised with the rotation.
+     ============================================================ */
+  .rayon-hero-bg__overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        100deg,
+        color-mix(in srgb, var(--culture-from, #1C6B35) 60%, transparent) 0%,
+        color-mix(in srgb, var(--culture-from, #1C6B35) 35%, transparent) 35%,
+        transparent 65%,
+        transparent 100%
+      );
+  }
+
+  /* Tablet & mobile — the hero stacks vertically. Soften the
+     overlay to a neutral top-down tint so the cultural artwork
+     stays prominent behind the stacked content. */
+  @media (max-width: 1023px) {
+    .rayon-hero-bg__overlay {
+      background:
+        linear-gradient(
+          180deg,
+          color-mix(in srgb, var(--culture-from, #1C6B35) 50%, transparent) 0%,
+          color-mix(in srgb, var(--culture-from, #1C6B35) 28%, transparent) 60%,
+          transparent 100%
+        );
+    }
+    .rayon-hero-bg__word {
+      font-size: clamp(140px, 28vh, 260px);
+    }
   }
 </style>

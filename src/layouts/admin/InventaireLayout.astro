@@ -62,5 +62,34 @@ const authExpiresAt = Astro.locals.authExpiresAt;
         })();
       </script>
     )}
+
+    <script is:inline>
+      (() => {
+        // Triple-click placeholder copy helper
+        document.addEventListener("click", (e) => {
+          if (e.detail === 3) {
+            const input = e.target;
+            if (input && (input.tagName === "INPUT" || input.tagName === "TEXTAREA")) {
+              const placeholder = input.getAttribute("placeholder");
+              if (placeholder) {
+                const proto = input.tagName === "INPUT" 
+                  ? window.HTMLInputElement.prototype 
+                  : window.HTMLTextAreaElement.prototype;
+                const descriptor = Object.getOwnPropertyDescriptor(proto, "value");
+                if (descriptor && descriptor.set) {
+                  descriptor.set.call(input, placeholder);
+                  input.dispatchEvent(new Event("input", { bubbles: true }));
+                  input.dispatchEvent(new Event("change", { bubbles: true }));
+                } else {
+                  input.value = placeholder;
+                  input.dispatchEvent(new Event("input", { bubbles: true }));
+                  input.dispatchEvent(new Event("change", { bubbles: true }));
+                }
+              }
+            }
+          }
+        });
+      })();
+    </script>
   </body>
 </html>

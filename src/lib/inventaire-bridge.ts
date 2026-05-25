@@ -95,19 +95,28 @@ let isTrioBridgeMigrationApplied = true;
 /**
  * Probe to check if a DB error is caused by missing bridge migration columns.
  * If so, deactivates the bridge queries to save bandwidth and prevent log spam.
+ *
+ * Migration 003_trio_bridge.sql adds 4 columns to public.articles :
+ *   slug, origine, publie_sur_site, sync_v2_at
+ * A missing-column error on ANY of them means the migration hasn't run on
+ * the inventaire Supabase project. We catch all four so the bridge falls
+ * dormant on the very first error instead of hammering the DB once per
+ * column (the previous regex only checked slug + publie_sur_site, which
+ * is why "column articles.origine does not exist" kept surfacing).
  */
+const MIGRATION_003_COLUMNS = ["slug", "origine", "publie_sur_site", "sync_v2_at"] as const;
+
 function handleBridgeError(err: any) {
-  if (err?.message && (
-    err.message.includes("column articles.slug does not exist") ||
-    err.message.includes("column articles.publie_sur_site does not exist")
-  )) {
-    if (isTrioBridgeMigrationApplied) {
-      console.warn(
-        "[inventaire-bridge] ⚠️ La migration 003_trio_bridge.sql n'a pas été appliquée sur la base inventaire.",
-        "Le pont d'inventaire est temporairement mis en sommeil."
-      );
-      isTrioBridgeMigrationApplied = false;
-    }
+  const msg = err?.message ?? "";
+  const isMigrationMissing = MIGRATION_003_COLUMNS.some((col) =>
+    msg.includes(`column articles.${col} does not exist`),
+  );
+  if (isMigrationMissing && isTrioBridgeMigrationApplied) {
+    console.warn(
+      "[inventaire-bridge] ⚠️ La migration 003_trio_bridge.sql n'a pas été appliquée sur la base inventaire.",
+      "Le pont d'inventaire est temporairement mis en sommeil. Voir Gestion_inventaire_marchedemo/supabase/migrations/003_trio_bridge.sql.",
+    );
+    isTrioBridgeMigrationApplied = false;
   }
 }
 

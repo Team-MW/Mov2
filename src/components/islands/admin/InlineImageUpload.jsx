@@ -38,7 +38,7 @@ import { optimizeImage } from "./imageOptimize.js";
  *    the user asks for reduced motion).
  */
 
-const ACCEPT = "image/jpeg,image/png,image/webp,image/avif,image/gif,image/svg+xml";
+const ACCEPT = "image/jpeg,image/jpg,image/png,image/webp,image/avif,image/gif,image/svg+xml";
 const MAX_BYTES = 8 * 1024 * 1024;
 
 export default function InlineImageUpload({

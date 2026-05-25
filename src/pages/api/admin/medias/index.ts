@@ -40,6 +40,7 @@ const ALLOWED_FOLDERS = new Set([
 /* Accepted MIME types + max size (8 MB per file). */
 const ALLOWED_MIME = new Set([
   "image/jpeg",
+  "image/jpg",
   "image/png",
   "image/webp",
   "image/avif",
@@ -143,9 +144,15 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   /* Either user-supplied rename, or safe-slug from original name. */
-  const safeName = typeof renameTo === "string" && renameTo.trim()
-    ? slugifyFilename(String(renameTo))
-    : slugifyFilename(file.name);
+  const uploadedExt = file.name.includes(".") ? file.name.slice(file.name.lastIndexOf(".")) : "";
+  let safeName;
+  if (typeof renameTo === "string" && renameTo.trim()) {
+    const nameWithoutExt = renameTo.replace(/\.[a-z0-9]{1,5}$/i, "");
+    const timestamp = Math.floor(Date.now() / 1000);
+    safeName = slugifyFilename(`${nameWithoutExt}-${timestamp}${uploadedExt}`);
+  } else {
+    safeName = slugifyFilename(file.name);
+  }
   const path = folder ? `${folder}/${safeName}` : safeName;
 
   const { data, error } = await supabaseAdmin!.storage

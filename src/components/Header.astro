@@ -112,7 +112,7 @@ const TWEMOJI_IDS: Record<string, string> = {
             type="text"
             name="q"
             placeholder="Rechercher un produit, une saveur, une recette..."
-            class="w-full pl-12 pr-20 py-2.5 bg-neutral-100 focus:bg-white text-[14px] text-neutral-800 rounded-full border border-black/10 focus:border-vert/30 focus:ring-4 focus:ring-vert/5 outline-none transition-all placeholder-neutral-400"
+            class="w-full pl-12 pr-20 py-2 bg-neutral-100 focus:bg-white text-[14px] text-neutral-800 rounded-full border border-black/10 focus:border-vert/30 focus:ring-4 focus:ring-vert/5 outline-none transition-all placeholder-neutral-400"
             autocomplete="off"
           />
           <svg class="w-5 h-5 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -161,7 +161,7 @@ const TWEMOJI_IDS: Record<string, string> = {
        No scroll-state transitions on mobile — the design stays as-is. -->
   <div
     id="header-row-mobile"
-    class="lg:hidden w-full h-[96px] border-b border-black/5 bg-white/95 backdrop-blur-sm grid grid-cols-[1fr_auto_1fr] items-center px-3 select-none relative z-20"
+    class="lg:hidden w-full h-[80px] border-b border-black/5 bg-white/95 backdrop-blur-sm grid grid-cols-[1fr_auto_1fr] items-center px-3 select-none relative z-20"
   >
     <!-- LEFT zone : burger + promo button (big) -->
     <div class="flex items-center gap-2 justify-self-start min-w-0">
@@ -187,7 +187,7 @@ const TWEMOJI_IDS: Record<string, string> = {
         <img
           src="/promos/promo_button-removebg-preview.png"
           alt="Promos"
-          class="h-16 w-auto object-contain"
+          class="h-14 w-auto object-contain"
         />
       </a>
     </div>
@@ -201,10 +201,10 @@ const TWEMOJI_IDS: Record<string, string> = {
       <img
         src="/logos/logo-marchedemo-rond-contourgreen.png"
         alt="Marché de Mo'"
-        width="72"
-        height="72"
+        width="58"
+        height="58"
         fetchpriority="high"
-        class="logo-row-mobile w-[72px] h-[72px] object-contain bg-white rounded-full shadow-sm p-0.5"
+        class="logo-row-mobile w-[58px] h-[58px] object-contain bg-white rounded-full shadow-sm p-0.5"
       />
     </a>
 
@@ -248,16 +248,16 @@ const TWEMOJI_IDS: Record<string, string> = {
       <img
         src="/logos/logo-marchedemo-rond-contourgreen.png"
         alt="Marché de Mo'"
-        width="144"
-        height="144"
+        width="120"
+        height="120"
         fetchpriority="high"
-        class="w-28 h-28 lg:w-36 lg:h-36 object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300 bg-white rounded-full shadow-sm p-0.5"
+        class="w-24 h-24 lg:w-30 lg:h-30 object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300 bg-white rounded-full shadow-sm p-0.5"
       />
     </a>
   </div>
 
   <!-- 3. Row 3: Category Buttons & Auxiliary Links (Sticky below Row 1) -->
-  <div id="header-categories-row" class="border-t border-black/5 bg-neutral-50/80 py-1.5 relative z-10">
+  <div id="header-categories-row" class="border-t border-black/5 bg-neutral-50/80 py-1 relative z-10">
     <div id="header-categories-flex" class="container-mo flex items-center gap-6 transition-all duration-300">
       <!-- Scrollable category tabs bar (Centered by default in top state) -->
       <div 
@@ -270,7 +270,7 @@ const TWEMOJI_IDS: Record<string, string> = {
           return (
             <a
               href={`/rayons/${r.slug}`}
-              class="group/tab inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-[15px] font-soft font-bold text-white transition-all shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:-translate-y-[1px] hover:scale-[1.02] shrink-0"
+              class="group/tab inline-flex items-center gap-2 px-[22px] py-[8px] rounded-full text-[14.5px] font-soft font-bold text-white transition-all shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:-translate-y-[1px] hover:scale-[1.02] shrink-0"
               style={`background-color: ${bgCol}; box-shadow: 0 4px 10px ${bgCol}25;`}
             >
               <span class="inline-flex items-center gap-2.5 whitespace-nowrap">
@@ -528,8 +528,8 @@ const TWEMOJI_IDS: Record<string, string> = {
      --------------------------------------------------------------- */
   /* Desktop scrolled */
   #site-header.is-header-scrolled .logo-row-1 {
-    width: 72px !important;
-    height: 72px !important;
+    width: 60px !important;
+    height: 60px !important;
   }
   #site-header.is-header-scrolled .logo-row-1-label {
     opacity: 0;
@@ -583,8 +583,19 @@ const TWEMOJI_IDS: Record<string, string> = {
     }
   }
 
-  /* Hide categories row dynamically when the mobile menu is open */
-  .menu-is-open #header-categories-row {
+  /* Smooth transition for categories row collapse/expand */
+  #header-categories-row {
+    transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.25s ease,
+                padding 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                border-width 0.3s ease;
+    max-height: 100px; /* safe upper bound */
+    overflow: hidden;
+  }
+
+  /* Hide categories row dynamically when the mobile menu is open or on scroll down */
+  .menu-is-open #header-categories-row,
+  #site-header.hide-categories #header-categories-row {
     max-height: 0px !important;
     opacity: 0 !important;
     padding-top: 0px !important;
@@ -1012,19 +1023,28 @@ const TWEMOJI_IDS: Record<string, string> = {
       if (!header) return;
 
       const isHomePage = window.location.pathname === "/";
-      if (!isHomePage) {
+      const y = window.scrollY;
+
+      if (isHomePage) {
+        const wasScrolled = header.classList.contains("is-header-scrolled");
+        if (!wasScrolled && y >= SCROLL_DOWN) {
+          header.classList.add("is-header-scrolled", "header-scrolled");
+        } else if (wasScrolled && y <= SCROLL_UP) {
+          header.classList.remove("is-header-scrolled", "header-scrolled");
+        }
+      } else {
         if (!header.classList.contains("is-header-scrolled")) {
           header.classList.add("is-header-scrolled", "header-scrolled");
         }
-        return;
-      }
-
-      const y = window.scrollY;
-      const wasScrolled = header.classList.contains("is-header-scrolled");
-      if (!wasScrolled && y >= SCROLL_DOWN) {
-        header.classList.add("is-header-scrolled", "header-scrolled");
-      } else if (wasScrolled && y <= SCROLL_UP) {
-        header.classList.remove("is-header-scrolled", "header-scrolled");
+        
+        // Hide categories row when scrolling down, show when scrolling back to the top
+        const isHidden = header.classList.contains("hide-categories");
+        
+        if (!isHidden && y >= SCROLL_DOWN) {
+          header.classList.add("hide-categories");
+        } else if (isHidden && y <= SCROLL_UP) {
+          header.classList.remove("hide-categories");
+        }
       }
     };
 
@@ -1033,12 +1053,9 @@ const TWEMOJI_IDS: Record<string, string> = {
       window.removeEventListener("scroll", (window as any).__headerScrollEvaluate);
     }
 
-    const isHomePage = window.location.pathname === "/";
-    if (isHomePage) {
-      // Assign the new evaluate and add it
-      (window as any).__headerScrollEvaluate = evaluate;
-      window.addEventListener("scroll", (window as any).__headerScrollEvaluate, { passive: true });
-    }
+    // Assign the new evaluate and add it on all pages
+    (window as any).__headerScrollEvaluate = evaluate;
+    window.addEventListener("scroll", (window as any).__headerScrollEvaluate, { passive: true });
 
     // Measure and set spacer height
     const header = document.getElementById("site-header");
