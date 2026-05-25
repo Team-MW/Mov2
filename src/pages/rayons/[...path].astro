@@ -542,6 +542,7 @@ const pageDesc = (() => {
           {promos.map((p) => (
             <div class="reveal">
               <PromoCard
+                slug={p.slug}
                 titre={p.data.titre}
                 description={p.data.description}
                 image={p.data.image}

@@ -7,6 +7,7 @@ import { RAYONS } from "@/lib/site";
 import { supabaseSrcSet } from "@/lib/image-cdn";
 
 interface Props {
+  slug?: string;
   titre: string;
   description?: string;
   image: string;
@@ -21,6 +22,7 @@ interface Props {
 }
 
 const {
+  slug,
   titre,
   description = "",
   image,
@@ -50,8 +52,8 @@ const magasinLabel = "Toulouse Sud — Cépière";
 
 const fin = new Date(date_fin);
 const finStr = isNaN(fin.getTime())
-  ? date_fin
-  : fin.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+      ? date_fin
+      : fin.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
 
 /* Responsive srcset : the promo card fills 1 column on mobile (~100vw),
  * 2 cols on tablet (~50vw) and 3 cols on desktop (~33vw at container
@@ -67,7 +69,7 @@ const promoSizes =
 
 <article class={`promo-card group ${featured ? "ring-2 ring-rouge/20" : ""}`}>
   <!-- Image -->
-  <a href={`/rayons/${rayonSlug}`} class="relative block aspect-[4/3] overflow-hidden bg-white">
+  <a href={slug ? `/produits/${slug}` : `/rayons/${rayonSlug}`} class="relative block aspect-[4/3] overflow-hidden bg-white">
     <img
       src={promoSrc}
       srcset={promoSrcset}

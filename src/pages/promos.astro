@@ -55,6 +55,7 @@ const bc = breadcrumbSchema([{ name: "Promos de la semaine", url: "/promos" }]);
         <h2 class="display-md mt-4 max-w-2xl text-balance">Le coup de cœur.</h2>
         <div class="mt-10 max-w-md">
           <PromoCard
+            slug={featured.slug}
             titre={featured.data.titre}
             description={featured.data.description}
             image={featured.data.image}
@@ -92,6 +93,7 @@ const bc = breadcrumbSchema([{ name: "Promos de la semaine", url: "/promos" }]);
         {others.map((p) => (
           <div data-rayon={p.data.rayon}>
             <PromoCard
+              slug={p.slug}
               titre={p.data.titre}
               description={p.data.description}
               image={p.data.image}

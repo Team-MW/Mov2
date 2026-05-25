@@ -35,6 +35,7 @@ import {
   getArticlesPublies,
   getArticlesPubliesByRayon,
 } from "@/lib/inventaire-bridge";
+import { getActivePromos } from "./promos-repo";
 
 /* --------------------------------------------------------------------
    Local catalogue fallback
@@ -247,11 +248,24 @@ function mergeBySlug(
  * row cap is 1000 which is more than enough; beyond that we'd paginate.
  */
 export async function getAllProduits(): Promise<ProduitPublic[]> {
-  const [v2, inv] = await Promise.all([
+  const [v2, inv, promos] = await Promise.all([
     fetchV2AllProduits(),
     getArticlesPublies(),
+    getActivePromos(),
   ]);
-  const merged = mergeBySlug(v2, inv);
+  const promoProducts: ProduitPublic[] = promos.map((p) => ({
+    slug: p.slug,
+    nom: p.data.titre,
+    description: p.data.description,
+    image: p.data.image || null,
+    rayon: p.data.rayon,
+    categorie: null,
+    sous_categorie: null,
+    origine: null,
+    badge: `-${p.data.reduction_pct}%`,
+    ordre: 1000,
+  }));
+  const merged = mergeBySlug(v2, [...inv, ...promoProducts]);
   if (merged.length > 0) return merged.sort(byRayonOrdreNom);
   return allFromLocal();
 }
@@ -348,6 +362,24 @@ export async function getProduitBySlug(
   if (v2) return v2;
   const inv = await getArticleBySlug(slug);
   if (inv) return inv;
+
+  const promos = await getActivePromos();
+  const promo = promos.find((p) => p.slug === slug);
+  if (promo) {
+    return {
+      slug: promo.slug,
+      nom: promo.data.titre,
+      description: promo.data.description,
+      image: promo.data.image || null,
+      rayon: promo.data.rayon,
+      categorie: null,
+      sous_categorie: null,
+      origine: null,
+      badge: `-${promo.data.reduction_pct}%`,
+      ordre: 1000,
+    };
+  }
+
   const local = LOCAL_CATALOGUE.find((r) => r.slug === slug);
   return local ? localToPublic(local) : null;
 }
