@@ -15,7 +15,7 @@ interface Props {
 const { items, darkText = false } = Astro.props as Props;
 ---
 
-<nav aria-label="Fil d'Ariane" class="container-mo py-4">
+<nav aria-label="Fil d'Ariane" class="container-mo pt-2.5 pb-0">
   <ol class={`flex flex-wrap items-center gap-2 text-[13px] ${darkText ? "text-white/70" : "text-neutral-500"} font-pro`}>
     <li>
       <a href="/" class={`hover:underline ${darkText ? "hover:text-white" : "hover:text-vert"}`}>Accueil</a>
