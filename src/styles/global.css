@@ -229,6 +229,7 @@
     overflow-x: hidden;
     content-visibility: auto;
     contain-intrinsic-size: auto 600px;
+    scroll-margin-top: 140px; /* Account for sticky header height */
   }
   .section-sm {
     padding-top: var(--space-section-sm);

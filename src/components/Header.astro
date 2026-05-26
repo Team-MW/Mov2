@@ -409,7 +409,7 @@ const TWEMOJI_IDS: Record<string, string> = {
     </div>
   </div>
 </header>
-<div id="header-spacer" class="hidden lg:block"></div>
+<div id="header-spacer" class="hidden lg:block" style={`height: ${isHome ? '284px' : '120px'};`}></div>
 
 <style>
   /* Hamburger button & icon animation */
@@ -1057,27 +1057,40 @@ const TWEMOJI_IDS: Record<string, string> = {
     (window as any).__headerScrollEvaluate = evaluate;
     window.addEventListener("scroll", (window as any).__headerScrollEvaluate, { passive: true });
 
-    // Measure and set spacer height
-    const header = document.getElementById("site-header");
-    const spacer = document.getElementById("header-spacer");
-    if (header && spacer) {
+    const setSpacerHeight = () => {
+      const header = document.getElementById("site-header");
+      const spacer = document.getElementById("header-spacer");
+      if (!header || !spacer) return;
+
+      const isHomePage = window.location.pathname === "/";
+      
+      const hasScrolledClass = header.classList.contains("is-header-scrolled");
+      const hasScrolledClass2 = header.classList.contains("header-scrolled");
+      const hasHideCategories = header.classList.contains("hide-categories");
+
+      // Temporarily remove collapsed classes to measure natural expanded height
       if (isHomePage) {
-        const wasScrolled = header.classList.contains("is-header-scrolled");
-        if (wasScrolled) {
-          header.classList.remove("is-header-scrolled", "header-scrolled");
-        }
-        const naturalHeight = header.offsetHeight;
-        spacer.style.height = `${naturalHeight}px`;
-        if (wasScrolled) {
-          header.classList.add("is-header-scrolled", "header-scrolled");
-        }
+        header.classList.remove("is-header-scrolled", "header-scrolled");
       } else {
-        if (!header.classList.contains("is-header-scrolled")) {
-          header.classList.add("is-header-scrolled", "header-scrolled");
-        }
-        spacer.style.height = `${header.offsetHeight}px`;
+        header.classList.add("is-header-scrolled", "header-scrolled");
+        header.classList.remove("hide-categories");
       }
-    }
+
+      const naturalHeight = header.offsetHeight;
+
+      // Restore classes
+      if (hasScrolledClass) header.classList.add("is-header-scrolled");
+      if (hasScrolledClass2) header.classList.add("header-scrolled");
+      if (hasHideCategories) header.classList.add("hide-categories");
+
+      spacer.style.height = `${naturalHeight}px`;
+    };
+
+    // Measure and set spacer height
+    setSpacerHeight();
+
+    // Re-run on resize
+    window.addEventListener("resize", setSpacerHeight, { passive: true });
 
     // Run evaluate immediately and multiple times to handle Astro scroll restoration
     evaluate();

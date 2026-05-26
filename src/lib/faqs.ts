@@ -17,7 +17,7 @@ export const FAQ_HOME: FAQItem[] = [
     r: "Notre magasin se trouve à Toulouse Sud Cépière (5 rue Joachim du Bellay, sortie 27).",
   },
   {
-    q: "Les magasins sont-ils ouverts le dimanche ?",
+    q: "Le magasin est-il ouvert le dimanche ?",
     r: "Oui, notre magasin est ouvert 7 jours sur 7 dont le dimanche de 8h30 à 13h.",
   },
   {
@@ -70,7 +70,7 @@ export const FAQ_MAGASINS: FAQItem[] = [
     r: "Oui, un grand parking gratuit de 600 places est à votre disposition.",
   },
   {
-    q: "Les magasins sont-ils accessibles PMR ?",
+    q: "Le magasin est-il accessible PMR ?",
     r: "Oui, notre magasin est entièrement adapté aux personnes à mobilité réduite.",
   },
   {
