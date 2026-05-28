@@ -316,7 +316,7 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
   },
   "saveur-mediterranee": {
     slug: "saveur-mediterranee",
-    nom: "Saveur Méditerranéenne",
+    nom: "Saveur Médi\u00ADter\u00ADra\u00ADné\u00ADenne",
     nomCourt: "Méditerranée",
     eyebrow: "Rayon culturel",
     tagline: "Provence. Levant. Rien entre.",

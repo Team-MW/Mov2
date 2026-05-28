@@ -51,3 +51,19 @@
   color: var(--rayon-texte-hero);
   border: 1px solid rgba(240, 244, 252, 0.18);
 }
+
+/* Typography: reduce title size to prevent 'Méditerranéenne' wrapping.
+   Soft hyphens (\00AD) are injected in the HTML via site.ts rayon.nom.
+   CSS hyphens: auto provides a fallback for any browser that supports it. */
+[data-rayon="saveur-mediterranee"] .rayon-title.display-xl {
+  font-size: clamp(2rem, 6.2vw, 5.8rem);
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+@media (max-width: 767px) {
+  [data-rayon="saveur-mediterranee"] .rayon-title.display-xl {
+    font-size: clamp(1.9rem, 8vw, 2.8rem);
+  }
+}

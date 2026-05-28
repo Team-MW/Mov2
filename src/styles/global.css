@@ -358,6 +358,26 @@
     color: var(--rayon-texte-hero);
   }
 
+  /* Dark-hero contrast: ensure all hero text elements use the hero text color */
+  .rayon-hero--dark .rayon-eyebrow {
+    color: var(--rayon-texte-hero);
+    opacity: 0.85;
+  }
+  .rayon-hero--dark .rayon-pill {
+    background: color-mix(in srgb, var(--rayon-texte-hero) 10%, transparent);
+    color: var(--rayon-texte-hero);
+    border-color: color-mix(in srgb, var(--rayon-texte-hero) 22%, transparent);
+  }
+  .rayon-hero--dark .rayon-saison-encart .flex {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(12px);
+    ring: none;
+  }
+  .rayon-hero--dark .rayon-saison-encart p,
+  .rayon-hero--dark .rayon-saison-encart a {
+    color: var(--rayon-texte-hero);
+  }
+
   .rayon-img-overlay {
     background: linear-gradient(160deg,
       transparent 0%,

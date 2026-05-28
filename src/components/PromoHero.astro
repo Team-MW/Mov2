@@ -177,7 +177,7 @@ const isGreenOverlaySlide = (s: (typeof baseSlides)[number]) =>
  * Above 2400 px the file cost (> 250 KB even as WebP) outweighs the
  * extra sharpness at the distance a user views a hero photo. */
 const heroWidths = [800, 1200, 1600, 2400];
-const heroSizes = "76vw";
+const heroSizes = "68vw";
 const heroSources = loopSlides.map((s) =>
   s.kind === "banner" || s.image.startsWith("/promos/")
     ? { src: s.image, srcset: "" }
@@ -405,7 +405,7 @@ const heroSources = loopSlides.map((s) =>
     cursor: grab;
     user-select: none;
     -webkit-user-select: none;
-    padding: 0 6vw;
+    padding: 0 12vw;
     gap: 20px;
   }
   @media (max-width: 768px) {
@@ -419,8 +419,8 @@ const heroSources = loopSlides.map((s) =>
   .promo-hero-track:focus { outline: none; }
 
   .promo-hero-slide {
-    flex: 0 0 76vw;
-    width: 76vw;
+    flex: 0 0 68vw;
+    width: 68vw;
     position: relative;
     scroll-snap-align: center;
     scroll-snap-stop: always;
