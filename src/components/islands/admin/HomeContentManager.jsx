@@ -34,6 +34,7 @@ const EMPTY_SLIDE = {
   description: "",
   image: "",
   image_alt: "",
+  video_url: null,
   cta_label: "",
   cta_href: "",
   accent: "#1C6B35",
@@ -614,6 +615,15 @@ function SlideEditModal({ slide, onCancel, onSave }) {
               maxLength={150}
             />
           </Field>
+
+          <InlineImageUpload
+            folder="home"
+            label="Fichier Vidéo (Optionnel)"
+            hint="Si spécifié, cette slide s'affiche sous forme de vidéo dans le split-screen PromoHero. Uploadé sur Cloudinary."
+            value={form.video_url ?? ""}
+            onChange={(v) => set("video_url", v)}
+            renameTo={(form.slug || slugifyLocal(form.titre || "slide")) + "-video"}
+          />
 
           <div className="grid grid-cols-2 gap-3">
             <Field label="Libellé du bouton">

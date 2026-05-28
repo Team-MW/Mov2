@@ -61,6 +61,7 @@ export interface ExtraSlide {
   ctaHref: string;
   /** Background accent (CSS color) for overlay tint. Default : vert. */
   accent?: string;
+  videoUrl?: string | null;
 }
 
 interface Props {
@@ -113,7 +114,7 @@ const promoSlides = promos.slice(0, 5).map((p) => ({
 }));
 
 const editorialSlides = extraSlides.map((s) => ({
-  kind: "editorial" as const,
+  kind: s.videoUrl ? ("video" as const) : ("editorial" as const),
   titre: s.titre,
   description: s.description,
   eyebrow: s.eyebrow,
@@ -126,8 +127,10 @@ const editorialSlides = extraSlides.map((s) => ({
   prixPromo: null as number | null,
   prixOriginal: null as number | null,
   reductionPct: null as number | null,
-  videoUrl: null as string | null,
+  videoUrl: s.videoUrl || null,
 }));
+
+const hasDynamicVideo = editorialSlides.some((s) => s.kind === "video");
 
 const initialSlides: Slide[] = [agneauBannerSlide, ...promoSlides, ...editorialSlides];
 const videoSlide = {
@@ -147,10 +150,12 @@ const videoSlide = {
   videoUrl: "/videos/marchedemo-promo.mp4",
 };
 
-if (initialSlides.length > 0) {
-  initialSlides.splice(1, 0, videoSlide);
-} else {
-  initialSlides.push(videoSlide);
+if (!hasDynamicVideo) {
+  if (initialSlides.length > 0) {
+    initialSlides.splice(1, 0, videoSlide);
+  } else {
+    initialSlides.push(videoSlide);
+  }
 }
 
 const baseSlides = initialSlides;
@@ -213,6 +218,7 @@ const heroSources = loopSlides.map((s) =>
             data-slide-index={realIndex}
             data-dom-index={i}
             data-loop-clone={isClone ? "true" : undefined}
+            style={isVideo ? `background-color: ${slide.accent} !important;` : ""}
           >
             {isVideo ? (
               /* Split Screen Layout for Video Slide */
@@ -221,7 +227,7 @@ const heroSources = loopSlides.map((s) =>
                 <div class="absolute inset-0 bg-transparent z-0"></div>
                 <div 
                   class="absolute inset-0 opacity-[0.035] pointer-events-none z-0" 
-                  style="background-image: radial-gradient(circle at center, rgba(46, 139, 74, 0.4) 0%, rgba(0,0,0,0) 80%), url('data:image/svg+xml,%3Csvg width=\'120\' height=\'24\' viewBox=\'0 0 120 24\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 12 Q 30 0, 60 12 T 120 12\' fill=\'none\' stroke=\'%231c6b35\' stroke-width=\'1.5\'/%3E%3C/svg%3E');"
+                  style={`background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.15) 0%, rgba(0,0,0,0) 80%), url("data:image/svg+xml,%3Csvg width='120' height='24' viewBox='0 0 120 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 12 Q 30 0, 60 12 T 120 12' fill='none' stroke='${encodeURIComponent(slide.accent)}' stroke-width='1.5'/%3E%3C/svg%3E");`}
                 ></div>
                 
                 <!-- Left text column (hidden on green-accent / video slides per design) -->

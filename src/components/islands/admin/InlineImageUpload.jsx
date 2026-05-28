@@ -38,7 +38,7 @@ import { optimizeImage } from "./imageOptimize.js";
  *    the user asks for reduced motion).
  */
 
-const ACCEPT = "image/jpeg,image/jpg,image/png,image/webp,image/avif,image/gif,image/svg+xml";
+const ACCEPT = "image/jpeg,image/jpg,image/png,image/webp,image/avif,image/gif,image/svg+xml,video/mp4,video/quicktime,video/webm";
 const MAX_BYTES = 8 * 1024 * 1024;
 
 export default function InlineImageUpload({
@@ -70,33 +70,77 @@ export default function InlineImageUpload({
         setError(`Type non accepté : ${file.type || "inconnu"}`);
         return;
       }
-      /* NOTE : we check the original file size here so we can fail
-       * fast on clearly broken uploads (e.g. 50 Mo raw camera file),
-       * even though the optimizer will usually bring it under 8 Mo
-       * before POST. The cap is intentionally lenient (16 Mo) to
-       * give the optimizer room to work. */
-      if (file.size > MAX_BYTES * 2) {
+      const isVideo = file.type.startsWith("video/");
+      const maxAllowed = isVideo ? 30 * 1024 * 1024 : MAX_BYTES * 2;
+      if (file.size > maxAllowed) {
         setError(`Fichier beaucoup trop gros (${(file.size / 1024 / 1024).toFixed(1)} Mo)`);
         return;
       }
+
+      // Enforce image dimensions exactly 1600x900 px for folder === "home"
+      if (folder === "home" && !isVideo) {
+        try {
+          const dims = await new Promise((resolve) => {
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+            img.onload = () => {
+              const res = { w: img.width, h: img.height };
+              URL.revokeObjectURL(img.src);
+              resolve(res);
+            };
+            img.onerror = () => {
+              URL.revokeObjectURL(img.src);
+              resolve(null);
+            };
+          });
+
+          if (!dims) {
+            setError("Impossible de valider les dimensions de l'image.");
+            return;
+          }
+
+          if (dims.w !== 1600 || dims.h !== 900) {
+            setError(`Dimensions de votre fichier : ${dims.w}×${dims.h} px. L'image pour les slides PromoHero doit faire exactement 1600×900 pixels.`);
+            return;
+          }
+        } catch (e) {
+          setError("Erreur lors de la validation de l'image.");
+          return;
+        }
+      }
+
       setUploading(true);
       try {
-        /* Client-side resize + re-encode to WebP when it helps. SVG,
-         * GIF, and already-small images pass through untouched. */
-        const opt = await optimizeImage(file);
-        const toSend = opt.file;
-        if (toSend.size > MAX_BYTES) {
-          throw new Error(
-            `Fichier trop gros après optimisation (${(toSend.size / 1024 / 1024).toFixed(1)} Mo > 8 Mo).`,
-          );
+        let toSend = file;
+        let optimized = false;
+        let originalBytes = file.size;
+        let finalBytes = file.size;
+
+        if (!isVideo) {
+          /* Client-side resize + re-encode to WebP when it helps. SVG,
+           * GIF, and already-small images pass through untouched. */
+          const opt = await optimizeImage(file);
+          toSend = opt.file;
+          optimized = opt.optimized;
+          originalBytes = opt.originalBytes;
+          finalBytes = opt.finalBytes;
+
+          if (toSend.size > MAX_BYTES) {
+            throw new Error(
+              `Fichier trop gros après optimisation (${(toSend.size / 1024 / 1024).toFixed(1)} Mo > 8 Mo).`,
+            );
+          }
+        } else {
+          // Video files must be under 30MB
+          if (file.size > 30 * 1024 * 1024) {
+            throw new Error(`Fichier vidéo trop gros (${(file.size / 1024 / 1024).toFixed(1)} Mo > 30 Mo).`);
+          }
         }
+
         const form = new FormData();
         form.append("file", toSend);
         form.append("folder", folder);
         if (renameTo) form.append("renameTo", renameTo);
-        /* Default: upsert ON so a re-upload of the same slug+ext
-         * replaces the file instead of 409-ing. This matches the
-         * mental model of "I want to update this image". */
         form.append("upsert", "1");
         const res = await adminFetch("/api/admin/medias", { method: "POST", body: form });
         if (!res.ok) {
@@ -105,12 +149,10 @@ export default function InlineImageUpload({
         }
         const data = await res.json();
         onChange?.(data.file.publicUrl);
-        if (opt.optimized) {
-          /* Log to console once per upload so the owner can see the
-           * win in devtools without surfacing it in the UI. */
-          const saved = ((1 - opt.finalBytes / opt.originalBytes) * 100).toFixed(0);
+        if (optimized) {
+          const saved = ((1 - finalBytes / originalBytes) * 100).toFixed(0);
           console.info(
-            `[InlineImageUpload] Optimisé ${(opt.originalBytes / 1024).toFixed(0)} Ko → ${(opt.finalBytes / 1024).toFixed(0)} Ko (−${saved}%)`,
+            `[InlineImageUpload] Optimisé ${(originalBytes / 1024).toFixed(0)} Ko → ${(finalBytes / 1024).toFixed(0)} Ko (−${saved}%)`,
           );
         }
       } catch (err) {
@@ -165,6 +207,7 @@ export default function InlineImageUpload({
   }
 
   const hasImage = !!value;
+  const isVideoUrl = hasImage && (value.match(/\.(mp4|webm|mov|ogg)/i) || value.includes("/video/upload/"));
 
   return (
     <div className="space-y-2">
@@ -195,15 +238,23 @@ export default function InlineImageUpload({
           {/* Preview */}
           <div className="shrink-0 w-20 h-20 rounded-xl bg-white ring-1 ring-black/5 overflow-hidden flex items-center justify-center">
             {hasImage ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={value}
-                alt=""
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.style.display = "none";
-                }}
-              />
+              isVideoUrl ? (
+                <video
+                  src={value}
+                  className="w-full h-full object-cover"
+                  muted
+                  playsInline
+                />
+              ) : (
+                <img
+                  src={value}
+                  alt=""
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                  }}
+                />
+              )
             ) : (
               <svg
                 className="w-8 h-8 text-neutral-300"

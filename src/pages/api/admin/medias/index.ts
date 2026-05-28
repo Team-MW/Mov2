@@ -37,7 +37,7 @@ const ALLOWED_FOLDERS = new Set([
   "actus",
 ]);
 
-/* Accepted MIME types + max size (8 MB per file). */
+/* Accepted MIME types + max size (30 MB to support short videos). */
 const ALLOWED_MIME = new Set([
   "image/jpeg",
   "image/jpg",
@@ -46,8 +46,11 @@ const ALLOWED_MIME = new Set([
   "image/avif",
   "image/gif",
   "image/svg+xml",
+  "video/mp4",
+  "video/quicktime",
+  "video/webm",
 ]);
-const MAX_BYTES = 8 * 1024 * 1024;
+const MAX_BYTES = 30 * 1024 * 1024;
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -74,6 +77,56 @@ function slugifyFilename(name: string): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
   return (cleanBase || "file") + ext;
+}
+
+import crypto from "crypto";
+
+async function uploadToCloudinary(file: File, folder: string, renameTo?: string): Promise<{ publicUrl: string; path: string }> {
+  const cloudName = process.env.PUBLIC_CLOUDINARY_CLOUD_NAME || import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY || import.meta.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET || import.meta.env.CLOUDINARY_API_SECRET;
+
+  if (!cloudName || !apiKey || !apiSecret) {
+    throw new Error("Configuration Cloudinary (CLOUDINARY_URL, etc.) manquante dans .env.local.");
+  }
+
+  const timestamp = Math.floor(Date.now() / 1000);
+  
+  const dot = file.name.lastIndexOf(".");
+  const originalBase = dot > 0 ? file.name.slice(0, dot) : file.name;
+  let baseName = renameTo ? renameTo.replace(/\.[a-z0-9]{1,5}$/i, "") : originalBase;
+  baseName = baseName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  
+  const publicId = `${baseName}-${timestamp}`;
+
+  const paramsToSign = `folder=${folder}&public_id=${publicId}&timestamp=${timestamp}`;
+  const stringToSign = `${paramsToSign}${apiSecret}`;
+  const signature = crypto.createHash("sha1").update(stringToSign).digest("hex");
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("folder", folder);
+  formData.append("public_id", publicId);
+  formData.append("timestamp", String(timestamp));
+  formData.append("api_key", apiKey);
+  formData.append("signature", signature);
+
+  const url = `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`;
+  const res = await fetch(url, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error?.message || `Erreur Cloudinary: ${res.statusText}`);
+  }
+
+  const data = await res.json();
+  return {
+    publicUrl: data.secure_url,
+    path: data.public_id,
+  };
 }
 
 /* ----------------------------------------------------------------- */
@@ -140,7 +193,37 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return json({ error: `Type non autorisé : ${file.type}` }, 400);
   }
   if (file.size > MAX_BYTES) {
-    return json({ error: `Fichier trop gros (${(file.size / 1024 / 1024).toFixed(1)} Mo > 8 Mo)` }, 400);
+    return json({ error: `Fichier trop gros (${(file.size / 1024 / 1024).toFixed(1)} Mo > 30 Mo)` }, 400);
+  }
+
+  /* Cloudinary routing for 'home' files per dynamic uploader request */
+  if (folder === "home") {
+    try {
+      const cloudRes = await uploadToCloudinary(file, folder, typeof renameTo === "string" ? renameTo : undefined);
+      
+      logActivity({
+        entity: "media",
+        entity_id: cloudRes.path,
+        entity_label: cloudRes.path.split("/").pop() ?? cloudRes.path,
+        action: "upload",
+        payload: { folder, size: file.size, mime: file.type, provider: "cloudinary" },
+      });
+
+      return json(
+        {
+          file: {
+            name: cloudRes.path.split("/").pop() ?? cloudRes.path,
+            path: cloudRes.path,
+            size: file.size,
+            mime: file.type,
+            publicUrl: cloudRes.publicUrl,
+          },
+        },
+        201
+      );
+    } catch (err: any) {
+      return json({ error: err.message || "Erreur lors de l'upload Cloudinary" }, 500);
+    }
   }
 
   /* Either user-supplied rename, or safe-slug from original name. */

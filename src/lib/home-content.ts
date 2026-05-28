@@ -37,6 +37,7 @@ export interface HomeEditorialSlide {
   ctaHref: string;
   /** Hex accent colour used as overlay tint. */
   accent: string;
+  videoUrl: string | null;
 }
 
 /** Hardcoded fallback used when Supabase is unreachable. Matches the
@@ -54,6 +55,7 @@ const FALLBACK_SLIDES: HomeEditorialSlide[] = [
     ctaLabel: "Découvrir le magasin",
     ctaHref: "/magasins/toulouse-sud",
     accent: "#1C6B35",
+    videoUrl: null,
   },
   {
     kind: "editorial",
@@ -66,6 +68,7 @@ const FALLBACK_SLIDES: HomeEditorialSlide[] = [
     ctaLabel: "Rejoindre le programme",
     ctaHref: "/fidelite",
     accent: "#C53030",
+    videoUrl: null,
   },
 ];
 
@@ -80,6 +83,7 @@ function slideRowToEntry(row: any): HomeEditorialSlide {
     ctaLabel: row.cta_label ?? "",
     ctaHref: row.cta_href ?? "",
     accent: row.accent || "#1C6B35",
+    videoUrl: row.video_url || null,
   };
 }
 
