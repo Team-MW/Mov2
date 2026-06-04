@@ -7,6 +7,10 @@ import { FAQ_HOME } from "@/lib/faqs";
 import { breadcrumbSchema } from "@/lib/schema";
 
 const bc = breadcrumbSchema([{ name: "Service client", url: "/service-client" }]);
+
+// Configure with your Vercel URL once deployed
+const FORM_API_URL = import.meta.env.PUBLIC_FORM_API_URL || "https://logiciel-formulaire.vercel.app/api";
+const FORM_ID = import.meta.env.PUBLIC_FORM_ID || "http://localhost:3000/api/submit/90571e4a-d9db-4fa0-bfb1-b95eaf887631";
 ---
 
 <Layout
@@ -93,11 +97,11 @@ const bc = breadcrumbSchema([{ name: "Service client", url: "/service-client" }]
         </p>
       </div>
       <div class="lg:col-span-7">
-        <form id="contact-form" method="POST" action="/api/contact" class="bg-white rounded-3xl p-6 md:p-8 shadow-card space-y-5">
+        <form id="contact-form" data-api-url={FORM_API_URL} data-form-id={FORM_ID} class="bg-white rounded-3xl p-6 md:p-8 shadow-card space-y-5">
           <!-- Honeypot anti-spam -->
           <div style="position: absolute; left: -9999px; top: -9999px; opacity: 0; width: 0; height: 0; overflow: hidden; pointer-events: none;" aria-hidden="true">
-            <label for="phone_confirm">Confirmer le numéro de téléphone</label>
-            <input type="text" name="phone_confirm" id="phone_confirm" tabindex="-1" autocomplete="off" />
+            <label for="_gotcha">Confirmer le numéro de téléphone</label>
+            <input type="text" name="_gotcha" id="_gotcha" tabindex="-1" autocomplete="off" />
           </div>
           <div class="grid md:grid-cols-2 gap-4">
             <div>
@@ -155,13 +159,49 @@ const bc = breadcrumbSchema([{ name: "Service client", url: "/service-client" }]
       if (button) button.disabled = true;
 
       try {
+        const apiUrl = form.getAttribute("data-api-url");
+        const formId = form.getAttribute("data-form-id");
+
+        if (window.showToast) window.showToast("Calcul de sécurité en cours...", "info");
+
+        // 1. Demander le challenge cryptographique
+        const challengeRes = await fetch(`${apiUrl}/challenge`);
+        if (!challengeRes.ok) throw new Error("Le service de formulaire est temporairement indisponible.");
+        const { challenge, timestamp, difficulty } = await challengeRes.json();
+
+        // 2. Résoudre le challenge en arrière-plan (Proof-of-Work)
+        async function sha256(str) {
+          const buf = new TextEncoder().encode(str);
+          const hashBuf = await crypto.subtle.digest("SHA-256", buf);
+          return Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2, "0")).join("");
+        }
+
+        let nonce = 0;
+        let hash = "";
+        const prefix = "0".repeat(difficulty);
+
+        while (true) {
+          hash = await sha256(`${challenge}:${nonce}`);
+          if (hash.startsWith(prefix)) break;
+          nonce++;
+        }
+
+        // 3. Préparer le payload
         const formData = new FormData(form);
-        const payload = {};
+        const payload = {
+          _lang: "fr",
+          pow_challenge: challenge,
+          pow_timestamp: timestamp,
+          pow_nonce: nonce.toString(),
+          _gotcha: formData.get('_gotcha') || undefined
+        };
+        
         formData.forEach((value, key) => {
-          payload[key] = value;
+          if (key !== '_gotcha') payload[key] = value;
         });
 
-        const res = await fetch("/api/contact", {
+        // 4. Envoyer au microservice
+        const res = await fetch(`${apiUrl}/submit/${formId}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -169,16 +209,20 @@ const bc = breadcrumbSchema([{ name: "Service client", url: "/service-client" }]
 
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
-          throw new Error(data.error || "Une erreur est survenue.");
+          throw new Error(data.error || "Une erreur est survenue lors de l'envoi.");
         }
 
         if (window.showToast) {
           window.showToast("Message envoyé ! Notre service client vous répondra sous 48h.", "success");
+        } else {
+          alert("Message envoyé avec succès !");
         }
         form.reset();
       } catch (err) {
         if (window.showToast) {
           window.showToast(err.message, "error");
+        } else {
+          alert("Erreur: " + err.message);
         }
       } finally {
         if (button) button.disabled = false;
