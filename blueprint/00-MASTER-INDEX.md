@@ -103,21 +103,21 @@ these decisions disagree, **follow the decision.**
 | F-09 | Fidélité no feedback | P1 | ⏳ wiring (LAST) | `07-forms-wiring.md` |
 | F-10 | Honeypot name mismatch | P1 | ⏳ wiring (LAST) | `07-forms-wiring.md` |
 | F-11 | `fidelite.ts` weak | P2 | ⏳ wiring (LAST) | `07-forms-wiring.md` |
-| F-12 | Supabase import-time throw | P1 | ⬜ TODO | `05-services-apis.md` |
-| F-13 | Promos empty-state | P2 | ⬜ TODO | `05-services-apis.md` |
-| F-14 | Promos leak into catalogue | P2 | ⬜ TODO | `05-services-apis.md` |
-| F-15 | Two divergent searches | P1 | ⬜ TODO | `05-services-apis.md` |
-| F-16 | Recipe category hardcoded | P2 | ⬜ TODO | `05-services-apis.md` |
-| F-17 | In-memory rate limit | P2 | ⬜ TODO (note) | `05-services-apis.md` |
+| F-12 | Supabase import-time throw | P1 | ✅ DONE | `05-services-apis.md` |
+| F-13 | Promos empty-state | P2 | ✅ DONE | `05-services-apis.md` |
+| F-14 | Promos leak into catalogue | P2 | ✅ DONE | `05-services-apis.md` |
+| F-15 | Two divergent searches | P1 | ✅ DONE | `05-services-apis.md` |
+| F-16 | Recipe category hardcoded | P2 | ✅ DONE | `05-services-apis.md` |
+| F-17 | In-memory rate limit | P2 | 📌 NOTED | `05-services-apis.md` |
 | F-18 | No analytics active | P1 | ⬜ TODO | `03-analytics-privacy.md` |
 | F-19 | Cookie policy inaccurate | P1 | ⬜ TODO | `03-analytics-privacy.md` |
 | F-21 | Themed buttons illegible | P2 | ⬜ TODO | `02-contrast-accessibility.md` |
 | F-22 | Footer fine print | P3 | ⬜ TODO | `02-contrast-accessibility.md` |
 | F-23 | Single-option store dropdowns | P3 | ⬜ TODO | `01-store-purge.md` |
-| F-24 | Dead anchor `#livraison` | P2 | ⬜ TODO (anchor only) | `06-seo-webflow.md` |
-| F-25 | Simulator double-run | P2 | 🅿️ PARKED (D7) | `06-seo-webflow.md` |
-| F-26 | Preview domain in `site` | P3 | ⬜ TODO (when domain known) | `06-seo-webflow.md` |
-| F-27 | Perf re-measure | P3 | ⬜ TODO | `06-seo-webflow.md` |
+| F-24 | Dead anchor `#livraison` | P2 | ✅ DONE | `06-seo-webflow.md` |
+| F-25 | Simulator double-run | P2 | ⏸️ PARKED (D7) | `06-seo-webflow.md` |
+| F-26 | Preview domain in `site` | P3 | ✅ DONE | `06-seo-webflow.md` |
+| F-27 | Perf re-measure | P3 | 📌 NOTED | `06-seo-webflow.md` |
 | — | Repo hygiene + stack watch | P3 | ⬜ TODO | `08-repo-hygiene-stack.md` |
 
 Legend: ✅ done · 🟡 partial · ⏳ deferred to wiring · 🅿️ parked · ❎ cancelled · ⬜ todo
