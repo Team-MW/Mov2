@@ -118,7 +118,7 @@ these decisions disagree, **follow the decision.**
 | F-25 | Simulator double-run | P2 | ⏸️ PARKED (D7) | `06-seo-webflow.md` |
 | F-26 | Preview domain in `site` | P3 | ✅ DONE | `06-seo-webflow.md` |
 | F-27 | Perf re-measure | P3 | 📌 NOTED | `06-seo-webflow.md` |
-| — | Repo hygiene + stack watch | P3 | ⬜ TODO | `08-repo-hygiene-stack.md` |
+| — | Repo hygiene + stack watch | P3 | ✅ DONE | `08-repo-hygiene-stack.md` |
 
 Legend: ✅ done · 🟡 partial · ⏳ deferred to wiring · 🅿️ parked · ❎ cancelled · ⬜ todo
 
