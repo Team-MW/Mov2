@@ -85,7 +85,7 @@ function normalize(data, existing = null) {
   const rawRayon = String(data.rayon ?? existing?.rayon ?? '').trim().toLowerCase();
   const rayon = RAYON_SLUGS.includes(rawRayon) ? rawRayon : '';
 
-  // Magasin : enum strict (' ' | portet | toulouse-sud | tous).
+  // Magasin : enum strict (' ' | toulouse-sud | tous).
   const rawMagasin = String(data.magasin ?? existing?.magasin ?? '').trim().toLowerCase();
   const magasin = MAGASIN_SLUGS.includes(rawMagasin) ? rawMagasin : '';
 

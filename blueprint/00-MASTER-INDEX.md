@@ -96,9 +96,9 @@ these decisions disagree, **follow the decision.**
 | F-20 | Low-contrast caption text | P2 | 🟡 PARTIAL | `02-contrast-accessibility.md` |
 | F-02 | Form endpoints are stubs | P0 | ⏳ wiring (LAST) | `07-forms-wiring.md` |
 | F-03 | Contact form broken URL/env | P0 | ⏳ wiring (LAST) | `07-forms-wiring.md` |
-| F-05 | Split-brain store model | P1 | ⬜ TODO | `01-store-purge.md` |
-| F-06 | "60 ans" vs founded 2024 | P1 | ⬜ TODO | `04-content-claims.md` |
-| F-07 | Stale opening timeline | P1 | ⬜ TODO | `01-store-purge.md` + `04` |
+| F-05 | Split-brain store model | P1 | ✅ DONE | `01-store-purge.md` |
+| F-06 | "60 ans" vs founded 2024 | P1 | ✅ DONE | `04-content-claims.md` |
+| F-07 | Stale opening timeline | P1 | ✅ DONE | `01-store-purge.md` + `04` |
 | F-08 | Placeholder copy | — | ❎ CANCELLED (D5) | — |
 | F-09 | Fidélité no feedback | P1 | ⏳ wiring (LAST) | `07-forms-wiring.md` |
 | F-10 | Honeypot name mismatch | P1 | ⏳ wiring (LAST) | `07-forms-wiring.md` |
@@ -109,12 +109,12 @@ these decisions disagree, **follow the decision.**
 | F-15 | Two divergent searches | P1 | ✅ DONE | `05-services-apis.md` |
 | F-16 | Recipe category hardcoded | P2 | ✅ DONE | `05-services-apis.md` |
 | F-17 | In-memory rate limit | P2 | 📌 NOTED | `05-services-apis.md` |
-| F-18 | No analytics active | P1 | ⬜ TODO | `03-analytics-privacy.md` |
-| F-19 | Cookie policy inaccurate | P1 | ⬜ TODO | `03-analytics-privacy.md` |
+| F-18 | No analytics active | P1 | ✅ DONE | `03-analytics-privacy.md` |
+| F-19 | Cookie policy inaccurate | P1 | ✅ DONE | `03-analytics-privacy.md` |
 | F-20 | Low-contrast caption text | P1 | ✅ DONE | `02-contrast-accessibility.md` |
 | F-21 | Themed buttons illegible | P2 | ✅ DONE | `02-contrast-accessibility.md` |
 | F-22 | Footer fine print | P3 | ✅ DONE | `02-contrast-accessibility.md` |
-| F-23 | Single-option store dropdowns | P3 | ⬜ TODO | `01-store-purge.md` |
+| F-23 | Single-option store dropdowns | P3 | ✅ DONE | `01-store-purge.md` |
 | F-24 | Dead anchor `#livraison` | P2 | ✅ DONE | `06-seo-webflow.md` |
 | F-25 | Simulator double-run | P2 | ⏸️ PARKED (D7) | `06-seo-webflow.md` |
 | F-26 | Preview domain in `site` | P3 | ✅ DONE | `06-seo-webflow.md` |

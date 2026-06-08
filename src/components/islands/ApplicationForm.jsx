@@ -87,10 +87,11 @@ export default function ApplicationForm({ poste = "spontanee", posteNom = "Candi
       </div>
 
       <div>
-        <label htmlFor="magasin" className="block text-[13px] font-bold mb-1.5">Magasin préféré</label>
-        <select id="magasin" name="magasin" className="input" defaultValue="toulouse-sud">
-          <option value="toulouse-sud">Toulouse Sud — Cépière</option>
-        </select>
+        <span className="block text-[13px] font-bold mb-1.5">Magasin</span>
+        <div className="input text-neutral-600 bg-neutral-100 cursor-not-allowed">
+          Toulouse Sud — Cépière
+        </div>
+        <input type="hidden" id="magasin" name="magasin" value="toulouse-sud" />
       </div>
 
       <div>

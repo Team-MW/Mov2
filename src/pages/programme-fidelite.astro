@@ -115,10 +115,11 @@ const faqFidelite: FAQItem[] = [
             </div>
           </div>
           <div>
-            <label for="fid-magasin" class="block text-[13px] font-bold mb-1.5">Magasin favori</label>
-            <select id="fid-magasin" name="magasin" class="input-sc">
-              <option value="toulouse-sud" selected>Toulouse Sud — Cépière</option>
-            </select>
+            <span class="block text-[13px] font-bold mb-1.5">Magasin</span>
+            <div class="input-sc text-neutral-600 bg-neutral-100 cursor-not-allowed">
+              Toulouse Sud — Cépière
+            </div>
+            <input type="hidden" id="fid-magasin" name="magasin" value="toulouse-sud" />
           </div>
           <label class="flex items-start gap-3 text-[13px] text-neutral-600">
             <input type="checkbox" name="rgpd" required class="mt-0.5 accent-vert" />

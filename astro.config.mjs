@@ -20,7 +20,7 @@ export default defineConfig({
     // L'inverse génère un 404 permanent sur /_vercel/insights/script.js
     // pour chaque visiteur (et casse aucun rendu, mais pollue la console).
     // Le script est sans cookie ni PII → conforme RGPD sans bandeau.
-    webAnalytics: { enabled: false },
+    webAnalytics: { enabled: true },
     imageService: true,
   }),
   integrations: [

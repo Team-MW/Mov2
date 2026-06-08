@@ -27,21 +27,24 @@ import { SITE } from "@/lib/site";
         <h2>Cookies utilisés sur ce site</h2>
 
         <h3>Cookies strictement nécessaires</h3>
-        <p>
-          Ces cookies sont indispensables au bon fonctionnement du site et ne peuvent pas être
-          désactivés. Ils ne contiennent aucune donnée personnelle identifiable.
-        </p>
         <ul>
-          <li><strong>session</strong> — identifie votre session (1 heure)</li>
-          <li><strong>cookie_consent</strong> — mémorise votre choix sur les cookies (13 mois)</li>
+          <li>
+            <strong>mdm_auth</strong> — cookie de session réservé à l'espace
+            d'administration du site (connexion sécurisée). Il n'est déposé que pour les
+            personnes qui se connectent à l'administration.
+          </li>
         </ul>
-
-        <h3>Cookies analytiques (optionnels)</h3>
         <p>
-          Sous réserve de votre consentement explicite, nous utilisons un outil d'analyse
-          respectueux de la vie privée (Plausible Analytics, hébergé en UE) pour mesurer
-          l'audience du site. Aucune donnée personnelle identifiable n'est collectée : pas
-          d'IP, pas de cookies tiers, pas de profil publicitaire.
+          Aucun cookie publicitaire ou de suivi tiers n'est déposé. Notre mesure d'audience
+          (Vercel Web Analytics) fonctionne sans cookie.
+        </p>
+
+        <h3>Mesure d'audience</h3>
+        <p>
+          Nous utilisons <strong>Vercel Web Analytics</strong>, une solution de mesure
+          d'audience <strong>sans cookie</strong>. Les données collectées sont agrégées et
+          anonymes (pages vues, pays, type d'appareil) ; elles ne permettent pas de vous
+          identifier et ne sont pas utilisées à des fins publicitaires.
         </p>
 
         <h3>Pas de cookies publicitaires</h3>
@@ -52,8 +55,10 @@ import { SITE } from "@/lib/site";
 
         <h2>Gérer vos préférences</h2>
         <p>
-          Vous pouvez à tout moment modifier vos préférences via le bandeau de consentement
-          en bas de votre écran, ou en supprimant les cookies dans les paramètres de votre navigateur.
+          Le cookie strictement nécessaire ci-dessus ne requiert pas de consentement
+          préalable. Vous pouvez à tout moment gérer ou supprimer les cookies depuis les
+          réglages de votre navigateur. La désactivation du cookie d'administration empêche
+          seulement la connexion à l'espace d'administration et n'affecte pas la navigation.
         </p>
         <ul>
           <li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener">Gérer les cookies sur Chrome</a></li>
