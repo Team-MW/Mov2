@@ -112,9 +112,10 @@ const showSubtitle = !!subtitle;
       </div>
 
       <div class="flex items-center gap-2 shrink-0">
-        <!-- Theme Picker Popover (DA-aware swatch grid + intensity) -->
-        <details id="admin-theme-picker" class="relative group">
-          <summary
+        <!-- Theme Picker Popover (DA-aware swatch grid + intensity) - ONLY visible on affiches -->
+        {current === "affiches" && (
+          <details id="admin-theme-picker" class="relative group">
+            <summary
             class="list-none flex items-center gap-1.5 cursor-pointer rounded-full bg-neutral-50 hover:bg-neutral-100 text-neutral-700 text-[12px] font-bold pl-2.5 pr-3 py-1.5 border border-black/10 transition select-none"
             aria-label="Sélectionner le thème et l'intensité de l'administration"
             title="Thème de l'admin"
@@ -203,8 +204,9 @@ const showSubtitle = !!subtitle;
             <p class="mt-2 text-[10.5px] leading-snug text-neutral-400 px-1">
               <strong class="text-neutral-500 font-bold">Discret</strong> préserve la couleur de marque · <strong class="text-neutral-500 font-bold">Affirmé</strong> la remplace par celle du thème.
             </p>
-          </div>
-        </details>
+            </div>
+          </details>
+        )}
 
         <a
           href="/"
@@ -333,7 +335,12 @@ const showSubtitle = !!subtitle;
     type Intensity = "subtle" | "bold";
 
     const picker = document.getElementById("admin-theme-picker") as HTMLDetailsElement | null;
-    if (!picker) return;
+    if (!picker) {
+      // Clear theme if we are on a page without the theme picker
+      document.documentElement.removeAttribute("data-admin-theme");
+      document.documentElement.removeAttribute("data-admin-intensity");
+      return;
+    }
     const swatches = picker.querySelectorAll<HTMLButtonElement>("[data-theme-value]");
     const pills = picker.querySelectorAll<HTMLButtonElement>("[data-intensity-value]");
     const triggerIcon = document.getElementById("admin-theme-trigger-icon");

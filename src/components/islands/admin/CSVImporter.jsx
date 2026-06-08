@@ -486,7 +486,7 @@ export default function CSVImporter({ rayonsOptions }) {
             </svg>
           </a>
           <div>
-            <span className="text-[11px] uppercase tracking-wider font-bold text-neutral-400">Importateur</span>
+            <span className="text-[]-neutral-600">Importateur</span>
             <h2 className="text-[18px] font-bold text-noir">Mise à jour en masse du catalogue</h2>
           </div>
         </div>
@@ -511,7 +511,7 @@ export default function CSVImporter({ rayonsOptions }) {
               effectuera une analyse différentielle avant toute écriture pour n'injecter que les lignes ajoutées ou modifiées.
             </p>
             <p className="font-medium text-noir">Noms de colonnes supportés (insensibles à la casse et accents) :</p>
-            <ul className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-1.5 font-mono text-[11px] text-neutral-500">
+            <ul className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-1.5 font-mono text-[]-neutral-600">
               <li>• nom (obligatoire)</li>
               <li>• rayon (obligatoire)</li>
               <li>• slug (optionnel)</li>
@@ -551,7 +551,7 @@ export default function CSVImporter({ rayonsOptions }) {
             </div>
             <div>
               <p className="font-bold text-[14px] text-noir">Déposez votre fichier CSV ici</p>
-              <p className="text-[12px] text-neutral-400 mt-1">ou cliquez pour parcourir vos fichiers (.csv)</p>
+              <p className="text-[]-neutral-600 mt-1">ou cliquez pour parcourir vos fichiers (.csv)</p>
             </div>
           </div>
         </div>
@@ -575,7 +575,7 @@ export default function CSVImporter({ rayonsOptions }) {
                   <p className="text-[13px] font-bold text-noir">
                     {analysis.inserts.length + analysis.updates.length} changements à appliquer
                   </p>
-                  <p className="text-[11.5px] text-neutral-400">
+                  <p className="text-[11.5px] text-neutral-500">
                     ({analysis.inserts.length} insertions, {analysis.updates.length} modifications)
                   </p>
                 </div>
@@ -601,7 +601,7 @@ export default function CSVImporter({ rayonsOptions }) {
                   <h3 className="font-bold text-[14px] text-noir">
                     {importing ? "Importation en cours..." : "Importation terminée"}
                   </h3>
-                  <p className="text-[12px] text-neutral-500 mt-0.5">
+                  <p className="text-[]-neutral-600 mt-0.5">
                     Traitement des produits par lots de 50 pour éviter les timeouts Supabase.
                   </p>
                 </div>
@@ -657,13 +657,12 @@ export default function CSVImporter({ rayonsOptions }) {
                   "px-5 py-3 text-[13px] font-bold border-b-2 transition -mb-px flex items-center gap-2",
                   activeTab === "inserts"
                     ? "border-vert text-vert"
-                    : "border-transparent text-neutral-400 hover:text-neutral-600",
+                    : "border-transparent text-neutral-500 hover:text-neutral-600",
                 ].join(" ")}
               >
                 <span>Nouveaux produits</span>
                 <span className={[
-                  "text-[11px] px-2 py-0.5 rounded-full font-bold",
-                  analysis.inserts.length > 0 ? "bg-vert/10 text-vert" : "bg-neutral-100 text-neutral-400",
+                  "text-[]-neutral-600",
                 ].join(" ")}>
                   {analysis.inserts.length}
                 </span>
@@ -675,13 +674,12 @@ export default function CSVImporter({ rayonsOptions }) {
                   "px-5 py-3 text-[13px] font-bold border-b-2 transition -mb-px flex items-center gap-2",
                   activeTab === "updates"
                     ? "border-orange-500 text-orange-600"
-                    : "border-transparent text-neutral-400 hover:text-neutral-600",
+                    : "border-transparent text-neutral-500 hover:text-neutral-600",
                 ].join(" ")}
               >
                 <span>Produits à modifier</span>
                 <span className={[
-                  "text-[11px] px-2 py-0.5 rounded-full font-bold",
-                  analysis.updates.length > 0 ? "bg-orange-50 text-orange-600" : "bg-neutral-100 text-neutral-400",
+                  "text-[]-neutral-600",
                 ].join(" ")}>
                   {analysis.updates.length}
                 </span>
@@ -693,13 +691,12 @@ export default function CSVImporter({ rayonsOptions }) {
                   "px-5 py-3 text-[13px] font-bold border-b-2 transition -mb-px flex items-center gap-2",
                   activeTab === "invalid"
                     ? "border-rouge text-rouge"
-                    : "border-transparent text-neutral-400 hover:text-neutral-600",
+                    : "border-transparent text-neutral-500 hover:text-neutral-600",
                 ].join(" ")}
               >
                 <span>Lignes invalides</span>
                 <span className={[
-                  "text-[11px] px-2 py-0.5 rounded-full font-bold",
-                  analysis.invalid.length > 0 ? "bg-rouge/10 text-rouge" : "bg-neutral-100 text-neutral-400",
+                  "text-[]-neutral-600",
                 ].join(" ")}>
                   {analysis.invalid.length}
                 </span>
@@ -711,11 +708,11 @@ export default function CSVImporter({ rayonsOptions }) {
                   "px-5 py-3 text-[13px] font-bold border-b-2 transition -mb-px flex items-center gap-2",
                   activeTab === "unchanged"
                     ? "border-neutral-500 text-noir"
-                    : "border-transparent text-neutral-400 hover:text-neutral-600",
+                    : "border-transparent text-neutral-500 hover:text-neutral-600",
                 ].join(" ")}
               >
                 <span>Identiques</span>
-                <span className="text-[11px] px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-400 font-bold">
+                <span className="text-[]-neutral-600 font-bold">
                   {analysis.unchanged.length}
                 </span>
               </button>
@@ -726,7 +723,7 @@ export default function CSVImporter({ rayonsOptions }) {
               {activeTab === "inserts" && (
                 <div>
                   {analysis.inserts.length === 0 ? (
-                    <div className="p-12 text-center text-neutral-400 text-[13px]">
+                    <div className="p-12 text-center text-neutral-500 text-[13px]">
                       Aucun nouveau produit dans ce fichier.
                     </div>
                   ) : (
@@ -744,10 +741,10 @@ export default function CSVImporter({ rayonsOptions }) {
                         <tbody className="divide-y divide-neutral-100">
                           {analysis.inserts.map(({ item, line }) => (
                             <tr key={item.slug} className="hover:bg-neutral-50/50 transition">
-                              <td className="p-4 text-neutral-400 font-mono text-[11px]">{line}</td>
+                              <td className="p-4 text-neutral-500 font-mono text-[11px]">{line}</td>
                               <td className="p-4">
                                 <div className="font-bold text-noir">{item.nom}</div>
-                                <div className="text-[11px] text-neutral-400 font-mono">{item.slug}</div>
+                                <div className="text-[]-neutral-600 font-mono">{item.slug}</div>
                               </td>
                               <td className="p-4">
                                 <span className="px-2.5 py-1 rounded-full bg-vert-light/35 text-vert-dark font-medium text-[11px]">
@@ -756,11 +753,11 @@ export default function CSVImporter({ rayonsOptions }) {
                               </td>
                               <td className="p-4 text-neutral-600 font-medium">
                                 {item.categorie || <span className="text-neutral-300">—</span>}
-                                {item.sous_categorie && <span className="text-neutral-400 text-[11px] ml-1">({item.sous_categorie})</span>}
+                                {item.sous_categorie && <span className="text-neutral-500 text-[11px] ml-1">({item.sous_categorie})</span>}
                               </td>
                               <td className="p-4 text-right font-bold text-noir tabular-nums">
                                 {item.prix_indicatif !== null ? `${item.prix_indicatif.toFixed(2)} €` : "—"}
-                                {item.unite && <span className="text-[11px] text-neutral-400 font-normal ml-0.5">/ {item.unite}</span>}
+                                {item.unite && <span className="text-[]-neutral-600 font-normal ml-0.5">/ {item.unite}</span>}
                               </td>
                             </tr>
                           ))}
@@ -774,7 +771,7 @@ export default function CSVImporter({ rayonsOptions }) {
               {activeTab === "updates" && (
                 <div>
                   {analysis.updates.length === 0 ? (
-                    <div className="p-12 text-center text-neutral-400 text-[13px]">
+                    <div className="p-12 text-center text-neutral-500 text-[13px]">
                       Aucune modification détectée dans ce fichier.
                     </div>
                   ) : (
@@ -790,10 +787,10 @@ export default function CSVImporter({ rayonsOptions }) {
                         <tbody className="divide-y divide-neutral-100">
                           {analysis.updates.map(({ item, line, diffs }) => (
                             <tr key={item.slug} className="hover:bg-neutral-50/50 transition">
-                              <td className="p-4 text-neutral-400 font-mono text-[11px]">{line}</td>
+                              <td className="p-4 text-neutral-500 font-mono text-[11px]">{line}</td>
                               <td className="p-4 max-w-xs">
                                 <div className="font-bold text-noir">{item.nom}</div>
-                                <div className="text-[11px] text-neutral-400 font-mono">{item.slug}</div>
+                                <div className="text-[]-neutral-600 font-mono">{item.slug}</div>
                               </td>
                               <td className="p-4">
                                 <div className="flex flex-wrap gap-2">
@@ -805,7 +802,7 @@ export default function CSVImporter({ rayonsOptions }) {
                                       <span className="font-bold text-orange-800 uppercase tracking-wider text-[9.5px]">
                                         {field === "prix_indicatif" ? "Prix" : field} :
                                       </span>
-                                      <span className="text-neutral-400 line-through">
+                                      <span className="text-neutral-500 line-through">
                                         {prev === null || prev === "" ? "vide" : String(prev)}
                                       </span>
                                       <span className="text-orange-900 font-bold">→</span>
@@ -828,7 +825,7 @@ export default function CSVImporter({ rayonsOptions }) {
               {activeTab === "invalid" && (
                 <div>
                   {analysis.invalid.length === 0 ? (
-                    <div className="p-12 text-center text-neutral-400 text-[13px]">
+                    <div className="p-12 text-center text-neutral-500 text-[13px]">
                       Aucune ligne invalide détectée. Félicitations !
                     </div>
                   ) : (
@@ -848,10 +845,10 @@ export default function CSVImporter({ rayonsOptions }) {
                           <tbody className="divide-y divide-neutral-100">
                             {analysis.invalid.map(({ item, line, errors }) => (
                               <tr key={line} className="hover:bg-neutral-50/50 transition">
-                                <td className="p-4 text-neutral-400 font-mono text-[11px]">{line}</td>
+                                <td className="p-4 text-neutral-500 font-mono text-[11px]">{line}</td>
                                 <td className="p-4 max-w-xs">
                                   <div className="font-bold text-noir">{item.nom || <span className="text-neutral-300 italic">sans nom</span>}</div>
-                                  <div className="text-[11px] text-neutral-400 font-mono">Rayon : {item.rayon || "—"}</div>
+                                  <div className="text-[]-neutral-600 font-mono">Rayon : {item.rayon || "—"}</div>
                                 </td>
                                 <td className="p-4">
                                   <ul className="list-disc pl-4 space-y-1 font-medium text-rouge text-[12px]">
@@ -873,7 +870,7 @@ export default function CSVImporter({ rayonsOptions }) {
               {activeTab === "unchanged" && (
                 <div>
                   {analysis.unchanged.length === 0 ? (
-                    <div className="p-12 text-center text-neutral-400 text-[13px]">
+                    <div className="p-12 text-center text-neutral-500 text-[13px]">
                       Aucun produit identique dans ce fichier.
                     </div>
                   ) : (

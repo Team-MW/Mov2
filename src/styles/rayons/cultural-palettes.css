@@ -20,7 +20,7 @@
 [data-culture="creole"] {
   --culture-from: #E8C390;
   --culture-to: #7FBED4;
-  --culture-accent: #1C6B35;
+  
   --culture-on-light: #1C6B35;
   --culture-text: #ffffff;
   --culture-motif-top-right: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><path d="M160 0 Q100 40 70 110 M160 0 C130 15 105 10 80 5 M160 0 C140 30 120 45 95 50" stroke="%231C6B35" stroke-width="2.5" stroke-opacity="0.12" fill="none"/></svg>');
@@ -31,7 +31,7 @@
 [data-culture="asie"] {
   --culture-from: #F2EDD8;
   --culture-to: #A3B85C;
-  --culture-accent: #4F6E1C;
+  
   --culture-on-light: #4F6E1C;
   --culture-text: #0f0f0f;
   --culture-motif-top-right: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><g fill="%234F6E1C" fill-opacity="0.12"><path d="M160 0 L110 60 M140 0 L100 40" stroke="%234F6E1C" stroke-width="2" stroke-opacity="0.12"/><ellipse cx="120" cy="30" rx="25" ry="4" transform="rotate(-30 120 30)"/><ellipse cx="105" cy="45" rx="20" ry="3" transform="rotate(-45 105 45)"/></g></svg>');
@@ -42,7 +42,7 @@
 [data-culture="inde"] {
   --culture-from: #5C1A1F;
   --culture-to: #C09060;
-  --culture-accent: #A86B1E;
+  
   --culture-on-light: #5C1A1F;
   --culture-text: #ffffff;
   --culture-motif-top-right: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><path d="M160 0 C130 10 110 30 110 50 C110 70 125 80 140 80 C155 80 160 65 160 55 C160 40 145 35 150 20 C152 15 158 5 160 0 Z" fill="%23A86B1E" fill-opacity="0.12"/></svg>');
@@ -53,7 +53,7 @@
 [data-culture="maghreb"] {
   --culture-from: #F4A37A;
   --culture-to: #E2735C;
-  --culture-accent: #8B2500;
+  
   --culture-on-light: #8B2500;
   --culture-text: #ffffff;
   --culture-motif-top-right: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><path d="M60 0 Q100 40 160 30 L160 0 Z" fill="%238B2500" fill-opacity="0.12"/><circle cx="120" cy="40" r="12" fill="%238B2500" fill-opacity="0.08"/></svg>');
@@ -64,7 +64,7 @@
 [data-culture="italie"] {
   --culture-from: #009246;
   --culture-to: #CE2B37;
-  --culture-accent: #009246;
+  
   --culture-on-light: #009246;
   --culture-text: #ffffff;
   --culture-motif-top-right: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><g fill="%23009246" fill-opacity="0.12"><path d="M160 0 C140 20 120 25 100 20 Q120 40 140 40 Z"/><ellipse cx="120" cy="25" rx="12" ry="5" transform="rotate(15 120 25)"/><circle cx="135" cy="15" r="4"/><circle cx="145" cy="20" r="4"/><circle cx="138" cy="28" r="4"/></g></svg>');
@@ -75,7 +75,7 @@
 [data-culture="hygiene"] {
   --culture-from: #F5C7C9;
   --culture-to: #FFE8EA;
-  --culture-accent: #B85257;
+  
   --culture-on-light: #B85257;
   --culture-text: #0f0f0f;
   --culture-motif-top-right: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><g fill="none" stroke="%23B85257" stroke-opacity="0.12" stroke-width="1.5"><circle cx="120" cy="40" r="15"/><circle cx="140" cy="25" r="8"/><circle cx="100" cy="20" r="10"/><circle cx="145" cy="55" r="12"/></g></svg>');
@@ -86,7 +86,7 @@
 [data-culture="sauces-soupes"] {
   --culture-from: #F4C7B5;
   --culture-to: #FFE8DC;
-  --culture-accent: #A85710;
+  
   --culture-on-light: #A85710;
   --culture-text: #0f0f0f;
   --culture-motif-top-right: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><g fill="none" stroke="%23A85710" stroke-opacity="0.12" stroke-width="1.5"><path d="M100 40 C110 30 110 20 120 30 S130 40 140 30"/><path d="M100 45 L140 45"/><path d="M105 45 C105 55 135 55 135 45 Z" fill="%23A85710" fill-opacity="0.05"/></g></svg>');
@@ -97,7 +97,7 @@
 [data-culture="huiles-condiments"] {
   --culture-from: #A8D85F;
   --culture-to: #7BC141;
-  --culture-accent: #2E8B4A;
+  
   --culture-on-light: #2E8B4A;
   --culture-text: #ffffff;
   --culture-motif-top-right: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><g fill="%232E8B4A" fill-opacity="0.12"><path d="M160 0 C140 20 110 30 90 20 Q120 40 140 30"/><path d="M120 35 Q125 45 120 50 T115 60" fill="none" stroke="%232E8B4A" stroke-width="1.5" stroke-opacity="0.12"/></g></svg>');
@@ -247,7 +247,7 @@ section[data-culture] h2[data-watermark]::before {
 [data-culture] .rayon-btn-primary {
   background-color: var(--culture-accent) !important;
   border-color: var(--culture-accent) !important;
-  color: var(--culture-text, #ffffff) !important;
+  color: var(--culture-on-accent, #ffffff) !important;
 }
 [data-culture] .btn-primary:hover,
 [data-culture] .rayon-btn-primary:hover {

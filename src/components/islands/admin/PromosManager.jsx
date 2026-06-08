@@ -644,7 +644,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
                   type="button"
                   onClick={() => setFilter({ q: "" })}
                   aria-label="Effacer la recherche"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full text-neutral-400 hover:bg-neutral-100 flex items-center justify-center"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full text-neutral-500 hover:bg-neutral-100 flex items-center justify-center"
                 >
                   <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                     <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
@@ -752,7 +752,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
         {/* Active filters chips */}
         {activeCount > 0 && (
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-400">
+            <span className="text-[]-neutral-600">
               Filtres actifs :
             </span>
             {filter.q && (
@@ -791,7 +791,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
             <button
               type="button"
               onClick={resetFilter}
-              className="text-[11px] font-bold text-neutral-500 hover:text-rouge transition underline underline-offset-2"
+              className="text-[]-neutral-600 hover:text-rouge transition underline underline-offset-2"
             >
               Tout réinitialiser
             </button>
@@ -899,7 +899,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
                               setDragId(null);
                               setDragOverId(null);
                             }}
-                            className="cursor-grab active:cursor-grabbing text-neutral-400 hover:text-noir select-none"
+                            className="cursor-grab active:cursor-grabbing text-neutral-500 hover:text-noir select-none"
                             title="Glisser pour déplacer"
                             aria-hidden="true"
                           >
@@ -917,7 +917,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
                               type="button"
                               onClick={() => moveRow(p.id, -1)}
                               aria-label="Monter d'un rang"
-                              className="w-4 h-4 text-neutral-400 hover:text-noir transition flex items-center justify-center"
+                              className="w-4 h-4 text-neutral-500 hover:text-noir transition flex items-center justify-center"
                             >
                               <svg className="w-3 h-3" viewBox="0 0 10 6" fill="currentColor"><path d="M5 0 10 6H0z" /></svg>
                             </button>
@@ -925,7 +925,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
                               type="button"
                               onClick={() => moveRow(p.id, +1)}
                               aria-label="Descendre d'un rang"
-                              className="w-4 h-4 text-neutral-400 hover:text-noir transition flex items-center justify-center"
+                              className="w-4 h-4 text-neutral-500 hover:text-noir transition flex items-center justify-center"
                             >
                               <svg className="w-3 h-3" viewBox="0 0 10 6" fill="currentColor"><path d="M5 6 0 0h10z" /></svg>
                             </button>
@@ -942,7 +942,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
                           loading="lazy"
                         />
                       ) : (
-                        <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center text-neutral-400">
+                        <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center text-neutral-500">
                           —
                         </div>
                       )}
@@ -960,12 +960,12 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
                           </span>
                         )}
                       </div>
-                      <p className="text-[11px] text-neutral-400 truncate">{p.slug}</p>
+                      <p className="text-[]-neutral-600 truncate">{p.slug}</p>
                     </td>
                     <td className="px-4 py-3 text-neutral-600">{rayonNom(p.rayon)}</td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <span className="font-bold text-rouge">{fmtPrice(p.prix_promo)}</span>
-                      <span className="ml-1 text-neutral-400 line-through">
+                      <span className="ml-1 text-neutral-500 line-through">
                         {fmtPrice(p.prix_original)}
                       </span>
                     </td>
@@ -985,10 +985,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
                         <button
                           type="button"
                           onClick={() => togglePromoField(p, "actif")}
-                          className={`px-2 py-0.5 rounded-full text-[11px] font-bold transition ${
-                            p.actif
-                              ? "bg-vert/15 text-vert-dark hover:bg-vert/25"
-                              : "bg-neutral-200 text-neutral-500 hover:bg-neutral-300"
+                          className={`px-2 py-0.5 rounded-full text-[]-neutral-600 hover:bg-neutral-300"
                           }`}
                         >
                           {p.actif ? "● Active" : "○ Inactive"}
@@ -996,10 +993,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
                         <button
                           type="button"
                           onClick={() => togglePromoField(p, "mise_en_avant")}
-                          className={`px-2 py-0.5 rounded-full text-[11px] font-bold transition ${
-                            p.mise_en_avant
-                              ? "bg-amber-100 text-amber-800 hover:bg-amber-200"
-                              : "bg-transparent text-neutral-400 hover:bg-neutral-100 border border-neutral-200"
+                          className={`px-2 py-0.5 rounded-full text-[]-neutral-600 hover:bg-neutral-100 border border-neutral-200"
                           }`}
                           title="Mise en avant : apparaît dans le carrousel hero (peut s’accumuler avec d’autres)."
                         >
@@ -1008,10 +1002,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
                         <button
                           type="button"
                           onClick={() => togglePromoField(p, "ticker_semaine")}
-                          className={`px-2 py-0.5 rounded-full text-[11px] font-bold transition ${
-                            p.ticker_semaine
-                              ? "bg-rouge text-white hover:bg-rouge-dark shadow-sm"
-                              : "bg-transparent text-neutral-400 hover:bg-neutral-100 border border-neutral-200"
+                          className={`px-2 py-0.5 rounded-full text-[]-neutral-600 hover:bg-neutral-100 border border-neutral-200"
                           }`}
                           title="Bandeau urgent rouge sous le PromoHero — une seule promo à la fois (le clic désactive automatiquement les autres)."
                         >
@@ -1032,7 +1023,7 @@ export default function PromosManager({ initialPromos, rayonsOptions, magasinsOp
                           type="button"
                           onClick={() => deletePromo(p)}
                           aria-label="Supprimer"
-                          className="w-8 h-8 rounded-full text-neutral-400 hover:bg-rouge/10 hover:text-rouge transition flex items-center justify-center"
+                          className="w-8 h-8 rounded-full text-neutral-500 hover:bg-rouge/10 hover:text-rouge transition flex items-center justify-center"
                         >
                           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" strokeLinecap="round" strokeLinejoin="round" />
@@ -1545,12 +1536,12 @@ function EditModal({ promo, rayonsOptions, magasinsOptions, onCancel, onSave }) 
 function Field({ label, hint, required, inline, children }) {
   return (
     <div className={inline ? "inline-flex items-center gap-2" : ""}>
-      <label className="block text-[12px] font-bold text-neutral-500 uppercase tracking-wider mb-1.5">
+      <label className="block text-[]-neutral-600 uppercase tracking-wider mb-1.5">
         {label}
         {required && <span className="text-rouge ml-1">*</span>}
       </label>
       {children}
-      {hint && <p className="mt-1 text-[11px] text-neutral-400 leading-snug">{hint}</p>}
+      {hint && <p className="mt-1 text-[]-neutral-600 leading-snug">{hint}</p>}
     </div>
   );
 }
@@ -1577,7 +1568,7 @@ function PriceField({
       <div className="flex items-center justify-between mb-1.5">
         <label
           htmlFor={`price-${field}`}
-          className="block text-[12px] font-bold text-neutral-500 uppercase tracking-wider"
+          className="block text-[]-neutral-600 uppercase tracking-wider"
         >
           {label}
           {required && <span className="text-rouge ml-1">*</span>}
@@ -1618,7 +1609,7 @@ function PriceField({
         onChange={(e) => onChange(e.target.value)}
         className={`input ${locked ? "ring-2 ring-rouge/30" : ""}`}
       />
-      {hint && <p className="mt-1 text-[11px] text-neutral-400 leading-snug">{hint}</p>}
+      {hint && <p className="mt-1 text-[]-neutral-600 leading-snug">{hint}</p>}
     </div>
   );
 }
@@ -1701,13 +1692,13 @@ function ImportModal({ currentPromos, onCancel, onImport }) {
 
           {parsed && (
             <div className="bg-white border border-black/5 rounded-2xl overflow-hidden">
-              <div className="bg-white px-4 py-2 text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
+              <div className="bg-white px-4 py-2 text-[]-neutral-600 uppercase tracking-wider">
                 Prévisualisation · {parsed.length} ligne(s)
               </div>
               <div className="max-h-64 overflow-y-auto">
                 <table className="w-full text-[12px]">
                   <thead className="bg-white sticky top-0">
-                    <tr className="text-left text-neutral-400">
+                    <tr className="text-left text-neutral-500">
                       <th className="px-3 py-2 font-bold">Action</th>
                       <th className="px-3 py-2 font-bold">Slug</th>
                       <th className="px-3 py-2 font-bold">Titre</th>
@@ -1730,7 +1721,7 @@ function ImportModal({ currentPromos, onCancel, onImport }) {
                         <td className="px-3 py-1.5 text-neutral-500">{p.rayon}</td>
                         <td className="px-3 py-1.5 whitespace-nowrap">
                           <span className="font-bold text-rouge">{fmtPrice(p.prix_promo)}</span>
-                          <span className="ml-1 text-neutral-400 line-through">{fmtPrice(p.prix_original)}</span>
+                          <span className="ml-1 text-neutral-500 line-through">{fmtPrice(p.prix_original)}</span>
                         </td>
                       </tr>
                     ))}

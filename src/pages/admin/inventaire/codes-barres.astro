@@ -92,7 +92,7 @@ import Layout from '../../../layouts/admin/InventaireLayout.astro';
           </div>
         </div>
 
-        <p class="mt-4 text-[11px] text-center text-slate-400">Génération d'EAN-13 conformes <strong>GS1 France</strong> (300-379) avec checksum.</p>
+        <p class="mt-4 text-[11px] text-center text-slate-600">Génération d'EAN-13 conformes <strong>GS1 France</strong> (300-379) avec checksum.</p>
       </div>
     </div>
 
@@ -108,7 +108,7 @@ import Layout from '../../../layouts/admin/InventaireLayout.astro';
     <!-- Barcode preview modal -->
     <div id="barcode-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
       <div class="bg-white rounded-2xl shadow-2xl ring-1 ring-slate-200 max-w-lg w-full p-6 md:p-8 relative">
-        <button id="modal-close" type="button" class="absolute top-3 right-3 text-slate-400 hover:text-slate-700 transition-colors">
+        <button id="modal-close" type="button" class="absolute top-3 right-3 text-slate-600 hover:text-slate-700 transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
         <h3 id="modal-title" class="text-lg font-bold text-slate-900 mb-1">Code-barres</h3>
@@ -135,7 +135,7 @@ import Layout from '../../../layouts/admin/InventaireLayout.astro';
     <div id="postgen-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
       <div id="postgen-backdrop" class="absolute inset-0"></div>
       <div class="relative bg-white rounded-2xl shadow-2xl ring-1 ring-slate-200 max-w-sm w-full p-6 md:p-8 text-center">
-        <button id="postgen-close" type="button" class="absolute top-3 right-3 text-slate-400 hover:text-slate-700 transition-colors">
+        <button id="postgen-close" type="button" class="absolute top-3 right-3 text-slate-600 hover:text-slate-700 transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
         <div class="mx-auto h-14 w-14 rounded-2xl bg-vert-50 ring-1 ring-vert-200 flex items-center justify-center text-vert mb-4">
@@ -196,7 +196,7 @@ import Layout from '../../../layouts/admin/InventaireLayout.astro';
           <tbody id="missing-tbody" class="divide-y divide-slate-100 bg-white"></tbody>
         </table>
         
-        <div id="missing-loading" class="hidden py-16 px-6 text-center text-slate-400">
+        <div id="missing-loading" class="hidden py-16 px-6 text-center text-slate-600">
           <div class="h-10 w-10 mx-auto mb-3 rounded-full border-4 border-slate-200 border-t-vert animate-spin"></div>
           <p class="text-sm font-medium">Recherche des articles sans code-barres…</p>
         </div>

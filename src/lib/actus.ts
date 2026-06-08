@@ -119,7 +119,7 @@ const ACTUS_SEED: ActuItem[] = [
     type: "evenement",
     titre: "Semaine Saveurs d'Afrique — 22 au 28 avril",
     resume:
-      "Dégustations, démos cuisine, prix découverte sur tout le rayon africain. Les deux magasins.",
+      "Dégustations, démos cuisine, prix découverte sur tout le rayon africain. Dans notre magasin.",
     image: "/images/rayons/saveurs-afrique/image-de-annie-spratt.jpg",
     imageAlt: "Étal de produits africains pour la semaine festival",
     rayon: "saveurs-afrique",

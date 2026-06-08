@@ -30,7 +30,7 @@ const getMeta = (cat: string) =>
 
 <Layout
   title={`Actualités & événements · ${SITE.name}`}
-  description="Les actualités du Marché de Mo' — ouvertures, partenariats, engagements, événements. Suivez la vie de nos magasins toulousains."
+  description="Les actualités du Marché de Mo' — ouvertures, partenariats, engagements, événements. Suivez la vie de notre magasin toulousain."
   schema={bc}
 >
   <Breadcrumb items={[{ name: "Actualités" }]} />
@@ -44,7 +44,7 @@ const getMeta = (cat: string) =>
       </h1>
       <p class="mt-6 max-w-2xl text-[17px] text-neutral-600 leading-relaxed">
         Nos ouvertures, nos partenariats, nos événements. Tout ce qui fait l'actualité
-        de vos magasins préférés à Toulouse.
+        de votre magasin préféré à Toulouse.
       </p>
     </div>
   </section>
@@ -126,7 +126,7 @@ const getMeta = (cat: string) =>
                     {a.data.titre}
                   </h3>
                   <p class="mt-2 text-[13.5px] text-neutral-500 line-clamp-2">{a.data.resume}</p>
-                  <time class="text-[12px] text-neutral-400 mt-3 block">
+                  <time class="text-[]-neutral-600 mt-3 block">
                     {new Date(a.data.date_publication).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" })}
                   </time>
                 </div>

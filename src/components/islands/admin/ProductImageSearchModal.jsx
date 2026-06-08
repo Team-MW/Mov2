@@ -134,7 +134,7 @@ export default function ProductImageSearchModal({
             <h2 className="font-soft font-bold text-[20px] truncate">
               Chercher une image
             </h2>
-            <p className="text-[12px] text-neutral-500 mt-0.5 truncate">
+            <p className="text-[]-neutral-600 mt-0.5 truncate">
               pour <strong>{produit?.nom ?? "—"}</strong> · source OpenFoodFacts (CC-BY-SA)
             </p>
           </div>
@@ -188,7 +188,7 @@ export default function ProductImageSearchModal({
               className="w-10 h-10 object-cover rounded-lg ring-1 ring-black/5"
               onError={(e) => (e.currentTarget.style.visibility = "hidden")}
             />
-            <p className="text-[12px] text-neutral-500">
+            <p className="text-[]-neutral-600">
               Image actuelle — cliquez sur un résultat pour la remplacer.
             </p>
           </div>
@@ -214,7 +214,7 @@ export default function ProductImageSearchModal({
           )}
 
           {!loading && hasSearched && results.length === 0 && !err && (
-            <div className="text-center py-10 text-neutral-400 text-[13px]">
+            <div className="text-center py-10 text-neutral-500 text-[13px]">
               <p className="font-bold text-neutral-500 text-[14px]">Aucun résultat</p>
               <p className="mt-1">
                 Essayez un terme plus court (ex. « dattes » au lieu de « dattes medjool premium »)
@@ -249,7 +249,7 @@ export default function ProductImageSearchModal({
                           if (sib) sib.textContent = "Image indisponible";
                         }}
                       />
-                      <span className="hidden text-[11px] text-neutral-400"></span>
+                      <span className="hidden text-[]-neutral-600"></span>
                     </div>
                     <div className="p-2 border-t border-black/5">
                       <p className="text-[12.5px] font-bold text-noir line-clamp-2 leading-tight">
@@ -274,7 +274,7 @@ export default function ProductImageSearchModal({
           )}
 
           {!hasSearched && !loading && (
-            <div className="text-center py-10 text-neutral-400 text-[13px]">
+            <div className="text-center py-10 text-neutral-500 text-[13px]">
               <p>La recherche démarre automatiquement avec le nom du produit.</p>
             </div>
           )}
@@ -282,7 +282,7 @@ export default function ProductImageSearchModal({
 
         {/* Footer */}
         <div className="sticky bottom-0 bg-white border-t border-black/5 px-6 py-3 flex items-center justify-between flex-wrap gap-2">
-          <p className="text-[11px] text-neutral-500">
+          <p className="text-[]-neutral-600">
             Les images proviennent d'OpenFoodFacts sous licence CC-BY-SA 3.0.
             Attribution déjà déclarée dans <code className="bg-white px-1 rounded">CREDITS.md</code>.
           </p>

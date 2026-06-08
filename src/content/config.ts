@@ -27,7 +27,7 @@ const promos = defineCollection({
       'boulangerie',
       'produits-laitiers',
     ]),
-    magasin: z.enum(['tous', 'portet', 'toulouse-sud']).default('tous'),
+    magasin: z.enum(['toulouse-sud']).default('toulouse-sud'),
     date_debut: z.string(),
     date_fin: z.string(),
     mise_en_avant: z.boolean().default(false),
@@ -71,7 +71,7 @@ const postes = defineCollection({
   type: 'content',
   schema: z.object({
     titre: z.string(),
-    magasin: z.enum(['portet', 'toulouse-sud', 'tous']).default('tous'),
+    magasin: z.enum(['toulouse-sud']).default('toulouse-sud'),
     type_contrat: z.enum(['CDI', 'CDD', 'Apprentissage', 'Alternance', 'Stage']),
     temps: z.enum(['Temps plein', 'Temps partiel']).default('Temps plein'),
     resume: z.string(),
@@ -156,6 +156,7 @@ const recettes = defineCollection({
     actif: z.boolean().default(true),
     /** Mise en avant sur la home / index /recettes. */
     mise_en_avant: z.boolean().default(false),
+    categorie: z.string().optional(),
   }),
 });
 

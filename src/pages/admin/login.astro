@@ -95,7 +95,7 @@ const expired = Astro.url.searchParams.get("expired") === "1";
               <button
                 type="button"
                 id="toggle-password"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-noir transition"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-noir transition"
                 aria-label="Afficher le mot de passe"
               >
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -130,7 +130,7 @@ const expired = Astro.url.searchParams.get("expired") === "1";
           </button>
         </form>
 
-        <p class="mt-12 text-[12px] text-neutral-400 font-pro">
+        <p class="mt-12 text-[]-neutral-600 font-pro">
           Accès oublié ? Contactez l'<a href={`mailto:${SITE.agence.url}`} class="text-vert underline underline-offset-2">agence</a>.
         </p>
       </div>

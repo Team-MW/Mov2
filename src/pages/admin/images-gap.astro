@@ -186,7 +186,7 @@ function rayonLink(slug: string) {
           <!-- Big coverage cards -->
           <section class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
             <div class="bg-white rounded-3xl p-6 shadow-card">
-              <p class="text-[12px] uppercase tracking-wider text-neutral-500 font-bold">Couverture</p>
+              <p class="text-[]-neutral-600 font-bold">Couverture</p>
               <div class="flex items-baseline gap-2 mt-3">
                 <span class="font-soft font-bold text-[42px] leading-none text-vert">{coveragePct}</span>
                 <span class="text-[20px] font-bold text-vert">%</span>
@@ -196,32 +196,32 @@ function rayonLink(slug: string) {
               </div>
             </div>
             <div class="bg-white rounded-3xl p-6 shadow-card">
-              <p class="text-[12px] uppercase tracking-wider text-neutral-500 font-bold">Avec image</p>
+              <p class="text-[]-neutral-600 font-bold">Avec image</p>
               <div class="flex items-baseline gap-2 mt-3">
                 <span class="font-soft font-bold text-[42px] leading-none text-noir">{withImage}</span>
-                <span class="text-[13px] text-neutral-400">/ {total}</span>
+                <span class="text-[13px] text-neutral-500">/ {total}</span>
               </div>
-              <p class="mt-3 text-[12px] text-neutral-500">produits illustrés</p>
+              <p class="mt-3 text-[]-neutral-600">produits illustrés</p>
             </div>
             <div class="bg-white rounded-3xl p-6 shadow-card">
-              <p class="text-[12px] uppercase tracking-wider text-neutral-500 font-bold">Sans image</p>
+              <p class="text-[]-neutral-600 font-bold">Sans image</p>
               <div class="flex items-baseline gap-2 mt-3">
                 <span class={`font-soft font-bold text-[42px] leading-none ${withoutImage > 0 ? "text-rouge" : "text-neutral-300"}`}>
                   {withoutImage}
                 </span>
-                <span class="text-[13px] text-neutral-400">à combler</span>
+                <span class="text-[13px] text-neutral-500">à combler</span>
               </div>
-              <p class="mt-3 text-[12px] text-neutral-500">manquent dans le catalogue vitrine</p>
+              <p class="mt-3 text-[]-neutral-600">manquent dans le catalogue vitrine</p>
             </div>
             <div class="bg-white rounded-3xl p-6 shadow-card">
-              <p class="text-[12px] uppercase tracking-wider text-neutral-500 font-bold">Rayons concernés</p>
+              <p class="text-[]-neutral-600 font-bold">Rayons concernés</p>
               <div class="flex items-baseline gap-2 mt-3">
                 <span class="font-soft font-bold text-[42px] leading-none text-noir">
                   {rayonBreakdowns.filter((r) => r.withoutImage > 0).length}
                 </span>
-                <span class="text-[13px] text-neutral-400">/ {rayonBreakdowns.length}</span>
+                <span class="text-[13px] text-neutral-500">/ {rayonBreakdowns.length}</span>
               </div>
-              <p class="mt-3 text-[12px] text-neutral-500">ont au moins un manque</p>
+              <p class="mt-3 text-[]-neutral-600">ont au moins un manque</p>
             </div>
           </section>
 
@@ -292,7 +292,7 @@ function rayonLink(slug: string) {
                 <span class="eyebrow">Par rayon</span>
                 <h2 class="font-soft font-bold text-[22px] mt-2">Où sont les trous ?</h2>
               </div>
-              <p class="text-[12px] text-neutral-500">
+              <p class="text-[]-neutral-600">
                 Les rayons avec le plus de manques s'affichent en premier.
               </p>
             </div>
@@ -333,7 +333,7 @@ function rayonLink(slug: string) {
                       style={`width:${r.coveragePct}%`}
                     />
                   </div>
-                  <div class="mt-2 flex items-center justify-between text-[12px] text-neutral-500">
+                  <div class="mt-2 flex items-center justify-between text-[]-neutral-600">
                     <span>{r.withImage}/{r.total} illustrés</span>
                     <span class="font-bold text-neutral-700">{r.coveragePct}%</span>
                   </div>
@@ -376,10 +376,10 @@ function rayonLink(slug: string) {
                               —
                             </div>
                             <div class="min-w-0">
-                              <p class={`font-bold text-noir truncate ${p.actif ? "" : "text-neutral-400 line-through"}`}>
+                              <p class={`font-bold text-noir truncate ${p.actif ? "" : "text-neutral-500 line-through"}`}>
                                 {p.nom}
                               </p>
-                              <p class="text-[11px] font-mono text-neutral-400 truncate">{p.slug}</p>
+                              <p class="text-[]-neutral-600 truncate">{p.slug}</p>
                             </div>
                           </div>
                         </td>
@@ -388,7 +388,7 @@ function rayonLink(slug: string) {
                         </td>
                         <td class="px-4 py-2 text-neutral-600">
                           {p.categorie ?? "—"}
-                          {p.sous_categorie && <span class="text-neutral-400"> / {p.sous_categorie}</span>}
+                          {p.sous_categorie && <span class="text-neutral-500"> / {p.sous_categorie}</span>}
                         </td>
                         <td class="px-4 py-2 text-neutral-600">{p.origine ?? "—"}</td>
                         <td class="px-4 py-2 text-right">

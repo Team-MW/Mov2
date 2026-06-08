@@ -424,7 +424,7 @@ function SlidesPanel({ slides, onNew, onEdit, onToggleActive, onDelete }) {
                   loading="lazy"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-neutral-400 text-xs">
+                <div className="w-full h-full flex items-center justify-center text-neutral-500 text-xs">
                   —
                 </div>
               )}
@@ -442,7 +442,7 @@ function SlidesPanel({ slides, onNew, onEdit, onToggleActive, onDelete }) {
               </div>
               <h3 className="font-soft font-bold text-[16px] leading-tight truncate">{s.titre}</h3>
               <p className="text-[12.5px] text-neutral-500 line-clamp-2 mt-1">{s.description}</p>
-              <p className="text-[11px] text-neutral-400 mt-1">
+              <p className="text-[]-neutral-600 mt-1">
                 <code className="font-mono">{s.cta_href || "—"}</code> · ordre {s.ordre}
               </p>
             </div>
@@ -450,10 +450,7 @@ function SlidesPanel({ slides, onNew, onEdit, onToggleActive, onDelete }) {
               <button
                 type="button"
                 onClick={() => onToggleActive(s)}
-                className={`px-3 py-1 rounded-full text-[11px] font-bold transition ${
-                  s.actif
-                    ? "bg-vert/15 text-vert-dark hover:bg-vert/25"
-                    : "bg-neutral-200 text-neutral-500 hover:bg-neutral-300"
+                className={`px-3 py-1 rounded-full text-[]-neutral-600 hover:bg-neutral-300"
                 }`}
               >
                 {s.actif ? "● Active" : "○ Inactive"}
@@ -543,7 +540,7 @@ function SlideEditModal({ slide, onCancel, onSave }) {
           <button
             type="button"
             onClick={onCancel}
-            className="text-neutral-400 hover:text-noir transition"
+            className="text-neutral-500 hover:text-noir transition"
             aria-label="Fermer"
           >
             ✕
@@ -767,7 +764,7 @@ function MarqueePanel({ items, onAdd, onPatch, onMove, onDelete }) {
                     ▼
                   </button>
                 </div>
-                <span className="text-[11px] text-neutral-400 font-mono w-6 shrink-0 text-right">
+                <span className="text-[]-neutral-600 font-mono w-6 shrink-0 text-right">
                   {idx + 1}
                 </span>
                 <input
@@ -802,10 +799,7 @@ function MarqueePanel({ items, onAdd, onPatch, onMove, onDelete }) {
                 <button
                   type="button"
                   onClick={() => onPatch(idx, { actif: !item.actif })}
-                  className={`px-3 py-1 rounded-full text-[11px] font-bold transition shrink-0 ${
-                    item.actif
-                      ? "bg-vert/15 text-vert-dark hover:bg-vert/25"
-                      : "bg-neutral-200 text-neutral-500 hover:bg-neutral-300"
+                  className={`px-3 py-1 rounded-full text-[]-neutral-600 hover:bg-neutral-300"
                   }`}
                 >
                   {item.actif ? "● Actif" : "○ Masqué"}
@@ -837,7 +831,7 @@ function Field({ label, hint, required, children }) {
         {label} {required && <span className="text-rouge">*</span>}
       </span>
       {children}
-      {hint && <span className="text-[11px] text-neutral-400">{hint}</span>}
+      {hint && <span className="text-[]-neutral-600">{hint}</span>}
     </label>
   );
 }
@@ -900,7 +894,7 @@ function SeoPanel({ notify }) {
   }
 
   if (loading) {
-    return <div className="text-neutral-400 italic text-[13px] py-8">Chargement de la configuration SEO...</div>;
+    return <div className="text-neutral-500 italic text-[13px] py-8">Chargement de la configuration SEO...</div>;
   }
 
   if (dbError) {

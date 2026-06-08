@@ -61,11 +61,14 @@ export function publishAdminEvent(type, extra = {}) {
   }
 }
 
+import { supabase } from "@/lib/supabase";
+
 /**
  * Subscribe to admin sync events. Returns a teardown function suitable
  * for `useEffect` cleanups.
  *
- *   useEffect(() => subscribeAdminEvents(["PRODUITS_UPDATED"], handler), []);
+ * Now enhanced with Supabase Realtime `postgres_changes` to sync across
+ * different devices automatically (coupled with BroadcastChannel for instant local sync).
  *
  * @param {string[]} types  list of event types to listen for
  * @param {(event: { type: string; entity?: string; ids?: string[]; senderId: string; ts: number }) => void} handler
@@ -73,9 +76,11 @@ export function publishAdminEvent(type, extra = {}) {
  */
 export function subscribeAdminEvents(types, handler) {
   if (typeof window === "undefined") return () => {};
-  if (typeof BroadcastChannel !== "function") return () => {};
+  
   const myId = ensureSenderId();
-  const channel = new BroadcastChannel(CHANNEL_NAME);
+  
+  // 1. BroadcastChannel (Instant local cross-tab)
+  let bc = null;
   const onMessage = (e) => {
     const data = e?.data;
     if (!data || typeof data.type !== "string") return;
@@ -87,10 +92,54 @@ export function subscribeAdminEvents(types, handler) {
       console.warn("[admin-bus] handler threw", err);
     }
   };
-  channel.addEventListener("message", onMessage);
+
+  if (typeof BroadcastChannel === "function") {
+    bc = new BroadcastChannel(CHANNEL_NAME);
+    bc.addEventListener("message", onMessage);
+  }
+
+  // 2. Supabase Realtime (Global cross-device)
+  // We debounce the handler because a CSV import or bulk delete will trigger many row changes.
+  let timeout;
+  const debouncedHandler = (type) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      try { 
+        handler({ type, entity: "realtime", senderId: "supabase", ts: Date.now() }); 
+      } catch (err) {
+        console.warn("[admin-bus] realtime handler threw", err);
+      }
+    }, 800);
+  };
+
+  let rtChannel = null;
+  if (supabase) {
+    // Generate a unique channel name per component instance to avoid conflicts
+    rtChannel = supabase.channel(`admin-sync-${Math.random().toString(36).slice(2)}`);
+    
+    if (types.includes("PRODUITS_UPDATED")) {
+      rtChannel.on("postgres_changes", { event: "*", schema: "public", table: "produits" }, () => debouncedHandler("PRODUITS_UPDATED"));
+    }
+    if (types.includes("PROMOS_UPDATED")) {
+      rtChannel.on("postgres_changes", { event: "*", schema: "public", table: "promos" }, () => debouncedHandler("PROMOS_UPDATED"));
+    }
+    if (types.includes("ACTUS_UPDATED")) {
+      rtChannel.on("postgres_changes", { event: "*", schema: "public", table: "actus" }, () => debouncedHandler("ACTUS_UPDATED"));
+    }
+    // "MEDIAS_UPDATED" relies on local BroadcastChannel since it's Storage, not Database.
+    
+    rtChannel.subscribe();
+  }
+
   return () => {
-    channel.removeEventListener("message", onMessage);
-    try { channel.close(); } catch { /* no-op */ }
+    if (bc) {
+      bc.removeEventListener("message", onMessage);
+      try { bc.close(); } catch { /* no-op */ }
+    }
+    if (rtChannel) {
+      supabase.removeChannel(rtChannel);
+    }
+    clearTimeout(timeout);
   };
 }
 

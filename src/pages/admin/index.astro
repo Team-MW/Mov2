@@ -271,14 +271,14 @@ const isOnline = !!supabaseAdmin && !promosError;
         <section class="mt-6 md:mt-8">
           <div class="flex items-center justify-between mb-3">
             <h2 class="eyebrow">Activité 14 jours</h2>
-            <span class="text-[11.5px] text-neutral-400">
+            <span class="text-[11.5px] text-neutral-500">
               Source : audit trail · {total14d} actions
             </span>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div class="bg-white rounded-3xl p-4 md:p-5 shadow-card flex items-center gap-4">
               <div class="flex-1 min-w-0">
-                <p class="text-[11px] uppercase tracking-wider font-bold text-neutral-400">Produits</p>
+                <p class="text-[]-neutral-600">Produits</p>
                 <p class="font-soft font-bold text-[24px] leading-tight mt-1">{produits14d}</p>
                 <p class="text-[11.5px] text-neutral-500">écritures sur 14 j</p>
               </div>
@@ -294,7 +294,7 @@ const isOnline = !!supabaseAdmin && !promosError;
             </div>
             <div class="bg-white rounded-3xl p-4 md:p-5 shadow-card flex items-center gap-4">
               <div class="flex-1 min-w-0">
-                <p class="text-[11px] uppercase tracking-wider font-bold text-neutral-400">Promos</p>
+                <p class="text-[]-neutral-600">Promos</p>
                 <p class="font-soft font-bold text-[24px] leading-tight mt-1">{promos14d}</p>
                 <p class="text-[11.5px] text-neutral-500">écritures sur 14 j</p>
               </div>
@@ -310,7 +310,7 @@ const isOnline = !!supabaseAdmin && !promosError;
             </div>
             <div class="bg-white rounded-3xl p-4 md:p-5 shadow-card flex items-center gap-4">
               <div class="flex-1 min-w-0">
-                <p class="text-[11px] uppercase tracking-wider font-bold text-neutral-400">Toutes entités</p>
+                <p class="text-[]-neutral-600">Toutes entités</p>
                 <p class="font-soft font-bold text-[24px] leading-tight mt-1">{total14d}</p>
                 <p class="text-[11.5px] text-neutral-500">écritures sur 14 j</p>
               </div>
@@ -393,12 +393,12 @@ const isOnline = !!supabaseAdmin && !promosError;
           <div class="flex items-center justify-between mb-2">
             <div>
               <h2 class="eyebrow">Activité récente</h2>
-              <p class="text-[12px] text-neutral-500 mt-0.5">
+              <p class="text-[]-neutral-600 mt-0.5">
                 Toutes les écritures admin, ordre antéchronologique.
               </p>
             </div>
             {activityRows.length > 0 && (
-              <span class="text-[11px] text-neutral-400 tabular-nums">{activityRows.length} entrée(s)</span>
+              <span class="text-[]-neutral-600 tabular-nums">{activityRows.length} entrée(s)</span>
             )}
           </div>
           <ActivityFeed
@@ -416,21 +416,20 @@ const isOnline = !!supabaseAdmin && !promosError;
               <a href="/admin/promos" class="text-[11px] text-vert font-bold hover:underline">Gérer →</a>
             </div>
             {recentPromos.length === 0 ? (
-              <p class="mt-4 text-[12px] text-neutral-400">Aucune promo en base.</p>
+              <p class="mt-4 text-[]-neutral-600">Aucune promo en base.</p>
             ) : (
               <ul class="mt-3 divide-y divide-black/5">
                 {recentPromos.map((p) => (
                   <li class="py-2.5 flex items-center justify-between gap-3 min-w-0">
                     <div class="min-w-0 flex-1">
                       <p class="font-bold text-[13px] truncate">{p.titre}</p>
-                      <p class="text-[11px] text-neutral-500 truncate">
+                      <p class="text-[]-neutral-600 truncate">
                         −{p.reduction_pct}% · {p.magasin ?? "tous"}
                       </p>
                     </div>
                     <span
                       class:list={[
-                        "px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider shrink-0",
-                        p.actif ? "bg-vert/10 text-vert-dark" : "bg-neutral-100 text-neutral-500",
+                        "px-2 py-0.5 rounded-full text-[]-neutral-600",
                       ]}
                     >
                       {p.actif ? "Actif" : "Inactif"}
@@ -448,21 +447,21 @@ const isOnline = !!supabaseAdmin && !promosError;
               <a href="/admin/produits" class="text-[11px] text-vert font-bold hover:underline">Gérer →</a>
             </div>
             {recentProduits.length === 0 ? (
-              <p class="mt-4 text-[12px] text-neutral-400">Aucun produit modifié récemment.</p>
+              <p class="mt-4 text-[]-neutral-600">Aucun produit modifié récemment.</p>
             ) : (
               <ul class="mt-3 divide-y divide-black/5">
                 {recentProduits.map((p) => (
                   <li class="py-2.5 flex items-center justify-between gap-3 min-w-0">
                     <div class="min-w-0 flex-1">
                       <p class="font-bold text-[13px] truncate">{p.nom}</p>
-                      <p class="text-[11px] text-neutral-500 truncate">{p.rayon}</p>
+                      <p class="text-[]-neutral-600 truncate">{p.rayon}</p>
                     </div>
                     {!p.image_url ? (
                       <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-orange-100 text-orange-700 shrink-0">
                         Sans image
                       </span>
                     ) : !p.actif ? (
-                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-neutral-100 text-neutral-500 shrink-0">
+                      <span class="px-2 py-0.5 rounded-full text-[]-neutral-600 shrink-0">
                         Inactif
                       </span>
                     ) : (

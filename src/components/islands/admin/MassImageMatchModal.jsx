@@ -377,7 +377,7 @@ export default function MassImageMatchModal({ onClose, onApplied, rayonsOptions 
         <div className="bg-white border-b border-black/5 px-6 py-4 flex items-center justify-between shrink-0">
           <div>
             <h2 className="font-soft font-bold text-[20px]">Importer images (auto-match)</h2>
-            <p className="text-[12px] text-neutral-500 mt-0.5">
+            <p className="text-[]-neutral-600 mt-0.5">
               Glissez plusieurs images — elles seront uploadées puis associées automatiquement aux produits par nom de fichier.
             </p>
           </div>
@@ -416,7 +416,7 @@ export default function MassImageMatchModal({ onClose, onApplied, rayonsOptions 
                   dragging ? "border-vert bg-vert/5" : "border-black/15 bg-white/40"
                 }`}
               >
-                <svg className="w-12 h-12 mx-auto text-neutral-400 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <svg className="w-12 h-12 mx-auto text-neutral-500 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
                 <p className="font-bold text-[15px] text-noir">Déposez vos images ici</p>
@@ -451,7 +451,7 @@ export default function MassImageMatchModal({ onClose, onApplied, rayonsOptions 
                   />
                   <span>
                     Écraser les images existantes
-                    <span className="text-neutral-400"> (sinon seuls les produits sans image seront candidats)</span>
+                    <span className="text-neutral-500"> (sinon seuls les produits sans image seront candidats)</span>
                   </span>
                 </label>
                 <div className="inline-flex items-center gap-2 text-[13px]">
@@ -473,7 +473,7 @@ export default function MassImageMatchModal({ onClose, onApplied, rayonsOptions 
 
               {files.length > 0 && (
                 <div>
-                  <p className="text-[12px] text-neutral-500 uppercase tracking-wider font-bold mb-2">
+                  <p className="text-[]-neutral-600 uppercase tracking-wider font-bold mb-2">
                     {files.length} fichier(s) prêt(s)
                   </p>
                   <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
@@ -492,7 +492,7 @@ export default function MassImageMatchModal({ onClose, onApplied, rayonsOptions 
                         >
                           ×
                         </button>
-                        <p className="mt-1 text-[10px] text-neutral-500 truncate">{f.file.name}</p>
+                        <p className="mt-1 text-[]-neutral-600 truncate">{f.file.name}</p>
                       </div>
                     ))}
                   </div>
@@ -773,7 +773,7 @@ function ReviewRow({ file, match, choice, onChoose }) {
             ))}
           </select>
         ) : (
-          <span className="text-neutral-400 text-[12px] italic">Aucun candidat ≥ 50%</span>
+          <span className="text-neutral-500 text-[12px] italic">Aucun candidat ≥ 50%</span>
         )}
         {currentProduct?.hasImage && selected && !choice?.skip && (
           <p className="mt-1 text-[11px] text-orange-700">

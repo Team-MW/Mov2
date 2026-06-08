@@ -176,9 +176,7 @@ export function guessRayonFromText(text) {
 // Magasins (enum partagé avec la contrainte DB articles_magasin_enum).
 export const MAGASINS = [
   { slug: '',             label: 'Non précisé' },
-  { slug: 'portet',       label: 'Portet-sur-Garonne' },
   { slug: 'toulouse-sud', label: 'Toulouse Sud — Cépière' },
-  { slug: 'tous',         label: 'Les deux magasins' },
 ];
 
 export const MAGASIN_SLUGS = MAGASINS.map((m) => m.slug);

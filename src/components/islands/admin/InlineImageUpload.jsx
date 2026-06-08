@@ -212,14 +212,14 @@ export default function InlineImageUpload({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between gap-2">
-        <label className="block text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
+        <label className="block text-[]-neutral-600 uppercase tracking-wider">
           {label}
         </label>
         {hasImage && (
           <button
             type="button"
             onClick={clear}
-            className="text-[11px] font-bold text-neutral-400 hover:text-rouge transition"
+            className="text-[]-neutral-600 hover:text-rouge transition"
           >
             Retirer
           </button>
@@ -307,7 +307,7 @@ export default function InlineImageUpload({
             </div>
             <p
               aria-live="polite"
-              className="mt-1.5 text-[11px] text-neutral-400 leading-snug min-h-[1em]"
+              className="mt-1.5 text-[]-neutral-600 leading-snug min-h-[1em]"
             >
               {error ? (
                 <span className="text-rouge font-bold">{error}</span>

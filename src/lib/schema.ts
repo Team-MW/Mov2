@@ -100,13 +100,10 @@ export function jobPostingSchema(p: {
   description: string;
   datePosted: string;
   employmentType: string;
-  magasin: "portet" | "toulouse-sud" | "tous";
+  magasin?: "toulouse-sud";
   slug: string;
 }) {
-  const locs =
-    p.magasin === "tous"
-      ? Object.values(MAGASINS)
-      : (p.magasin in MAGASINS ? [MAGASINS[p.magasin as keyof typeof MAGASINS]] : []);
+  const locs = [MAGASINS["toulouse-sud"]];
   return {
     "@context": "https://schema.org",
     "@type": "JobPosting",
@@ -192,6 +189,7 @@ export function recipeSchema(r: {
   ingredients?: string[];
   /** Liste des étapes plain-text extraite du MDX (optionnel). */
   steps?: string[];
+  categorie?: string;
 }) {
   const imageUrl = r.image.startsWith("http") ? r.image : `${SITE.url}${r.image}`;
   return {
@@ -206,7 +204,7 @@ export function recipeSchema(r: {
     cookTime: minutesToISO(r.tempsCuissonMin),
     totalTime: minutesToISO(r.tempsMin),
     recipeYield: `${r.portions} portions`,
-    recipeCategory: "Plat principal",
+    recipeCategory: r.categorie ?? "Plat principal",
     recipeCuisine: r.origine,
     keywords: r.keywords?.join(", "),
     ...(r.ingredients && r.ingredients.length > 0

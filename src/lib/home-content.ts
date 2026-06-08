@@ -116,7 +116,7 @@ const FALLBACK_MARQUEE: string[] = [
   "Boucherie halal sur carcasse",
   "Fruits exotiques",
   "20 000+ références",
-  "60 ans d'expérience",
+  "60 ans d'expérience familiale",
 ];
 
 /**

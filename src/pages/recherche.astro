@@ -72,7 +72,7 @@ const index = {
     tagline: r.tagline ?? "",
     image: r.image,
     accent: r.accent ?? "#1C6B35",
-    href: `/produits/${r.slug}`,
+    href: `/rayons/${r.slug}`,
   })),
   actus: actus.map((a) => ({
     type: "actu" as const,
@@ -128,7 +128,7 @@ const quickSuggestions = [
 
       <div class="mt-10 relative">
         <svg
-          class="absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6 text-neutral-400 pointer-events-none"
+          class="absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6 text-neutral-500 pointer-events-none"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"

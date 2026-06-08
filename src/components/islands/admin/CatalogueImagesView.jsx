@@ -122,7 +122,7 @@ function ProductCard({ p, rayon }) {
           {p.nom}
         </p>
         {(p.categorie || p.sous_categorie) && (
-          <p className="mt-0.5 text-[11px] text-neutral-500 line-clamp-1">
+          <p className="mt-0.5 text-[]-neutral-600 line-clamp-1">
             {[p.categorie, p.sous_categorie].filter(Boolean).join(" · ")}
           </p>
         )}
@@ -159,7 +159,7 @@ function PromoCard({ p }) {
           {p.titre}
         </p>
         {p.rayon && (
-          <p className="mt-0.5 text-[11px] text-neutral-500 line-clamp-1 capitalize">
+          <p className="mt-0.5 text-[]-neutral-600 line-clamp-1 capitalize">
             {p.rayon.replace(/-/g, " ")}
           </p>
         )}
@@ -197,15 +197,15 @@ function SectionCard({ id, accent, title, subtitle, count, withImageCount, child
           {title}
         </h2>
         {subtitle && (
-          <span className="text-[12px] text-neutral-500">{subtitle}</span>
+          <span className="text-[]-neutral-600">{subtitle}</span>
         )}
-        <span className="ml-auto text-[12px] text-neutral-500 tabular-nums">
+        <span className="ml-auto text-[]-neutral-600 tabular-nums">
           <strong className="text-noir">{withImageCount}</strong>
-          <span className="text-neutral-400"> / {count}</span> avec image
+          <span className="text-neutral-500"> / {count}</span> avec image
         </span>
       </header>
       {empty ? (
-        <p className="text-[13px] text-neutral-400 italic px-2 py-6 text-center">
+        <p className="text-[13px] text-neutral-500 italic px-2 py-6 text-center">
           {empty}
         </p>
       ) : (
@@ -324,7 +324,7 @@ export default function CatalogueImagesView({ initialPromos, initialProduits, ra
           {/* Search */}
           <div className="relative flex-1 max-w-md">
             <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -394,7 +394,7 @@ export default function CatalogueImagesView({ initialPromos, initialProduits, ra
                   style={{ background: r.accent || "#1C6B35" }}
                 />
                 {r.nomCourt || r.nom}
-                <span className="ml-1 text-neutral-400 font-normal">
+                <span className="ml-1 text-neutral-500 font-normal">
                   {withImage}/{total}
                 </span>
               </a>

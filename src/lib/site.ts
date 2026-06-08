@@ -65,7 +65,6 @@ export interface Magasin {
   photo: string;
   description: string;
   accroche: string;
-  dateOuverture: string;
   atouts: string[];
   badge?: string;
 }
@@ -104,7 +103,6 @@ export const MAGASINS: Record<MagasinSlug, Magasin> = {
     photo: "/images/magasins/toulouse-sud.jpg",
     badge: "Supermarché",
     accroche: "Votre grand supermarché au cœur de Toulouse Sud Cépière.",
-    dateOuverture: "Avril 2026",
     description:
       "Votre supermarché Marché de Mo' à Toulouse. Situé à l'entrée de la sortie périphérique Cépière, 1 200 m² d'espace de vente pour répondre à tous vos besoins.",
     atouts: [

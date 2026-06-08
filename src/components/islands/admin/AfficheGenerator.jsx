@@ -523,7 +523,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <div className="absolute left-4 top-3.5">
-              <svg className="w-4 h-4 text-neutral-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <svg className="w-4 h-4 text-neutral-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
               </svg>
             </div>
@@ -531,7 +531,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
             {searchQuery && (
               <button 
                 onClick={() => setSearchQuery('')}
-                className="absolute right-4 top-3.5 text-neutral-400 hover:text-neutral-600"
+                className="absolute right-4 top-3.5 text-neutral-500 hover:text-neutral-600"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M18 6 6 18M6 6l12 12"/>
@@ -552,7 +552,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
                   {item.image ? (
                     <img src={item.image} className="w-10 h-10 rounded-lg object-cover bg-neutral-100 flex-shrink-0" alt="" />
                   ) : (
-                    <div className="w-10 h-10 rounded-lg bg-neutral-100 text-neutral-400 flex items-center justify-center flex-shrink-0 font-bold text-[12px]">
+                    <div className="w-10 h-10 rounded-lg bg-neutral-100 text-neutral-500 flex items-center justify-center flex-shrink-0 font-bold text-[12px]">
                       MO
                     </div>
                   )}
@@ -576,7 +576,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
           )}
 
           {searchQuery && searchResults.length === 0 && searchQuery.length >= 2 && (
-            <p className="mt-3 text-[12px] text-neutral-400 text-center italic py-2">
+            <p className="mt-3 text-[]-neutral-600 text-center italic py-2">
               Aucun produit trouvé dans les bases locales.
             </p>
           )}
@@ -592,7 +592,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
               </div>
               <button 
                 onClick={() => setSelectedChip(null)}
-                className="text-neutral-400 hover:text-neutral-600 text-[11px] font-bold underline"
+                className="text-neutral-500 hover:text-neutral-600 text-[11px] font-bold underline"
               >
                 Détacher
               </button>
@@ -798,7 +798,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
                 <button
                   type="button"
                   onClick={() => setImageUrl('')}
-                  className="text-neutral-400 hover:text-rouge text-[11px] font-bold"
+                  className="text-neutral-500 hover:text-rouge text-[11px] font-bold"
                 >
                   Effacer
                 </button>
@@ -815,7 +815,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
                     placeholder="URL de l'image (Supabase, external...)"
                   />
                 </div>
-                <span className="text-[10px] text-neutral-400 leading-normal">
+                <span className="text-[]-neutral-600 leading-normal">
                   💡 *Privilégiez les formats transparents (PNG détouré) ou sur fond blanc pur pour économiser l'encre.*
                 </span>
                 {imageUrl && (
@@ -850,7 +850,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
                 onChange={(e) => setProductUrl(e.target.value)}
                 placeholder="Ex. https://marchedemo.com/..."
               />
-              <span className="text-[9.5px] text-neutral-400 pl-1 leading-none">URL cible du QR Code</span>
+              <span className="text-[9.5px] text-neutral-500 pl-1 leading-none">URL cible du QR Code</span>
             </div>
           </div>
 
@@ -897,7 +897,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
         <div className="flex items-center justify-between no-print px-1">
           <h2 className="text-[17px] font-bold text-neutral-900 flex items-center gap-2">
             Aperçu A4 Paysage
-            <span className="text-[12px] font-normal text-neutral-400">({Math.round(scale * 100)}%)</span>
+            <span className="text-[]-neutral-600">({Math.round(scale * 100)}%)</span>
           </h2>
           <button 
             onClick={() => setShowHelp(!showHelp)}
@@ -1117,7 +1117,7 @@ export default function AfficheGenerator({ initialProduits = [], initialPromos =
           </div>
         </div>
 
-        <p className="text-[12.5px] text-neutral-400 italic text-center no-print leading-relaxed">
+        <p className="text-[12.5px] text-neutral-500 italic text-center no-print leading-relaxed">
           L'aperçu reflète fidèlement l'impression physique en A4 Paysage (297 × 210 mm).
         </p>
       </div>

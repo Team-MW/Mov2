@@ -350,7 +350,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
               placeholder="Rechercher par titre, résumé..."
             />
             <svg
-              className="absolute left-3.5 top-3.5 w-4 h-4 text-neutral-400 pointer-events-none"
+              className="absolute left-3.5 top-3.5 w-4 h-4 text-neutral-500 pointer-events-none"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -362,7 +362,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
             {filter.q && (
               <button
                 onClick={() => setFilter("q", "")}
-                className="absolute right-3 top-3 text-neutral-400 hover:text-neutral-600 text-[12px] font-bold"
+                className="absolute right-3 top-3 text-neutral-500 hover:text-neutral-600 text-[12px] font-bold"
               >
                 Vider
               </button>
@@ -413,7 +413,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
             {activeCount > 0 && (
               <button
                 onClick={resetFilter}
-                className="text-[12px] font-bold text-neutral-500 hover:text-noir px-2 transition"
+                className="text-[]-neutral-600 hover:text-noir px-2 transition"
               >
                 Réinitialiser ({activeCount})
               </button>
@@ -510,7 +510,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
                         {actu.image ? (
                           <img src={actu.image} alt="" className="w-full h-full object-cover" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-[10px] text-neutral-400 font-bold">
+                          <div className="w-full h-full flex items-center justify-center text-[]-neutral-600 font-bold">
                             N/A
                           </div>
                         )}
@@ -520,7 +520,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
                       <div className="font-bold text-noir truncate" title={actu.titre}>
                         {actu.titre}
                       </div>
-                      <div className="text-[11px] text-neutral-400 truncate font-mono">
+                      <div className="text-[]-neutral-600 truncate font-mono">
                         {actu.slug}
                       </div>
                     </td>
@@ -535,7 +535,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
                           {RAYON_LABELS(actu.rayon)}
                         </span>
                       ) : (
-                        <span className="text-neutral-400 text-[12px]">—</span>
+                        <span className="text-neutral-500 text-[12px]">—</span>
                       )}
                     </td>
                     <td className="p-4 text-neutral-600 font-medium">
@@ -590,7 +590,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
                         </button>
                         <button
                           onClick={() => setPendingDelete(actu.id)}
-                          className="p-1.5 rounded-full hover:bg-rouge/10 text-neutral-400 hover:text-rouge transition"
+                          className="p-1.5 rounded-full hover:bg-rouge/10 text-neutral-500 hover:text-rouge transition"
                           title="Supprimer"
                         >
                           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -622,7 +622,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
               </h2>
               <button
                 onClick={() => setEditing(null)}
-                className="p-1.5 rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-noir transition"
+                className="p-1.5 rounded-full hover:bg-neutral-100 text-neutral-500 hover:text-noir transition"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M18 6 6 18M6 6l12 12" />
@@ -662,7 +662,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Titre */}
                   <div className="md:col-span-2 space-y-1.5">
-                    <label className="block text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
+                    <label className="block text-[]-neutral-600 uppercase tracking-wider">
                       Titre
                     </label>
                     <input
@@ -678,7 +678,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
                   {/* Slug */}
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <label className="block text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
+                      <label className="block text-[]-neutral-600 uppercase tracking-wider">
                         Slug
                       </label>
                       <button
@@ -701,7 +701,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
 
                   {/* Type */}
                   <div className="space-y-1.5">
-                    <label className="block text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
+                    <label className="block text-[]-neutral-600 uppercase tracking-wider">
                       Type
                     </label>
                     <select
@@ -719,7 +719,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
 
                   {/* Rayon */}
                   <div className="space-y-1.5">
-                    <label className="block text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
+                    <label className="block text-[]-neutral-600 uppercase tracking-wider">
                       Rayon associé (Optionnel)
                     </label>
                     <select
@@ -738,7 +738,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
 
                   {/* Date */}
                   <div className="space-y-1.5">
-                    <label className="block text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
+                    <label className="block text-[]-neutral-600 uppercase tracking-wider">
                       Date de publication
                     </label>
                     <input
@@ -751,7 +751,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
 
                   {/* Auteur */}
                   <div className="space-y-1.5">
-                    <label className="block text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
+                    <label className="block text-[]-neutral-600 uppercase tracking-wider">
                       Auteur
                     </label>
                     <input
@@ -765,7 +765,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
 
                   {/* Custom Badge override */}
                   <div className="space-y-1.5">
-                    <label className="block text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
+                    <label className="block text-[]-neutral-600 uppercase tracking-wider">
                       Badge personnalisé (Optionnel)
                     </label>
                     <input
@@ -779,7 +779,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
 
                   {/* Href link */}
                   <div className="space-y-1.5">
-                    <label className="block text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
+                    <label className="block text-[]-neutral-600 uppercase tracking-wider">
                       Lien redirection (Optionnel)
                     </label>
                     <input
@@ -794,7 +794,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
 
                 {/* Résumé */}
                 <div className="space-y-1.5">
-                  <label className="block text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
+                  <label className="block text-[]-neutral-600 uppercase tracking-wider">
                     Résumé / Description courte
                   </label>
                   <textarea
@@ -808,9 +808,9 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
 
                 {/* Contenu (Corps de l'article) */}
                 <div className="space-y-1.5">
-                  <label className="block text-[12px] font-bold text-neutral-500 uppercase tracking-wider flex items-center justify-between">
+                  <label className="block text-[]-neutral-600 uppercase tracking-wider flex items-center justify-between">
                     <span>Corps de l'article (Markdown)</span>
-                    <span className="text-[10px] text-neutral-400 normal-case font-normal">
+                    <span className="text-[]-neutral-600 normal-case font-normal">
                       Supporte : #, ##, ###, **, *, [liens](url), listes (-)
                     </span>
                   </label>
@@ -837,7 +837,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
 
                 {/* Image Alt */}
                 <div className="space-y-1.5">
-                  <label className="block text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
+                  <label className="block text-[]-neutral-600 uppercase tracking-wider">
                     Texte alternatif de l'image (Accessibilité)
                   </label>
                   <input
@@ -945,7 +945,7 @@ export default function ActusManager({ initialActus, rayonsOptions }) {
                     ></span>
                     {editing.badge_label || (PREVIEW_CATEGORIES[editing.type] || PREVIEW_CATEGORIES.article).label}
                   </span>
-                  <span className="text-[12px] text-neutral-500">
+                  <span className="text-[]-neutral-600">
                     {Math.max(1, Math.round((editing.contenu || "").split(/\s+/).filter(Boolean).length / 230))} min de lecture
                   </span>
                 </div>

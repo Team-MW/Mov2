@@ -40,7 +40,7 @@ function isPublic(pathname) {
 }
 
 export const onRequest = async (context, next) => {
-  const { cookies, redirect, url } = context;
+  const { cookies, redirect, url, locals } = context;
   const pathname = url.pathname;
 
   /* NOTE on geo-IP detection : we intentionally don't expose

@@ -50,7 +50,7 @@ const TWEMOJI_IDS: Record<string, string> = {
 >
   <!-- 0. Row 0: Top bar discrete (Desktop only, slides up on scroll) -->
   <div id="header-top-bar" class="header-top-bar border-b border-black/5 bg-white overflow-hidden hidden lg:block">
-    <div class="container-mo flex items-center justify-between py-2 text-[12px] text-neutral-500 font-pro">
+    <div class="container-mo flex items-center justify-between py-2 text-[]-neutral-600 font-pro">
       <span class="flex items-center gap-2">
         Bienvenue chez <strong class="text-neutral-900 font-bold">Marché de Mo'</strong>
         · Le plus grand supermarché ethnique d'Occitanie
@@ -87,7 +87,7 @@ const TWEMOJI_IDS: Record<string, string> = {
           />
           <div class="logo-row-1-label flex flex-col text-left font-soft shrink-0 ml-2.5 transition-all duration-200">
             <span class="text-[16px] font-black text-vert-dark leading-none">Marché de Mo'</span>
-            <span class="text-[10px] font-bold text-neutral-400 mt-1 leading-none uppercase tracking-wider">Supermarché du Monde</span>
+            <span class="text-[10px] font-bold text-neutral-600 mt-1 leading-none uppercase tracking-wider">Supermarché du Monde</span>
           </div>
         </a>
         <button
@@ -115,7 +115,7 @@ const TWEMOJI_IDS: Record<string, string> = {
             class="w-full pl-12 pr-20 py-2 bg-neutral-100 focus:bg-white text-[14px] text-neutral-800 rounded-full border border-black/10 focus:border-vert/30 focus:ring-4 focus:ring-vert/5 outline-none transition-all placeholder-neutral-400"
             autocomplete="off"
           />
-          <svg class="w-5 h-5 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg class="w-5 h-5 text-neutral-500 absolute left-4 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.35-4.35" stroke-linecap="round" />
           </svg>
@@ -140,14 +140,14 @@ const TWEMOJI_IDS: Record<string, string> = {
           <img src="/promos/promo_button-removebg-preview.png" alt="Promos" class="h-16 md:h-28 w-auto object-contain hover:scale-105 transition-transform duration-200" />
         </a>
         <a
-          href="/magasins"
+          href="/magasins/toulouse-sud"
           class="px-4 py-2 border border-vert text-vert hover:bg-vert hover:text-white rounded-full font-soft font-bold text-[13px] flex items-center gap-1.5 transition hover:-translate-y-0.5"
         >
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
             <circle cx="12" cy="10" r="3" />
           </svg>
-          Magasins
+          Toulouse Sud — Ouvert 7j/7
         </a>
       </div>
     </div>
@@ -225,10 +225,10 @@ const TWEMOJI_IDS: Record<string, string> = {
 
       <!-- Magasins (location) — closest to right border -->
       <a
-        href="/magasins"
+        href="/magasins/toulouse-sud"
         class="w-10 h-10 rounded-full border border-vert text-vert flex items-center justify-center transition active:bg-vert/10 shrink-0"
-        title="Magasins"
-        aria-label="Magasins"
+        title="Toulouse Sud"
+        aria-label="Toulouse Sud"
       >
         <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
           <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
@@ -316,7 +316,7 @@ const TWEMOJI_IDS: Record<string, string> = {
         <h4 class="font-soft font-bold text-[15px] mt-1 text-neutral-900 leading-tight">
           Le plus grand supermarché ethnique d'Occitanie
         </h4>
-        <p class="text-[12px] font-normal text-neutral-500 mt-1 leading-normal">
+        <p class="text-[]-neutral-600 mt-1 leading-normal">
           Plus de 20 000 références et 12 rayons thématiques à {currentStore.nomCourt.split(' — ')[0]}. Ouvert 7j/7.
         </p>
       </div>
@@ -346,7 +346,7 @@ const TWEMOJI_IDS: Record<string, string> = {
       </details>
 
       <a href="/promos" class="block py-2.5 border-b border-black/5 text-rouge font-bold">Promos</a>
-      <a href="/magasins" class="block py-2.5 border-b border-black/5">Magasins</a>
+      <a href="/magasins/toulouse-sud" class="block py-2.5 border-b border-black/5">Magasin (Toulouse Sud)</a>
       <a href="/recettes" class="block py-2.5 border-b border-black/5">Recettes</a>
       <a href="/recrutement" class="block py-2.5 border-b border-black/5">Recrutement</a>
       <a href="/programme-fidelite" class="block py-2.5 border-b border-black/5">Programme fidélité</a>
@@ -362,7 +362,7 @@ const TWEMOJI_IDS: Record<string, string> = {
           class="w-[70px] h-[70px] object-contain bg-white rounded-full shadow-sm p-0.5"
         />
         <span class="text-[14px] font-black text-vert-dark mt-2">Marché de Mo'</span>
-        <span class="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Supermarché du Monde</span>
+        <span class="text-[10px] font-bold text-neutral-600 uppercase tracking-wider">Supermarché du Monde</span>
       </div>
     </nav>
   </div>
@@ -391,7 +391,7 @@ const TWEMOJI_IDS: Record<string, string> = {
           class="w-full pl-10 pr-4 py-2.5 bg-neutral-100 text-[15px] font-medium text-neutral-900 rounded-full border border-black/5 outline-none focus:bg-white focus:border-vert/30 transition-all placeholder-neutral-400"
           autocomplete="off"
         />
-        <svg class="w-5 h-5 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="w-5 h-5 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="8" />
           <path d="m21 21-4.35-4.35" stroke-linecap="round" />
         </svg>
@@ -399,7 +399,7 @@ const TWEMOJI_IDS: Record<string, string> = {
     </div>
     <!-- Results list scrollable -->
     <div class="flex-1 overflow-y-auto container-mo py-6 animate-pulse" id="mobile-search-results">
-      <div class="text-center py-10 text-neutral-400 text-[14px]">
+      <div class="text-center py-10 text-neutral-500 text-[14px]">
         <svg class="w-12 h-12 mx-auto mb-3 text-neutral-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <circle cx="11" cy="11" r="8" />
           <path d="m21 21-4.35-4.35" stroke-linecap="round" />
@@ -745,7 +745,7 @@ const TWEMOJI_IDS: Record<string, string> = {
         if (isMobile) {
           resultsContainer.classList.add("animate-pulse");
           resultsContainer.innerHTML = `
-            <div class="text-center py-10 text-neutral-400 text-[14px]">
+            <div class="text-center py-10 text-neutral-500 text-[14px]">
               <svg class="w-12 h-12 mx-auto mb-3 text-neutral-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <circle cx="11" cy="11" r="8" />
                 <path d="m21 21-4.35-4.35" stroke-linecap="round" />
@@ -790,10 +790,10 @@ const TWEMOJI_IDS: Record<string, string> = {
 
       if (totalMatches === 0) {
         resultsContainer.innerHTML = `
-          <div class="text-center py-10 text-neutral-400 text-[14.5px]">
+          <div class="text-center py-10 text-neutral-500 text-[14.5px]">
             <span class="text-[20px] mb-2 block">🔍</span>
             Aucun résultat pour <strong class="text-neutral-700 font-bold">"${query}"</strong>
-            <p class="text-[12px] text-neutral-400 mt-1 font-normal">Essayez d'autres mots-clés ou vérifiez l'orthographe.</p>
+            <p class="text-[]-neutral-600 mt-1 font-normal">Essayez d'autres mots-clés ou vérifiez l'orthographe.</p>
           </div>
         `;
         return;
@@ -804,7 +804,7 @@ const TWEMOJI_IDS: Record<string, string> = {
       if (matchingRayons.length > 0) {
         html += `
           <div>
-            <div class="text-[11px] font-black text-neutral-400 uppercase tracking-widest px-2 mb-2">Rayons (${matchingRayons.length})</div>
+            <div class="text-[11px] font-black text-neutral-600 uppercase tracking-widest px-2 mb-2">Rayons (${matchingRayons.length})</div>
             <div class="grid grid-cols-1 gap-1">
               ${matchingRayons.map((r: any) => `
                 <a href="${r.href}" class="flex items-center gap-3 p-2 rounded-2xl hover:bg-neutral-50 transition-colors group">
@@ -813,9 +813,9 @@ const TWEMOJI_IDS: Record<string, string> = {
                   </div>
                   <div class="min-w-0 flex-1">
                     <div class="text-[14px] font-bold text-neutral-900 group-hover:text-vert transition-colors truncate">${r.title}</div>
-                    <div class="text-[11px] text-neutral-400 truncate">${r.tagline}</div>
+                    <div class="text-[11px] text-neutral-600 truncate">${r.tagline}</div>
                   </div>
-                  <svg class="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <svg class="w-4 h-4 text-neutral-500 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </a>
               `).join("")}
             </div>
@@ -826,7 +826,7 @@ const TWEMOJI_IDS: Record<string, string> = {
       if (matchingProduits.length > 0) {
         html += `
           <div>
-            <div class="text-[11px] font-black text-neutral-400 uppercase tracking-widest px-2 mb-2">Produits (${matchingProduits.length})</div>
+            <div class="text-[11px] font-black text-neutral-600 uppercase tracking-widest px-2 mb-2">Produits (${matchingProduits.length})</div>
             <div class="grid grid-cols-1 gap-1">
               ${matchingProduits.map((p: any) => `
                 <a href="${p.href}" class="flex items-center gap-3 p-2 rounded-2xl hover:bg-neutral-50 transition-colors group">
@@ -836,12 +836,12 @@ const TWEMOJI_IDS: Record<string, string> = {
                   <div class="flex-1 min-w-0">
                     <div class="text-[14px] font-bold text-neutral-900 group-hover:text-vert transition-colors truncate">${p.title}</div>
                     <div class="flex items-center gap-2 mt-0.5">
-                      <span class="text-[11px] text-neutral-500 font-bold">${p.rayon}</span>
+                      <span class="text-[11px] text-neutral-600 font-bold">${p.rayon}</span>
                       ${p.origine ? `<span class="text-[10px] bg-neutral-100 text-neutral-600 px-1.5 py-0.5 rounded-full font-medium">Origine: ${p.origine}</span>` : ""}
                     </div>
                   </div>
                   ${p.badge ? `<span class="text-[10.5px] font-bold bg-rouge/10 text-rouge px-2.5 py-0.5 rounded-full">${p.badge}</span>` : ""}
-                  <svg class="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <svg class="w-4 h-4 text-neutral-500 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </a>
               `).join("")}
             </div>
@@ -852,16 +852,16 @@ const TWEMOJI_IDS: Record<string, string> = {
       if (matchingRecettes.length > 0) {
         html += `
           <div>
-            <div class="text-[11px] font-black text-neutral-400 uppercase tracking-widest px-2 mb-2">Recettes (${matchingRecettes.length})</div>
+            <div class="text-[11px] font-black text-neutral-600 uppercase tracking-widest px-2 mb-2">Recettes (${matchingRecettes.length})</div>
             <div class="grid grid-cols-1 gap-1">
               ${matchingRecettes.map((r: any) => `
                 <a href="${r.href}" class="flex items-center gap-3 p-2 rounded-2xl hover:bg-neutral-50 transition-colors group">
                   <div class="w-8 h-8 rounded-lg bg-vert/10 text-vert flex items-center justify-center flex-shrink-0 text-[14px] font-bold">🍳</div>
                   <div class="flex-1 min-w-0">
                     <div class="text-[14px] font-bold text-neutral-900 group-hover:text-vert transition-colors truncate">${r.title}</div>
-                    <div class="text-[11px] text-neutral-400 truncate">Rayon ${r.rayon}</div>
+                    <div class="text-[11px] text-neutral-600 truncate">Rayon ${r.rayon}</div>
                   </div>
-                  <svg class="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <svg class="w-4 h-4 text-neutral-500 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </a>
               `).join("")}
             </div>
@@ -872,16 +872,16 @@ const TWEMOJI_IDS: Record<string, string> = {
       if (matchingActus.length > 0) {
         html += `
           <div>
-            <div class="text-[11px] font-black text-neutral-400 uppercase tracking-widest px-2 mb-2">Actualités (${matchingActus.length})</div>
+            <div class="text-[11px] font-black text-neutral-600 uppercase tracking-widest px-2 mb-2">Actualités (${matchingActus.length})</div>
             <div class="grid grid-cols-1 gap-1">
               ${matchingActus.map((a: any) => `
                 <a href="${a.href}" class="flex items-center gap-3 p-2 rounded-2xl hover:bg-neutral-50 transition-colors group">
                   <div class="w-8 h-8 rounded-lg bg-orange-500/10 text-orange-500 flex items-center justify-center flex-shrink-0 text-[14px] font-bold">📰</div>
                   <div class="flex-1 min-w-0">
                     <div class="text-[14px] font-bold text-neutral-900 group-hover:text-vert transition-colors truncate">${a.title}</div>
-                    <div class="text-[11px] text-neutral-400 truncate">${a.categorie}</div>
+                    <div class="text-[11px] text-neutral-600 truncate">${a.categorie}</div>
                   </div>
-                  <svg class="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <svg class="w-4 h-4 text-neutral-500 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </a>
               `).join("")}
             </div>
@@ -915,7 +915,7 @@ const TWEMOJI_IDS: Record<string, string> = {
           mobileSearchInput.value = "";
           mobileSearchResults.classList.add("animate-pulse");
           mobileSearchResults.innerHTML = `
-            <div class="text-center py-10 text-neutral-400 text-[14px]">
+            <div class="text-center py-10 text-neutral-500 text-[14px]">
               <svg class="w-12 h-12 mx-auto mb-3 text-neutral-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <circle cx="11" cy="11" r="8" />
                 <path d="m21 21-4.35-4.35" stroke-linecap="round" />

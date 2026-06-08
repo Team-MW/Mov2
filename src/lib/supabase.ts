@@ -16,25 +16,19 @@ const url = import.meta.env.SUPABASE_URL;
 const anonKey = import.meta.env.SUPABASE_ANON_KEY;
 const serviceKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!url || !anonKey) {
-  throw new Error(
-    "Supabase: SUPABASE_URL ou SUPABASE_ANON_KEY manquant. " +
-      "Vérifie .env.local (dev) ou Vercel Environment Variables (prod)."
-  );
-}
-
-/**
- * Client public — lecture seule via RLS (policies "actif = true").
- */
-export const supabase: SupabaseClient = createClient(url, anonKey, {
-  auth: { persistSession: false },
-});
+export const supabase: SupabaseClient | null =
+  url && anonKey
+    ? createClient(url, anonKey, { auth: { persistSession: false } })
+    : (console.warn(
+        "[supabase] SUPABASE_URL/ANON_KEY missing — running in fallback mode (Content Collections / local JSON)."
+      ),
+      null);
 
 /**
  * Client admin — bypasse RLS, UNIQUEMENT côté serveur (pages /admin, API routes).
  * `null` si la SERVICE_ROLE_KEY n'est pas configurée (= phase bootstrap).
  */
-export const supabaseAdmin: SupabaseClient | null = serviceKey
+export const supabaseAdmin: SupabaseClient | null = serviceKey && url
   ? createClient(url, serviceKey, { auth: { persistSession: false } })
   : null;
 
@@ -56,7 +50,7 @@ export type RayonSlug =
   | "boulangerie"
   | "produits-laitiers";
 
-export type MagasinSlug = "tous" | "portet" | "toulouse-sud";
+export type MagasinSlug = "toulouse-sud";
 
 export interface PromoRow {
   id: string;

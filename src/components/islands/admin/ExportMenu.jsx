@@ -52,7 +52,7 @@ export default function ExportMenu({ rows, totalRows, kind = "produits" }) {
       <summary
         className={`list-none cursor-pointer px-4 py-2 rounded-full text-[13px] font-bold border-2 transition inline-flex items-center gap-1.5 ${
           empty
-            ? "bg-white border-black/10 text-neutral-400 cursor-not-allowed"
+            ? "bg-white border-black/10 text-neutral-500 cursor-not-allowed"
             : "bg-white border-black/10 hover:border-vert hover:text-vert"
         }`}
         title={empty ? "Aucune ligne à exporter" : `Exporter ${rows.length} ligne(s)`}
@@ -68,7 +68,7 @@ export default function ExportMenu({ rows, totalRows, kind = "produits" }) {
       </summary>
       {!empty && (
         <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-card border border-black/5 p-2 z-30">
-          <p className="px-3 pt-1 pb-2 text-[10px] uppercase font-bold tracking-wider text-neutral-400">
+          <p className="px-3 pt-1 pb-2 text-[]-neutral-600">
             {rows.length === totalRows
               ? `${rows.length} ligne(s)`
               : `${rows.length} sur ${totalRows} (filtrées)`}
@@ -79,7 +79,7 @@ export default function ExportMenu({ rows, totalRows, kind = "produits" }) {
             className="block w-full text-left px-3 py-2 rounded-lg text-[13px] hover:bg-white"
           >
             <span className="font-bold">CSV</span>
-            <span className="block text-[11px] text-neutral-500">Excel · Numbers · Sheets</span>
+            <span className="block text-[]-neutral-600">Excel · Numbers · Sheets</span>
           </button>
           <button
             type="button"
@@ -87,7 +87,7 @@ export default function ExportMenu({ rows, totalRows, kind = "produits" }) {
             className="block w-full text-left px-3 py-2 rounded-lg text-[13px] hover:bg-white"
           >
             <span className="font-bold">JSON</span>
-            <span className="block text-[11px] text-neutral-500">Réimportable tel quel</span>
+            <span className="block text-[]-neutral-600">Réimportable tel quel</span>
           </button>
         </div>
       )}

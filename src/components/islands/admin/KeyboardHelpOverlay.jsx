@@ -102,7 +102,7 @@ export default function KeyboardHelpOverlay() {
           </Section>
         </div>
 
-        <footer className="px-6 py-3 border-t border-black/5 bg-white/50 text-[11px] text-neutral-500 sticky bottom-0">
+        <footer className="px-6 py-3 border-t border-black/5 bg-white/50 text-[]-neutral-600 sticky bottom-0">
           Astuce : tapez <Kbd>?</Kbd> n'importe où (sauf dans un champ de texte) pour rouvrir cette aide.
         </footer>
       </div>
@@ -113,7 +113,7 @@ export default function KeyboardHelpOverlay() {
 function Section({ title, children }) {
   return (
     <section>
-      <h3 className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">
+      <h3 className="text-[]-neutral-600 uppercase tracking-wider mb-2">
         {title}
       </h3>
       <ul className="space-y-1.5">{children}</ul>
@@ -133,7 +133,7 @@ function Row({ keys, altKeys, label }) {
           </span>
         ))}
         {altKeys && (
-          <span className="ml-1 flex items-center gap-1 text-neutral-400">
+          <span className="ml-1 flex items-center gap-1 text-neutral-500">
             <span>·</span>
             {altKeys.map((k, i) => (
               <span key={i} className="flex items-center gap-1">
@@ -151,9 +151,7 @@ function Row({ keys, altKeys, label }) {
 function Kbd({ children, subtle }) {
   return (
     <kbd
-      className={`inline-block min-w-[1.5rem] text-center px-1.5 py-0.5 rounded text-[11px] font-bold font-mono border ${
-        subtle
-          ? "bg-neutral-50 border-neutral-200 text-neutral-500"
+      className={`inline-block min-w-[1.5rem] text-center px-1.5 py-0.5 rounded text-[]-neutral-600"
           : "bg-noir text-white border-noir"
       }`}
     >

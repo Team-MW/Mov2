@@ -697,7 +697,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
                   type="button"
                   onClick={() => setFilter({ q: "" })}
                   aria-label="Effacer la recherche"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full text-neutral-400 hover:bg-neutral-100 flex items-center justify-center"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full text-neutral-500 hover:bg-neutral-100 flex items-center justify-center"
                 >
                   <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                     <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
@@ -832,7 +832,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
         {/* Active filter chips */}
         {activeCount > 0 && (
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-400">
+            <span className="text-[]-neutral-600">
               Filtres actifs :
             </span>
             {filter.q && (
@@ -873,7 +873,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
             <button
               type="button"
               onClick={resetFilter}
-              className="text-[11px] font-bold text-neutral-500 hover:text-rouge transition underline underline-offset-2"
+              className="text-[]-neutral-600 hover:text-rouge transition underline underline-offset-2"
             >
               Tout réinitialiser
             </button>
@@ -956,7 +956,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
                   />
                   <h2 className="font-soft font-bold text-[16px]">{rayonNom(rayonSlug)}</h2>
                 </label>
-                <span className="text-[12px] text-neutral-500">{items.length} produit(s)</span>
+                <span className="text-[]-neutral-600">{items.length} produit(s)</span>
               </header>
               <ul className="divide-y divide-black/5">
                 {items.map((p, i) => {
@@ -989,7 +989,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
                             setDragId(null);
                             setDragOverId(null);
                           }}
-                          className="cursor-grab active:cursor-grabbing text-neutral-400 hover:text-noir select-none"
+                          className="cursor-grab active:cursor-grabbing text-neutral-500 hover:text-noir select-none"
                           title="Glisser pour déplacer (dans ce rayon)"
                           aria-hidden="true"
                         >
@@ -1008,7 +1008,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
                             onClick={() => moveRowInRayon(p.id, -1)}
                             disabled={i === 0}
                             aria-label="Monter d'un rang"
-                            className="w-4 h-4 text-neutral-400 hover:text-noir disabled:opacity-30 transition flex items-center justify-center"
+                            className="w-4 h-4 text-neutral-500 hover:text-noir disabled:opacity-30 transition flex items-center justify-center"
                           >
                             <svg className="w-3 h-3" viewBox="0 0 10 6" fill="currentColor"><path d="M5 0 10 6H0z" /></svg>
                           </button>
@@ -1017,7 +1017,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
                             onClick={() => moveRowInRayon(p.id, +1)}
                             disabled={i === items.length - 1}
                             aria-label="Descendre d'un rang"
-                            className="w-4 h-4 text-neutral-400 hover:text-noir disabled:opacity-30 transition flex items-center justify-center"
+                            className="w-4 h-4 text-neutral-500 hover:text-noir disabled:opacity-30 transition flex items-center justify-center"
                           >
                             <svg className="w-3 h-3" viewBox="0 0 10 6" fill="currentColor"><path d="M5 6 0 0h10z" /></svg>
                           </button>
@@ -1045,10 +1045,10 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
                           </span>
                         )}
                         {p.origine && (
-                          <span className="text-[11px] text-neutral-400">· {p.origine}</span>
+                          <span className="text-[]-neutral-600">· {p.origine}</span>
                         )}
                       </div>
-                      <p className="text-[12px] text-neutral-500 truncate">
+                      <p className="text-[]-neutral-600 truncate">
                         {p.slug}
                         {p.prix_indicatif != null && (
                           <span className="ml-2 text-neutral-600">
@@ -1061,10 +1061,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
                       <button
                         type="button"
                         onClick={() => toggleActif(p)}
-                        className={`px-2.5 md:px-3 py-1 rounded-full text-[12px] font-bold transition flex items-center justify-center min-w-[32px] md:min-w-0 ${
-                          p.actif
-                            ? "bg-vert/15 text-vert-dark hover:bg-vert/25"
-                            : "bg-neutral-200 text-neutral-500 hover:bg-neutral-300"
+                        className={`px-2.5 md:px-3 py-1 rounded-full text-[]-neutral-600 hover:bg-neutral-300"
                         }`}
                         title={p.actif ? "Produit actif (cliquer pour désactiver)" : "Produit inactif (cliquer pour activer)"}
                       >
@@ -1100,7 +1097,7 @@ export default function ProduitsManager({ initialProduits, rayonsOptions, scope 
                         type="button"
                         onClick={() => deleteProduit(p)}
                         aria-label="Supprimer"
-                        className="w-8 h-8 rounded-full text-neutral-400 hover:bg-rouge/10 hover:text-rouge transition flex items-center justify-center shrink-0"
+                        className="w-8 h-8 rounded-full text-neutral-500 hover:bg-rouge/10 hover:text-rouge transition flex items-center justify-center shrink-0"
                         title="Supprimer"
                       >
                         <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1463,7 +1460,7 @@ function EditModal({ produit, rayonsOptions, onCancel, onSave }) {
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-bold uppercase tracking-wider pointer-events-none">
                 {slugChecking ? (
-                  <span className="text-neutral-400">…</span>
+                  <span className="text-neutral-500">…</span>
                 ) : slugStatus === true ? (
                   <span className="text-vert">✓ libre</span>
                 ) : slugStatus === false ? (
@@ -1669,12 +1666,12 @@ function EditModal({ produit, rayonsOptions, onCancel, onSave }) {
 function Field({ label, hint, required, inline, children }) {
   return (
     <div className={inline ? "inline-flex items-center gap-2" : ""}>
-      <label className="block text-[12px] font-bold text-neutral-500 uppercase tracking-wider mb-1.5">
+      <label className="block text-[]-neutral-600 uppercase tracking-wider mb-1.5">
         {label}
         {required && <span className="text-rouge ml-1">*</span>}
       </label>
       {children}
-      {hint && <p className="mt-1 text-[11px] text-neutral-400 leading-snug">{hint}</p>}
+      {hint && <p className="mt-1 text-[]-neutral-600 leading-snug">{hint}</p>}
     </div>
   );
 }
@@ -1842,7 +1839,7 @@ function ImportModal({ currentProduits, onCancel, onImport }) {
         <div className="sticky top-0 bg-white border-b border-black/5 px-6 py-4 flex items-center justify-between z-10">
           <div>
             <h2 className="font-soft font-bold text-[20px]">Importer des produits</h2>
-            <p className="text-[12px] text-neutral-500 mt-0.5">
+            <p className="text-[]-neutral-600 mt-0.5">
               Coller du JSON ou CSV, ou charger un fichier. Format détecté automatiquement.
             </p>
           </div>
@@ -1897,7 +1894,7 @@ function ImportModal({ currentProduits, onCancel, onImport }) {
               <button
                 type="button"
                 onClick={() => onPaste("")}
-                className="text-[12px] text-neutral-500 hover:text-rouge transition"
+                className="text-[]-neutral-600 hover:text-rouge transition"
               >
                 Vider
               </button>
@@ -1922,13 +1919,13 @@ function ImportModal({ currentProduits, onCancel, onImport }) {
 
           {parsed && (
             <div className="bg-white border border-black/5 rounded-2xl overflow-hidden">
-              <div className="bg-white px-4 py-2 text-[12px] font-bold text-neutral-500 uppercase tracking-wider">
+              <div className="bg-white px-4 py-2 text-[]-neutral-600 uppercase tracking-wider">
                 Prévisualisation · {parsed.length} ligne(s)
               </div>
               <div className="max-h-64 overflow-y-auto">
                 <table className="w-full text-[12px]">
                   <thead className="bg-white sticky top-0">
-                    <tr className="text-left text-neutral-400">
+                    <tr className="text-left text-neutral-500">
                       <th className="px-3 py-2 font-bold">Action</th>
                       <th className="px-3 py-2 font-bold">Slug</th>
                       <th className="px-3 py-2 font-bold">Nom</th>
@@ -1956,7 +1953,7 @@ function ImportModal({ currentProduits, onCancel, onImport }) {
                         <td className="px-3 py-1.5 text-neutral-500">{p.rayon}</td>
                         <td className="px-3 py-1.5 text-neutral-500">
                           {p.categorie ?? "—"}
-                          {p.sous_categorie ? <span className="text-neutral-400"> / {p.sous_categorie}</span> : null}
+                          {p.sous_categorie ? <span className="text-neutral-500"> / {p.sous_categorie}</span> : null}
                         </td>
                         <td className="px-3 py-1.5 text-neutral-500">{p.origine ?? "—"}</td>
                       </tr>

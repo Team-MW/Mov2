@@ -16,7 +16,7 @@ familiale** transmise de génération en génération.
 C'est pourquoi nos acheteurs sillonnent depuis décembre les vergers du
 **Jourdain, de Tunisie, d'Iran et d'Algérie** pour sélectionner les
 meilleures variétés. Le résultat : un arrivage exceptionnel de **12 variétés
-de dattes fraîches**, disponibles dans nos deux magasins dès le **10 février
+de dattes fraîches**, disponibles dans notre magasin dès le **10 février
 2026**.
 
 ## Les 12 variétés en rayon
@@ -80,7 +80,7 @@ Le mois de Ramadan 2026 débute le **17 février** (susceptible de varier
 selon l'observation du croissant lunaire) et se termine vers le **18 mars
 2026**. L'Aïd-el-Fitr est prévu le **19 mars**.
 
-Nos magasins de Portet et Toulouse Sud sont ouverts aux horaires habituels
+Notre magasin de Toulouse Sud est ouvert aux horaires habituels
 pendant toute la durée du Ramadan, y compris le dimanche.
 
 **Saha ramdankoum — et bon iftar à toutes et tous.**

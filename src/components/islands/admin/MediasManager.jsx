@@ -294,7 +294,7 @@ export default function MediasManager({ initialFolder, initialFiles, folders }) 
       {/* Gallery */}
       <div className="mt-3">
         {!loading && files.length === 0 ? (
-          <div className="bg-white rounded-3xl shadow-card p-12 text-center text-neutral-400">
+          <div className="bg-white rounded-3xl shadow-card p-12 text-center text-neutral-500">
             <p className="font-bold text-[15px] text-neutral-600">Aucun fichier dans « {folder} »</p>
             <p className="mt-2 text-[13px]">Glissez-déposez ou cliquez sur « Choisir des fichiers » pour commencer.</p>
           </div>
@@ -316,7 +316,7 @@ export default function MediasManager({ initialFolder, initialFiles, folders }) 
                         className="absolute inset-0 w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center text-neutral-400">
+                      <div className="absolute inset-0 flex items-center justify-center text-neutral-500">
                         <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
@@ -375,7 +375,7 @@ export default function MediasManager({ initialFolder, initialFiles, folders }) 
                     <p className="font-bold text-[12px] text-noir truncate" title={f.name}>
                       {f.name}
                     </p>
-                    <p className="text-[11px] text-neutral-400 flex items-center justify-between gap-2">
+                    <p className="text-[]-neutral-600 flex items-center justify-between gap-2">
                       <span>{fmtSize(f.size)}</span>
                       <span>{fmtDate(f.updated_at ?? f.created_at)}</span>
                     </p>

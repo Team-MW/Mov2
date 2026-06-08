@@ -106,7 +106,9 @@ let isTrioBridgeMigrationApplied = true;
  */
 const MIGRATION_003_COLUMNS = ["slug", "origine", "publie_sur_site", "sync_v2_at"] as const;
 
-function handleBridgeError(err: any) {
+let hasLoggedFetchError = false;
+
+function handleBridgeError(err: any, context: string) {
   const msg = err?.message ?? "";
   const isMigrationMissing = MIGRATION_003_COLUMNS.some((col) =>
     msg.includes(`column articles.${col} does not exist`),
@@ -117,6 +119,14 @@ function handleBridgeError(err: any) {
       "Le pont d'inventaire est temporairement mis en sommeil. Voir Gestion_inventaire_marchedemo/supabase/migrations/003_trio_bridge.sql.",
     );
     isTrioBridgeMigrationApplied = false;
+  }
+}
+
+function handleFetchError(e: any, context: string) {
+  if (!hasLoggedFetchError) {
+    console.warn(`[inventaire-bridge] ${context} error :`, e?.message || e);
+    console.warn("[inventaire-bridge] Note: Subsequent fetch errors will be silenced to prevent log spam during build.");
+    hasLoggedFetchError = true;
   }
 }
 
@@ -158,21 +168,13 @@ export async function getArticlesPublies(): Promise<ProduitPublic[]> {
       .order("rayon", { ascending: true })
       .order("nom_produit", { ascending: true });
     if (error) {
-      handleBridgeError(error);
-      if (isTrioBridgeMigrationApplied) {
-        console.warn(
-          "[inventaire-bridge] getArticlesPublies error :",
-          error.message,
-        );
-      }
+      handleBridgeError(error, "getArticlesPublies");
+      if (isTrioBridgeMigrationApplied) handleFetchError(error, "getArticlesPublies");
       return [];
     }
     return ((data ?? []) as ArticleRow[]).map(articleToProduitPublic);
   } catch (e: any) {
-    console.warn(
-      "[inventaire-bridge] Supabase unreachable :",
-      e?.message || e,
-    );
+    handleFetchError(e, "getArticlesPublies (exception)");
     return [];
   }
 }
@@ -193,21 +195,13 @@ export async function getArticlesPubliesByRayon(
       .not("slug", "is", null)
       .order("nom_produit", { ascending: true });
     if (error) {
-      handleBridgeError(error);
-      if (isTrioBridgeMigrationApplied) {
-        console.warn(
-          "[inventaire-bridge] getArticlesPubliesByRayon error :",
-          error.message,
-        );
-      }
+      handleBridgeError(error, "getArticlesPubliesByRayon");
+      if (isTrioBridgeMigrationApplied) handleFetchError(error, "getArticlesPubliesByRayon");
       return [];
     }
     return ((data ?? []) as ArticleRow[]).map(articleToProduitPublic);
   } catch (e: any) {
-    console.warn(
-      "[inventaire-bridge] Supabase unreachable :",
-      e?.message || e,
-    );
+    handleFetchError(e, "getArticlesPubliesByRayon (exception)");
     return [];
   }
 }
@@ -229,22 +223,14 @@ export async function getArticleBySlug(
       .maybeSingle();
     if (error || !data) {
       if (error) {
-        handleBridgeError(error);
-        if (isTrioBridgeMigrationApplied) {
-          console.warn(
-            "[inventaire-bridge] getArticleBySlug error :",
-            error.message,
-          );
-        }
+        handleBridgeError(error, "getArticleBySlug");
+        if (isTrioBridgeMigrationApplied) handleFetchError(error, "getArticleBySlug");
       }
       return null;
     }
     return articleToProduitPublic(data as ArticleRow);
   } catch (e: any) {
-    console.warn(
-      "[inventaire-bridge] Supabase unreachable :",
-      e?.message || e,
-    );
+    handleFetchError(e, "getArticleBySlug (exception)");
     return null;
   }
 }
@@ -262,21 +248,13 @@ export async function getArticleSlugs(): Promise<string[]> {
       .select("slug")
       .not("slug", "is", null);
     if (error) {
-      handleBridgeError(error);
-      if (isTrioBridgeMigrationApplied) {
-        console.warn(
-          "[inventaire-bridge] getArticleSlugs error :",
-          error.message,
-        );
-      }
+      handleBridgeError(error, "getArticleSlugs");
+      if (isTrioBridgeMigrationApplied) handleFetchError(error, "getArticleSlugs");
       return [];
     }
     return ((data ?? []) as { slug: string }[]).map((r) => r.slug);
   } catch (e: any) {
-    console.warn(
-      "[inventaire-bridge] Supabase unreachable :",
-      e?.message || e,
-    );
+    handleFetchError(e, "getArticleSlugs (exception)");
     return [];
   }
 }

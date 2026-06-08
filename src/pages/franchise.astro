@@ -40,7 +40,7 @@ const ETAPES = [
   {
     num: "03",
     titre: "Formation & Recrutement",
-    desc: "Formation de 4 à 6 semaines en immersion dans nos magasins pilotes et accompagnement au recrutement de vos équipes (boucherie, primeurs, épicerie).",
+    desc: "Formation de 4 à 6 semaines en immersion dans notre magasin pilote et accompagnement au recrutement de vos équipes (boucherie, primeurs, épicerie).",
   },
   {
     num: "04",
@@ -93,7 +93,7 @@ const faqItems = [
           <span class="text-vert">Supermarché du Monde.</span>
         </h1>
         <p class="mt-6 text-[17px] md:text-[18px] text-neutral-600 leading-relaxed max-w-2xl">
-          Devenez acteur de la distribution spécialisée à forte valeur ajoutée. Rejoignez un réseau de commerçants indépendants engagés et profitez de notre savoir-faire de <strong>60 ans d'expérience</strong> dans l'importation de saveurs du monde.
+          Devenez acteur de la distribution spécialisée à forte valeur ajoutée. Rejoignez un réseau de commerçants indépendants engagés et profitez de notre savoir-faire de <strong>60 ans d'expérience familiale (3 générations)</strong> dans l'importation de saveurs du monde.
         </p>
         <div class="mt-8 flex flex-wrap gap-4">
           <a href="#franchise-form-section" class="btn btn-primary btn-sheen">
@@ -124,19 +124,19 @@ const faqItems = [
     <div class="container-mo grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
       <div>
         <div class="text-[44px] md:text-[56px] font-soft font-bold text-vert-light leading-none">1 200 m²</div>
-        <p class="mt-2 text-[13px] md:text-[14px] uppercase tracking-wider text-neutral-400 font-semibold">Surface moyenne</p>
+        <p class="mt-2 text-[13px] md:text-[14px] uppercase tracking-wider text-neutral-500 font-semibold">Surface moyenne</p>
       </div>
       <div>
         <div class="text-[44px] md:text-[56px] font-soft font-bold text-vert-light leading-none">20 000+</div>
-        <p class="mt-2 text-[13px] md:text-[14px] uppercase tracking-wider text-neutral-400 font-semibold">Références du monde</p>
+        <p class="mt-2 text-[13px] md:text-[14px] uppercase tracking-wider text-neutral-500 font-semibold">Références du monde</p>
       </div>
       <div>
         <div class="text-[44px] md:text-[56px] font-soft font-bold text-vert-light leading-none">60 ans</div>
-        <p class="mt-2 text-[13px] md:text-[14px] uppercase tracking-wider text-neutral-400 font-semibold">D'expérience commerciale</p>
+        <p class="mt-2 text-[13px] md:text-[14px] uppercase tracking-wider text-neutral-500 font-semibold">D'expérience familiale</p>
       </div>
       <div>
         <div class="text-[44px] md:text-[56px] font-soft font-bold text-vert-light leading-none">A à Z</div>
-        <p class="mt-2 text-[13px] md:text-[14px] uppercase tracking-wider text-neutral-400 font-semibold">Accompagnement complet</p>
+        <p class="mt-2 text-[13px] md:text-[14px] uppercase tracking-wider text-neutral-500 font-semibold">Accompagnement complet</p>
       </div>
     </div>
   </section>
@@ -329,22 +329,33 @@ const faqItems = [
 
       try {
         const formData = new FormData(form);
+        const nomComplet = String(formData.get("nom") || "").trim();
+        const tel = String(formData.get("tel") || "").trim();
+        const region = String(formData.get("region") || "").trim();
+        const apport = String(formData.get("apport") || "").trim();
+        const motivation = String(formData.get("message") || "").trim();
+
+        // Mappe sur le contrat partagé /api/contact (prenom, nom, email,
+        // sujet, message obligatoires). Les champs propres à la franchise
+        // sont repliés dans le message pour ne rien perdre.
         const payload = {
-          nom: formData.get("nom"),
+          prenom: "Candidature franchise",
+          nom: nomComplet,
           email: formData.get("email"),
-          tel: formData.get("tel"),
-          region: formData.get("region"),
-          apport: formData.get("apport"),
-          message: formData.get("message"),
-          type: "franchise"
+          sujet: `Franchise${region ? " — " + region : ""}`,
+          message: `Téléphone : ${tel}\nApport personnel : ${apport}\nRégion ciblée : ${region}\n\n${motivation}`,
+          type: "franchise",
         };
 
-        // Simule l'appel API ou utilise l'api contact du site
         const res = await fetch("/api/contact", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
-        }).catch(() => ({ ok: true })); // fallback if endpoint not deployed
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(data.error || "L'envoi a échoué. Réessayez ou contactez-nous directement.");
+        }
 
         if (window.showToast) {
           window.showToast("Candidature reçue avec succès ! Notre équipe reviendra vers vous sous 48h.", "success");
@@ -354,7 +365,7 @@ const faqItems = [
         form.reset();
       } catch (err) {
         if (window.showToast) {
-          window.showToast("Une erreur s'est produite lors de l'envoi de votre candidature.", "error");
+          window.showToast(err && err.message ? err.message : "Une erreur s'est produite lors de l'envoi de votre candidature.", "error");
         }
       } finally {
         if (button) {

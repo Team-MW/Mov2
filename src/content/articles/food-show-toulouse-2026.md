@@ -13,8 +13,7 @@ Du **15 au 17 avril 2026**, le Marché de Mo' tiendra un stand au
 gastronomie d'Occitanie, organisé au Parc des Expositions **MEETT**
 (Aussonne, à 25 min du centre-ville).
 
-C'est la **première fois** que nous participons à un salon de cette
-ampleur. Après avoir ouvert deux magasins en 18 mois, nous voulons
+ampleur. L'ouverture de notre magasin toulousain nous permet de
 faire rayonner notre modèle — **commerçant engagé, saveurs du monde,
 prix cassés** — auprès des professionnels de la restauration, des
 chefs, et du grand public.
@@ -40,9 +39,9 @@ suivez les **drapeaux verts Marché de Mo'** aux 4 angles.
 
 ### 1. Pour goûter
 
-Notre boucherie halal sur carcasse est inconnue en dehors de nos deux
-magasins. Le salon est **l'occasion de tester** nos produits sans
-faire le déplacement à Portet ou Toulouse Sud.
+Notre boucherie halal sur carcasse est inconnue en dehors de notre
+magasin. Le salon est **l'occasion de tester** nos produits sans
+faire le déplacement à Toulouse Sud.
 
 ### 2. Pour découvrir nos fournisseurs
 
@@ -68,4 +67,4 @@ le reste.
   (billetterie en ligne sur foodshow-toulouse.fr)
 
 Un flyer complet des démonstrations live est disponible **à l'accueil
-de nos deux magasins** à partir du 1er avril. À très vite au MEETT !
+de notre magasin** à partir du 1er avril. À très vite au MEETT !

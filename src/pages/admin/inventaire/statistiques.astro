@@ -107,7 +107,7 @@ import Layout from '../../../layouts/admin/InventaireLayout.astro';
       <!-- Top 10 par valeur — cliquable -->
       <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-4 md:p-5">
         <h2 class="text-sm font-semibold text-slate-900 mb-1">Top 10 articles par valeur de stock</h2>
-        <p class="text-xs text-slate-400 mb-3">Cliquez sur un article pour voir sa fiche détaillée.</p>
+        <p class="text-xs text-slate-600 mb-3">Cliquez sur un article pour voir sa fiche détaillée.</p>
         <div id="top-list" class="space-y-2">
           <!-- Skeleton rows shown until data is loaded; replaced by stats.js -->
           <div class="top-skel space-y-2">
@@ -137,7 +137,7 @@ import Layout from '../../../layouts/admin/InventaireLayout.astro';
             </div>
           </div>
         </div>
-        <div id="top-empty" class="hidden py-8 text-center text-sm text-slate-400">Aucun article en stock</div>
+        <div id="top-empty" class="hidden py-8 text-center text-sm text-slate-600">Aucun article en stock</div>
       </div>
 
       <!-- Status pie -->
@@ -160,7 +160,7 @@ import Layout from '../../../layouts/admin/InventaireLayout.astro';
     <div id="stat-article-backdrop" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
     <div class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl ring-1 ring-slate-200 overflow-hidden">
       <button id="stat-modal-close" type="button"
-        class="absolute top-3 right-3 inline-flex h-9 w-9 items-center justify-center rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700">
+        class="absolute top-3 right-3 inline-flex h-9 w-9 items-center justify-center rounded-lg hover:bg-slate-100 text-slate-600 hover:text-slate-700">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       </button>
       <div id="stat-modal-body" class="p-6"></div>

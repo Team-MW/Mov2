@@ -297,7 +297,7 @@ export default function AdminCatalogueTree({ tree = [], activePath = "", publicU
       <div className="px-4 py-3 border-b border-black/5 bg-white">
         <p className="font-soft font-bold text-[14px] text-noir">
           Catalogue
-          <span className="ml-2 text-[11px] font-normal text-neutral-500">
+          <span className="ml-2 text-[]-neutral-600">
             {totalProduits} produit(s) · {totalRayons} rayons
           </span>
         </p>
@@ -316,7 +316,7 @@ export default function AdminCatalogueTree({ tree = [], activePath = "", publicU
               type="button"
               onClick={() => setQuery("")}
               aria-label="Effacer la recherche"
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full text-neutral-400 hover:bg-neutral-100 flex items-center justify-center"
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full text-neutral-500 hover:bg-neutral-100 flex items-center justify-center"
             >
               <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
@@ -355,7 +355,7 @@ export default function AdminCatalogueTree({ tree = [], activePath = "", publicU
         className="py-1 max-h-[70vh] overflow-y-auto focus:outline-none"
       >
         {visibleTree.length === 0 ? (
-          <p className="px-4 py-6 text-[12px] text-neutral-400 italic">
+          <p className="px-4 py-6 text-[]-neutral-600 italic">
             Aucun nœud ne correspond à « {query} ».
           </p>
         ) : (
@@ -375,7 +375,7 @@ export default function AdminCatalogueTree({ tree = [], activePath = "", publicU
       </div>
 
       {/* Legend */}
-      <div className="px-4 py-2 border-t border-black/5 bg-white/50 flex items-center gap-3 text-[10px] text-neutral-500 flex-wrap">
+      <div className="px-4 py-2 border-t border-black/5 bg-white/50 flex items-center gap-3 text-[]-neutral-600 flex-wrap">
         <span className="inline-flex items-center gap-1">
           <span className="w-2 h-2 rounded-full bg-vert" />
           actifs
@@ -402,18 +402,14 @@ function TopLink({ href, label, active = false, muted = false, count, external =
     <a
       href={href}
       {...(external ? { target: "_blank", rel: "noopener" } : {})}
-      className={`px-2 py-1.5 rounded-lg text-[12px] font-bold transition flex items-center justify-between ${
-        active
-          ? "bg-noir text-white"
-          : muted
-          ? "text-neutral-500 hover:bg-neutral-100"
+      className={`px-2 py-1.5 rounded-lg text-[]-neutral-600 hover:bg-neutral-100"
           : "text-noir hover:bg-white"
       }`}
       aria-current={active ? "page" : undefined}
     >
       <span>{label}</span>
       {count != null && (
-        <span className={`text-[10px] ${active ? "text-white/70" : "text-neutral-400"}`}>
+        <span className={`text-[]-neutral-600"}`}>
           {count}
         </span>
       )}
@@ -563,8 +559,7 @@ function Row({
             onToggle?.();
           }}
           aria-label={expanded ? "Replier" : "Déplier"}
-          className={`w-5 h-5 shrink-0 rounded flex items-center justify-center text-[10px] ${
-            isActive ? "text-white/80 hover:bg-white/10" : "text-neutral-400 hover:bg-black/5"
+          className={`w-5 h-5 shrink-0 rounded flex items-center justify-center text-[]-neutral-600 hover:bg-black/5"
           }`}
         >
           <svg
@@ -631,7 +626,7 @@ function Row({
               isActive
                 ? "bg-white/20 text-white"
                 : counts.total === 0
-                ? "bg-neutral-100 text-neutral-400"
+                ? "bg-neutral-100 text-neutral-500"
                 : "bg-vert/15 text-vert-dark"
             }`}
             title={

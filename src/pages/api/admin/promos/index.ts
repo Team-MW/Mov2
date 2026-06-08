@@ -35,7 +35,7 @@ const ALLOWED_RAYONS: readonly RayonSlug[] = [
   "boulangerie",
   "produits-laitiers",
 ];
-const ALLOWED_MAGASINS: readonly MagasinSlug[] = ["tous", "portet", "toulouse-sud"];
+const ALLOWED_MAGASINS: readonly MagasinSlug[] = ["toulouse-sud"];
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {

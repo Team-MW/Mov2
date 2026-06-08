@@ -25,7 +25,7 @@ export interface PromoData {
   prix_promo: number;
   reduction_pct: number;
   rayon: string;
-  magasin: "tous" | "portet" | "toulouse-sud";
+  magasin: "toulouse-sud";
   date_debut: string;
   date_fin: string;
   mise_en_avant: boolean;
@@ -70,6 +70,7 @@ function rowToEntry(row: any): PromoEntry {
 }
 
 async function fromSupabase(): Promise<PromoEntry[] | null> {
+  if (!supabase) return null;
   try {
     const { data, error } = await supabase
       .from("promos")
@@ -104,7 +105,7 @@ async function fromContentCollection(): Promise<PromoEntry[]> {
         image: p.data.image,
         prix_original: Number(p.data.prix_original),
         prix_promo: Number(p.data.prix_promo),
-        reduction_pct: p.data.reduction_pct,
+        reduction_pct: Number(p.data.reduction_pct),
         rayon: p.data.rayon,
         magasin: p.data.magasin,
         date_debut: p.data.date_debut,
@@ -124,8 +125,9 @@ async function fromContentCollection(): Promise<PromoEntry[]> {
  * then by date_fin). Tries Supabase, falls back to Content Collection.
  */
 export async function getActivePromos(): Promise<PromoEntry[]> {
+  if (!supabase) return fromContentCollection();
   const supa = await fromSupabase();
-  if (supa && supa.length > 0) return supa;
+  if (supa !== null) return supa;
   return fromContentCollection();
 }
 
