@@ -111,8 +111,9 @@ these decisions disagree, **follow the decision.**
 | F-17 | In-memory rate limit | P2 | 📌 NOTED | `05-services-apis.md` |
 | F-18 | No analytics active | P1 | ⬜ TODO | `03-analytics-privacy.md` |
 | F-19 | Cookie policy inaccurate | P1 | ⬜ TODO | `03-analytics-privacy.md` |
-| F-21 | Themed buttons illegible | P2 | ⬜ TODO | `02-contrast-accessibility.md` |
-| F-22 | Footer fine print | P3 | ⬜ TODO | `02-contrast-accessibility.md` |
+| F-20 | Low-contrast caption text | P1 | ✅ DONE | `02-contrast-accessibility.md` |
+| F-21 | Themed buttons illegible | P2 | ✅ DONE | `02-contrast-accessibility.md` |
+| F-22 | Footer fine print | P3 | ✅ DONE | `02-contrast-accessibility.md` |
 | F-23 | Single-option store dropdowns | P3 | ⬜ TODO | `01-store-purge.md` |
 | F-24 | Dead anchor `#livraison` | P2 | ✅ DONE | `06-seo-webflow.md` |
 | F-25 | Simulator double-run | P2 | ⏸️ PARKED (D7) | `06-seo-webflow.md` |
