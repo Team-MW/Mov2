@@ -405,7 +405,7 @@ const heroSources = loopSlides.map((s) =>
     cursor: grab;
     user-select: none;
     -webkit-user-select: none;
-    padding: 0 15vw;
+    padding: 0 19vw;
     gap: 20px;
   }
   @media (max-width: 768px) {
@@ -1020,7 +1020,10 @@ const heroSources = loopSlides.map((s) =>
           return;
         }
 
+        let scrollEndFired = false;
         const onScrollEnd = () => {
+          if (scrollEndFired) return;
+          scrollEndFired = true;
           isUserScrolling = false;
           markActive(clamped);
           wrapLoopIfNeeded();
@@ -1028,12 +1031,9 @@ const heroSources = loopSlides.map((s) =>
         };
         if ("onscrollend" in track) {
           track.addEventListener("scrollend", onScrollEnd, { once: true });
+          setTimeout(onScrollEnd, 500); // Safety net in case scrollend doesn't fire
         } else {
-          setTimeout(() => {
-            isUserScrolling = false;
-            markActive(clamped);
-            wrapLoopIfNeeded();
-          }, 320);
+          setTimeout(onScrollEnd, 320);
         }
       };
 
