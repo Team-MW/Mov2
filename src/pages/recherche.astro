@@ -15,7 +15,6 @@
  */
 import Layout from "@layouts/Layout.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import { RAYONS_LIST, RAYONS, SITE } from "@/lib/site";
 import { getAllProduits } from "@/lib/produits-repo";
 import { getCollection } from "astro:content";
@@ -236,7 +235,6 @@ const quickSuggestions = [
     </div>
   </section>
 
-  <NewsletterInline />
 </Layout>
 
 <script

@@ -2,7 +2,6 @@
 import Layout from "@layouts/Layout.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
 import RecetteCard from "@components/RecetteCard.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import { getAllRecettes } from "@/lib/recettes";
 import { getCollection } from "astro:content";
 import { RAYONS, SITE } from "@/lib/site";
@@ -197,7 +196,6 @@ const bc = breadcrumbSchema([{ name: "Recettes", url: "/recettes" }]);
     </div>
   </section>
 
-  <NewsletterInline />
 </Layout>
 
 <script>

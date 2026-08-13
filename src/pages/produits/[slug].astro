@@ -13,7 +13,6 @@
 import Layout from "@layouts/Layout.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
 import ProduitCard from "@components/ProduitCard.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import { RAYONS, MAGASINS, SITE } from "@/lib/site";
 import type { RayonSlug } from "@/lib/site";
 import {
@@ -288,5 +287,4 @@ const tagline = produit.description?.trim() || rayon?.tagline || "";
     </section>
   )}
 
-  <NewsletterInline />
 </Layout>

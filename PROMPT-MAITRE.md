@@ -16,7 +16,7 @@ Source of truth:
 - Nom : MARCHÉ DE MO'
 - SIREN 924 841 471 · SIRET 924 841 471 00012 · RCS Toulouse
 - Siège social : 6 Place Wilson, 31000 Toulouse
-- Dirigeant : Samir Ouaddaha
+- Dirigeant : Le fondateur
 - Tel : 05 82 95 82 52
 - Email : contact@marchedemo.com
 

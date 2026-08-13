@@ -2,7 +2,6 @@
 import Layout from "@layouts/Layout.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
 import FAQAccordion from "@components/FAQAccordion.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema } from "@/lib/schema";
 
@@ -225,7 +224,7 @@ const faqItems = [
                 name="nom"
                 required
                 class="w-full rounded-xl border border-black/10 bg-blanc px-4 py-3.5 text-[15px] focus:outline-none focus:ring-2 focus:ring-vert/30 focus:border-vert transition-all"
-                placeholder="Ex. Samir Ouaddaha"
+                placeholder="Ex. Jean Dupont"
               />
             </div>
             <div>
@@ -311,7 +310,6 @@ const faqItems = [
   </section>
 
   <FAQAccordion items={faqItems} title="FAQ — Devenir Franchisé" />
-  <NewsletterInline />
 </Layout>
 
 <script is:inline>

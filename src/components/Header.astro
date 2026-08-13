@@ -40,19 +40,19 @@ const BUTTON_COLORS: Record<string, string> = {
   "produits-laitiers": "#2563EB",   // Bleu roi
 };
 
-const TWEMOJI_IDS: Record<string, string> = {
-  "boucherie-halal": "1f969",
-  "fruits-legumes": "1f349",
-  "epices-du-monde": "1f336",
-  "saveurs-afrique": "1f30d",
-  "saveurs-asie": "1f35c",
-  "saveur-mediterranee": "1fad2",
-  "saveurs-sud-amer": "1f33d",
-  "balkans-turques": "1f9c0",
-  "produits-courants": "1f6d2",
-  "surgeles": "2744",
-  "boulangerie": "1f956",
-  "produits-laitiers": "1f95b",
+const NATIVE_EMOJIS: Record<string, string> = {
+  "boucherie-halal": "🥩",
+  "fruits-legumes": "🥬",
+  "epices-du-monde": "🌶️",
+  "saveurs-afrique": "🌍",
+  "saveurs-asie": "🍜",
+  "saveur-mediterranee": "🫒",
+  "saveurs-sud-amer": "🌽",
+  "balkans-turques": "🧀",
+  "produits-courants": "🥗",
+  "surgeles": "❄️",
+  "boulangerie": "🥖",
+  "produits-laitiers": "🥛",
 };
 ---
 
@@ -61,20 +61,19 @@ const TWEMOJI_IDS: Record<string, string> = {
   class={`sticky lg:fixed top-0 left-0 z-[60] w-full border-b border-black/5 bg-white/95 backdrop-blur-sm transition-[box-shadow] duration-200 ${!isHome ? "is-header-scrolled header-scrolled" : ""}`}
 >
   <!-- 0. Row 0: Top bar discrete (Desktop only, slides up on scroll) -->
-  <div id="header-top-bar" class="header-top-bar border-b border-black/5 bg-white overflow-hidden hidden lg:block">
-    <div class="container-mo flex items-center justify-between py-2 text-[]-neutral-600 font-pro">
-      <span class="flex items-center gap-2">
-        Bienvenue chez <strong class="text-neutral-900 font-bold">Marché de Mo'</strong>
-        · Le plus grand supermarché ethnique d'Occitanie
+  <div id="header-top-bar" class="header-top-bar border-b border-black/5 bg-vert text-white overflow-hidden hidden lg:block">
+    <div class="container-mo flex items-center justify-between py-1.5 text-xs font-pro">
+      <span class="flex items-center gap-1.5 text-white/90">
+        Bienvenue chez <strong class="text-white font-bold">Marché de Mo'</strong>
       </span>
       <nav class="flex items-center gap-5">
-        <a href="/recettes" class="hover:text-vert font-bold text-neutral-600 transition-colors">Recettes</a>
-        <a href="/actualites" class="hover:text-vert font-bold text-neutral-600 transition-colors">Actualités</a>
-        <a href="/recrutement" class="hover:text-vert font-bold text-neutral-600 transition-colors">Recrutement</a>
-        <a href="/programme-fidelite" class="hover:text-vert font-bold text-neutral-600 transition-colors">Fidélité</a>
-        <span class="h-3 w-px bg-neutral-200"></span>
-        <a href="/notre-enseigne" class="hover:text-vert transition-colors">À propos</a>
-        <a href="/service-client" class="hover:text-vert transition-colors">Service client</a>
+        <a href="/recettes" class="text-white/90 hover:text-white font-bold transition-colors">Recettes</a>
+        <a href="/actualites" class="text-white/90 hover:text-white font-bold transition-colors">Actualités</a>
+        <a href="/recrutement" class="text-white/90 hover:text-white font-bold transition-colors">Recrutement</a>
+        <a href="/programme-fidelite" class="text-white/90 hover:text-white font-bold transition-colors">Fidélité</a>
+        <span class="h-3 w-px bg-white/30"></span>
+        <a href="/notre-enseigne" class="text-white/90 hover:text-white transition-colors">À propos</a>
+        <a href="/service-client" class="text-white/90 hover:text-white transition-colors">Service client</a>
       </nav>
     </div>
   </div>
@@ -149,7 +148,7 @@ const TWEMOJI_IDS: Record<string, string> = {
           href="/promos"
           class="inline-flex items-center hover:opacity-90 transition relative z-20 my-[-20px]"
         >
-          <img src="/promos/promo_button-removebg-preview.png" alt="Promos" class="h-16 md:h-28 w-auto object-contain hover:scale-105 transition-transform duration-200" />
+          <img src="/promos/codepromo.jpeg" alt="Promos" class="h-8 md:h-12 w-auto object-contain hover:scale-105 transition-transform duration-200 mix-blend-multiply" />
         </a>
         <a
           href="/magasins/toulouse-sud"
@@ -197,9 +196,9 @@ const TWEMOJI_IDS: Record<string, string> = {
         aria-label="Voir les promos"
       >
         <img
-          src="/promos/promo_button-removebg-preview.png"
+          src="/promos/codepromo.jpeg"
           alt="Promos"
-          class="h-14 w-auto object-contain"
+          class="h-7 w-auto object-contain mix-blend-multiply"
         />
       </a>
     </div>
@@ -250,23 +249,7 @@ const TWEMOJI_IDS: Record<string, string> = {
     </div>
   </div>
 
-  <!-- 2. Row 2: Large Centered Logo with wave background (Desktop only) -->
-  <div 
-    id="header-logo-row" 
-    class="header-logo-row w-full flex flex-col items-center overflow-hidden hidden lg:flex"
-    style="background: radial-gradient(circle at center, rgba(46, 139, 74, 0.05) 0%, rgba(255, 255, 255, 0) 80%), url('data:image/svg+xml,%3Csvg width=\'120\' height=\'24\' viewBox=\'0 0 120 24\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 12 Q 30 0, 60 12 T 120 12\' fill=\'none\' stroke=\'%231c6b35\' stroke-width=\'1.5\' stroke-opacity=\'0.04\'/%3E%3C/svg%3E') repeat;"
-  >
-    <a href="/" class="group flex flex-col items-center py-1">
-      <img
-        src="/logos/logo-marchedemo-rond-contourgreen.png"
-        alt="Marché de Mo'"
-        width="120"
-        height="120"
-        fetchpriority="high"
-        class="w-24 h-24 lg:w-30 lg:h-30 object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300 bg-white rounded-full shadow-sm p-0.5"
-      />
-    </a>
-  </div>
+
 
   <!-- 3. Row 3: Category Buttons & Auxiliary Links (Sticky below Row 1) -->
   <div id="header-categories-row" class="border-t border-black/5 bg-neutral-50/80 py-1 relative z-10">
@@ -278,7 +261,7 @@ const TWEMOJI_IDS: Record<string, string> = {
       >
         {RAYONS_LIST.slice(0, 6).map((r) => {
           const bgCol = BUTTON_COLORS[r.slug] || BUTTON_COLORS["fruits-legumes"];
-          const twemojiId = TWEMOJI_IDS[r.slug];
+          const emoji = NATIVE_EMOJIS[r.slug];
           return (
             <a
               href={`/rayons/${r.slug}`}
@@ -286,13 +269,10 @@ const TWEMOJI_IDS: Record<string, string> = {
               style={`background-color: ${bgCol}; box-shadow: 0 4px 10px ${bgCol}25;`}
             >
               <span class="inline-flex items-center gap-2.5 whitespace-nowrap">
-                {twemojiId && (
-                  <img
-                    src={`https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/${twemojiId}.png`}
-                    alt=""
-                    class="w-[20px] h-[20px] object-contain shrink-0"
-                    loading="lazy"
-                  />
+                {emoji && (
+                  <span class="text-[17px] leading-none shrink-0" style="font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;">
+                    {emoji}
+                  </span>
                 )}
                 {r.nomCourt}
               </span>
@@ -357,7 +337,10 @@ const TWEMOJI_IDS: Record<string, string> = {
         </div>
       </details>
 
-      <a href="/promos" class="block py-2.5 border-b border-black/5 text-rouge font-bold">Promos</a>
+      <a href="/promos" class="py-2.5 border-b border-black/5 text-rouge font-bold flex items-center gap-3">
+        <img src="/promos/codepromo.jpeg" alt="Promos" class="h-6 w-auto object-contain mix-blend-multiply" />
+        Promos
+      </a>
       <a href="/magasins/toulouse-sud" class="block py-2.5 border-b border-black/5">Magasin (Toulouse Sud)</a>
       <a href="/recettes" class="block py-2.5 border-b border-black/5">Recettes</a>
       <a href="/recrutement" class="block py-2.5 border-b border-black/5">Recrutement</a>
@@ -500,14 +483,12 @@ const TWEMOJI_IDS: Record<string, string> = {
   }
 
   /* Desktop header — expanded vs compact (instant switch, no in-between tweak) */
-  #header-top-bar,
-  #header-logo-row {
+  #header-top-bar {
     max-height: 9rem;
     opacity: 1;
     overflow: hidden;
   }
-  #site-header.is-header-scrolled #header-top-bar,
-  #site-header.is-header-scrolled #header-logo-row {
+  #site-header.is-header-scrolled #header-top-bar {
     max-height: 0;
     opacity: 0;
     padding-top: 0;

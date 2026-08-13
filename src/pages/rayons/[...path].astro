@@ -20,8 +20,8 @@ import Breadcrumb from "@components/Breadcrumb.astro";
 import PromoCard from "@components/PromoCard.astro";
 import RecetteCard from "@components/RecetteCard.astro";
 import FAQAccordion from "@components/FAQAccordion.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import LocalVideoPlayer from "@components/islands/LocalVideoPlayer.jsx";
+import BoucherieHalalSeo from "@components/BoucherieHalalSeo.astro";
 import { getCollection } from "astro:content";
 import { RAYONS, RAYONS_LIST, SITE, type RayonSlug } from "@/lib/site";
 import { faqsForRayon } from "@/lib/faqs";
@@ -1128,9 +1128,12 @@ const pageDesc = (() => {
     </section>
   )}
 
+  {level === 1 && rayonSlug === "boucherie-halal" && (
+    <BoucherieHalalSeo />
+  )}
+
   {level === 1 && (
     <>
-      <NewsletterInline />
       <FAQAccordion items={faqItems} title={`FAQ — ${rayon.nomCourt}`} />
     </>
   )}

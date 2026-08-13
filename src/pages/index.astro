@@ -8,7 +8,6 @@ import ProduitCard from "@components/ProduitCard.astro";
 import RecetteCard from "@components/RecetteCard.astro";
 import Stats from "@components/Stats.astro";
 import FAQAccordion from "@components/FAQAccordion.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import FeedbackPopup from "@components/FeedbackPopup.astro";
 import LocalVideoPlayer from "@components/islands/LocalVideoPlayer.jsx";
 import PromoCarousel from "@components/PromoCarousel.astro";
@@ -84,6 +83,11 @@ const schemas = [
   schema={schemas}
   heroImage="/images/rayons/epices-du-monde/marche-aux-epices-dubai.jpg"
 >
+  {/* Big Logo signature area (Moved from header for better scrolling UX) */}
+  <div class="w-full flex flex-col items-center justify-center overflow-hidden border-b border-black/5 bg-white py-1">
+    <img src="/logos/bacgroundS1ZH.jpeg" alt="Marché de Mo" class="w-full max-w-[700px] object-contain" />
+  </div>
+
   {/* ====================== 1 · PROMO HERO (banner carousel full-width) ====================== */}
   {/* Full-width hero-style carousel : featured promos + editorial slides.
       One slide visible at a time with auto-advance, drag, dots. */}
@@ -98,6 +102,7 @@ const schemas = [
     <section class="relative overflow-hidden bg-rouge text-white animate-fade-up">
       <div class="container-mo py-4 md:py-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] md:text-[14px] font-pro">
         <span class="inline-flex items-center gap-2 font-bold">
+          <img src="/promos/codepromo.jpeg" alt="Promo" class="h-6 w-auto object-contain mix-blend-screen" />
           <span class="badge-promo !bg-white !text-rouge !shadow-none !min-w-0 !h-auto !px-2 !py-0.5 !text-[12px]">
             -{featuredPromo.data.reduction_pct}%
           </span>
@@ -413,12 +418,11 @@ const schemas = [
           </div>
         </div>
 
-        <!-- Sticker logo rouge en surcouche (effet autocollant adouci) -->
         <img
-          src="/logos/logo-marchedemo-FDROUGE.png"
+          src="/logos/logo-marchedemo-rond-contourgreen.png"
           alt=""
           aria-hidden="true"
-          class="absolute top-2 right-2 sm:right-4 lg:right-0 w-20 sm:w-24 md:w-28 drop-shadow-2xl rotate-[8deg] z-10 pointer-events-none rounded-[22px] border-[4px] border-white bg-white shadow-[0_12px_24px_rgba(0,0,0,0.18)]"
+          class="absolute top-2 right-2 sm:right-4 lg:right-0 w-20 sm:w-24 md:w-28 drop-shadow-2xl rotate-[8deg] z-10 pointer-events-none rounded-full bg-white shadow-[0_12px_24px_rgba(0,0,0,0.18)]"
         />
         <!-- Floating badge "Disponible sur téléphone" -->
         <div class="absolute left-1 sm:-left-2 md:-left-6 bottom-12 bg-white rounded-2xl shadow-2xl p-3 md:p-4 flex items-center gap-3 max-w-[200px] sm:max-w-[240px] z-10">
@@ -461,21 +465,6 @@ const schemas = [
     </div>
   </section>
 
-  {/* Big Logo signature area */}
-  <div
-    class="w-full flex flex-col items-center overflow-hidden border-t border-b border-black/5 py-8"
-    style="background: radial-gradient(circle at center, rgba(46, 139, 74, 0.05) 0%, rgba(255, 255, 255, 0) 80%), url('data:image/svg+xml,%3Csvg width=\'120\' height=\'24\' viewBox=\'0 0 120 24\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 12 Q 30 0, 60 12 T 120 12\' fill=\'none\' stroke=\'%231c6b35\' stroke-width=\'1.5\' stroke-opacity=\'0.04\'/%3E%3C/svg%3E') repeat;"
-  >
-    <div class="group relative block shrink-0">
-      <img
-        src="/logos/logo-marchedemo-rond-contourgreen.png"
-        alt="Marché de Mo'"
-        width="110"
-        height="110"
-        class="w-24 h-24 lg:w-28 lg:h-28 object-contain filter drop-shadow-md hover:scale-105 transition-transform duration-300 bg-white rounded-full shadow-sm p-0.5"
-      />
-    </div>
-  </div>
 
   {/* ====================== KINETIC MARQUEE — chapter break signature ======================
       Typographie display massive qui défile. Casse le rythme visuel après
@@ -566,7 +555,7 @@ const schemas = [
         <div class="mt-6 space-y-4 text-white/75 text-[16px] leading-relaxed max-w-2xl">
           <p>
             Le patriarche. Le père de cette famille de commerçants passionnés
-            dont est issu <strong class="text-white">Samir Ouaddaha</strong>,
+            dont est issu <strong class="text-white">le fondateur</strong>,
             fondateur du Marché de Mo'.
           </p>
           <p>
@@ -657,20 +646,8 @@ const schemas = [
   </section>
 
   {/* Intermediate Logo signature area between Engagements and Videos */}
-  <div
-    class="w-full flex flex-col items-center overflow-hidden border-t border-b border-black/5 py-8"
-    style="background: radial-gradient(circle at center, rgba(46, 139, 74, 0.05) 0%, rgba(255, 255, 255, 0) 80%), url('data:image/svg+xml,%3Csvg width='120' height='24' viewBox='0 0 120 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 12 Q 30 0, 60 12 T 120 12' fill='none' stroke='%231c6b35' stroke-width='1.5' stroke-opacity='0.03'/%3E%3C/svg%3E') repeat;"
-  >
-    <div class="group relative block shrink-0">
-      <img
-        src="/logos/logo-marchedemo-rond-contourgreen.png"
-        alt="Signature Marché de Mo'"
-        width="110"
-        height="110"
-        loading="lazy"
-        class="w-24 h-24 lg:w-28 lg:h-28 object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300 bg-white rounded-full p-0.5 shadow-sm"
-      />
-    </div>
+  <div class="w-full flex flex-col items-center justify-center overflow-hidden border-t border-b border-black/5 py-0 lg:py-2 bg-white">
+    <img src="/logos/bacgroundS1ZH.jpeg" alt="Marché de Mo" class="w-full max-w-[1200px] object-contain" loading="lazy" />
   </div>
 
   {/* ====================== VIDEOS TIKTOK — social proof ====================== */}
@@ -793,125 +770,6 @@ const schemas = [
     </div>
   </section>
 
-  {/* ====================== NEWSLETTER ====================== */}
-  <NewsletterInline variant="dark" />
-
-  {/* ====================== SUGGESTIONS FORM ====================== */}
-  <section id="suggestions" class="section bg-white scroll-mt-24">
-    <div class="container-mo">
-      <div class="relative overflow-hidden rounded-3xl p-8 md:p-12 bg-neutral-50 border border-black/5">
-        <!-- Decorative Mo' watermark -->
-        <img
-          src="/logos/favicon-marchedemo.png"
-          alt=""
-          aria-hidden="true"
-          class="absolute -right-12 -bottom-12 w-64 opacity-[0.02] pointer-events-none"
-        />
-
-        <div class="relative z-10 grid lg:grid-cols-[1fr_1.2fr] gap-8 lg:gap-16 items-start">
-          <div>
-            <span class="eyebrow !text-vert">Votre avis compte</span>
-            <h2 class="display-lg mt-4 text-balance">
-              Des conseils ?<br/>Nous sommes à l'écoute.
-            </h2>
-            <p class="mt-4 text-[15px] leading-relaxed text-neutral-600">
-              Une remarque sur la propreté, un produit introuvable ou une idée d'amélioration ? Partagez vos retours directement avec notre équipe pour nous aider à nous améliorer.
-            </p>
-          </div>
-
-          <form
-            id="suggestion-form-el"
-            class="space-y-4"
-          >
-            <!-- Honeypot anti-spam -->
-            <input type="text" name="phone_confirm" class="hidden" tabindex="-1" autocomplete="off" style="display: none !important" />
-            
-            <div class="grid grid-cols-1 gap-4">
-              <div>
-                <label class="sr-only" for="suggestion-email">Votre adresse email</label>
-                <input
-                  id="suggestion-email"
-                  type="email"
-                  name="email"
-                  required
-                  placeholder="votre@email.com"
-                  class="w-full rounded-2xl px-5 py-3.5 font-pro text-[14.5px] border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-vert/30 transition bg-white text-noir"
-                />
-              </div>
-
-              <div>
-                <label class="sr-only" for="suggestion-message">Votre suggestion / message</label>
-                <textarea
-                  id="suggestion-message"
-                  name="message"
-                  required
-                  rows="4"
-                  placeholder="Votre suggestion ou remarque..."
-                  class="w-full rounded-2xl px-5 py-3.5 font-pro text-[14.5px] border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-vert/30 transition bg-white text-noir resize-none"
-                ></textarea>
-              </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary w-full sm:w-auto font-bold justify-center gap-2">
-              Envoyer ma suggestion
-              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <script is:inline>
-    document.addEventListener("astro:page-load", () => {
-      const form = document.getElementById("suggestion-form-el");
-      if (!form) return;
-
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const button = form.querySelector("button[type='submit']");
-        if (button) button.disabled = true;
-
-        try {
-          const formData = new FormData(form);
-          const email = formData.get("email");
-          const message = formData.get("message");
-          const phone_confirm = formData.get("phone_confirm");
-
-          const res = await fetch("/api/contact", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              prenom: "Visiteur",
-              nom: "Anonyme",
-              sujet: "Suggestion Page d'Accueil",
-              email,
-              message,
-              phone_confirm
-            }),
-          });
-
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok) {
-            throw new Error(data.error || "Une erreur est survenue.");
-          }
-
-          if (window.showToast) {
-            window.showToast("Merci pour votre suggestion ! Nous allons l'étudier attentivement.", "success");
-          }
-          form.reset();
-        } catch (err) {
-          if (window.showToast) {
-            window.showToast(err.message, "error");
-          }
-        } finally {
-          if (button) button.disabled = false;
-        }
-      });
-    });
-  </script>
 
   {/* ====================== FAQ ====================== */}
   <FAQAccordion items={FAQ_HOME} />

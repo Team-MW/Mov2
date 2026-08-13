@@ -1,7 +1,6 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import RecetteCard from "@components/RecetteCard.astro";
 import { getCollection } from "astro:content";
 import { RAYONS, SITE } from "@/lib/site";
@@ -263,7 +262,6 @@ const tempsLabel =
     )}
   </article>
 
-  <NewsletterInline />
 </Layout>
 
 <style>

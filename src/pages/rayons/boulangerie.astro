@@ -14,7 +14,6 @@
 import Layout from "@layouts/Layout.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
 import FAQAccordion from "@components/FAQAccordion.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema } from "@/lib/schema";
 
@@ -173,6 +172,5 @@ const faqItems = [
     </div>
   </section>
 
-  <NewsletterInline />
   <FAQAccordion items={faqItems} title="FAQ — Boulangerie" />
 </Layout>

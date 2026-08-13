@@ -3,7 +3,6 @@ import Layout from "@layouts/Layout.astro";
 import RayonCard from "@components/RayonCard.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
 import FAQAccordion from "@components/FAQAccordion.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import { RAYONS_LIST, SITE } from "@/lib/site";
 import { FAQ_RAYONS_GENERAL } from "@/lib/faqs";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -123,6 +122,5 @@ const bc = breadcrumbSchema([{ name: "Nos rayons", url: "/rayons" }]);
     </div>
   </section>
 
-  <NewsletterInline />
   <FAQAccordion items={FAQ_RAYONS_GENERAL} />
 </Layout>

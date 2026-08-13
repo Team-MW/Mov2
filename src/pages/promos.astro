@@ -5,7 +5,6 @@ import Layout from "@layouts/Layout.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
 import PromoCard from "@components/PromoCard.astro";
 import FAQAccordion from "@components/FAQAccordion.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import { RAYONS_LIST, SITE } from "@/lib/site";
 import { FAQ_HOME } from "@/lib/faqs";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -34,9 +33,12 @@ const bc = breadcrumbSchema([{ name: "Promos de la semaine", url: "/promos" }]);
   <section class="bg-rouge text-white pb-10 relative overflow-hidden">
     <div class="container-mo py-12 relative z-10">
       <span class="eyebrow !text-white/80">Promos de la semaine</span>
-      <h1 class="display-xl mt-4 text-balance max-w-4xl !text-white" data-split-reveal>
-        <span class="text-white/90">Jusqu'à</span> -40<span class="opacity-80">%</span>
-      </h1>
+      <div class="flex items-center gap-4">
+        <h1 class="display-xl mt-4 text-balance max-w-4xl !text-white" data-split-reveal>
+          <span class="text-white/90">Jusqu'à</span> -40<span class="opacity-80">%</span>
+        </h1>
+        <img src="/promos/codepromo.jpeg" alt="Promos" class="hidden md:block h-24 w-auto object-contain mix-blend-screen rotate-12" />
+      </div>
       <p class="mt-6 max-w-xl text-[17px] text-white/85 leading-relaxed">
         <strong>{promos.length} offres</strong> actives cette semaine, mises à jour
         chaque lundi. Valables dans notre magasin toulousain.
@@ -112,7 +114,6 @@ const bc = breadcrumbSchema([{ name: "Promos de la semaine", url: "/promos" }]);
     </div>
   </section>
 
-  <NewsletterInline variant="dark" />
   <FAQAccordion items={FAQ_HOME} />
 </Layout>
 

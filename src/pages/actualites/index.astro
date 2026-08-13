@@ -1,7 +1,6 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import { getCollection } from "astro:content";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -138,5 +137,4 @@ const getMeta = (cat: string) =>
     </section>
   )}
 
-  <NewsletterInline />
 </Layout>

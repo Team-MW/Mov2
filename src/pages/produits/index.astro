@@ -15,7 +15,6 @@
 import Layout from "@layouts/Layout.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
 import ProduitCard from "@components/ProduitCard.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import { SITE, RAYONS_LIST } from "@/lib/site";
 import { getAllProduits } from "@/lib/produits-repo";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -221,7 +220,6 @@ const cards: Minimal[] = produits.map((p) => ({
     </div>
   </section>
 
-  <NewsletterInline />
 </Layout>
 
 <style>

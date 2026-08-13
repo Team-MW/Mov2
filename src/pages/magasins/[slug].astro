@@ -2,7 +2,6 @@
 import Layout from "@layouts/Layout.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
 import FAQAccordion from "@components/FAQAccordion.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import { MAGASINS, SITE, type MagasinSlug } from "@/lib/site";
 import { FAQ_HOME } from "@/lib/faqs";
 import { breadcrumbSchema, grocerySchema } from "@/lib/schema";
@@ -143,6 +142,5 @@ const horairesList = [
     </div>
   </section>
 
-  <NewsletterInline />
   <FAQAccordion items={FAQ_HOME} />
 </Layout>

@@ -3,7 +3,6 @@ export const prerender = true;
 import Layout from "@layouts/Layout.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
 import FAQAccordion from "@components/FAQAccordion.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import { SITE, ENGAGEMENTS } from "@/lib/site";
 import { FAQ_HOME } from "@/lib/faqs";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -62,6 +61,5 @@ const bc = breadcrumbSchema([{ name: "Nos engagements", url: "/nos-engagements" 
     </div>
   </section>
 
-  <NewsletterInline variant="dark" />
   <FAQAccordion items={FAQ_HOME} />
 </Layout>

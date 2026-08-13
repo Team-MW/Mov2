@@ -2,7 +2,6 @@
 import Layout from "@layouts/Layout.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
 import FAQAccordion from "@components/FAQAccordion.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import ApplicationForm from "@components/islands/ApplicationForm.jsx";
 import { getCollection } from "astro:content";
 import { SITE } from "@/lib/site";
@@ -106,6 +105,5 @@ const bc = breadcrumbSchema([{ name: "Recrutement", url: "/recrutement" }]);
     </div>
   </section>
 
-  <NewsletterInline />
   <FAQAccordion items={FAQ_RECRUTEMENT} />
 </Layout>

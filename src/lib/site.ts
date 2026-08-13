@@ -18,7 +18,7 @@ export const SITE = {
   siret: "924 841 471 00012",
   rcs: "RCS Toulouse",
   siege: "6 Place Wilson, 31000 Toulouse, France",
-  dirigeant: "Samir Ouaddaha",
+  dirigeant: "Le fondateur",
   foundedYear: 2024,
   agence: {
     nom: "Microdidact",
@@ -129,8 +129,7 @@ export type RayonSlug =
   | "balkans-turques"
   | "produits-courants"
   | "surgeles"
-  | "boulangerie"
-  | "produits-laitiers";
+  | "boulangerie";
 
 export interface Rayon {
   slug: RayonSlug;
@@ -271,7 +270,7 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
     imageAlt:
       "Rayon saveurs africaines et créoles Marché de Mo' Toulouse — produits du continent africain",
     culturel: true,
-    ordre: 4,
+    ordre: 7,
     icone: "africa",
     featured: ["Gombo", "Fufu", "Sauce graine", "Bissap"],
     accent: "#C8751A",
@@ -301,7 +300,7 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
     ],
     imageAlt: "Rayon saveurs d'Asie Marché de Mo' Toulouse — produits japonais, coréens, thaïlandais",
     culturel: true,
-    ordre: 5,
+    ordre: 8,
     icone: "asia",
     featured: ["Kimchi", "Sauce soja", "Nouilles udon", "Riz jasmin"],
     accent: "#C0392B",
@@ -329,7 +328,7 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
       "/images/rayons/saveur-mediterranee/image-de-giorgio-trovato.jpg",
     ],
     culturel: true,
-    ordre: 6,
+    ordre: 9,
     icone: "olive",
     featured: ["Olives du Maghreb", "Huile d'olive", "Harissa", "Couscous"],
     accent: "#2A6599",
@@ -361,7 +360,7 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
     imageAlt:
       "Plateau d'ingrédients latino-américains : plantain, avocat, arepa, orange, salsa et coriandre",
     culturel: true,
-    ordre: 7,
+    ordre: 11,
     icone: "tropical",
     featured: ["Arepa", "Dulce de leche", "Piment habanero", "Maté"],
     accent: "#E63946",
@@ -386,7 +385,7 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
     imageAlt:
       "Rayon Balkans et Turquie Marché de Mo' Toulouse — Adana kebab, börek, fromages blancs",
     culturel: true,
-    ordre: 8,
+    ordre: 10,
     icone: "ottoman",
     featured: ["Börek", "Ayran", "Fromage blanc", "Baklava"],
     accent: "#8B2500",
@@ -399,20 +398,20 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
   },
   "produits-courants": {
     slug: "produits-courants",
-    nom: "Produits Courants Discounts",
-    nomCourt: "Discounts",
-    eyebrow: "Prix cassés",
-    tagline: "Le quotidien, prix plancher.",
+    nom: "Produits Frais",
+    nomCourt: "Frais",
+    eyebrow: "Fraîcheur quotidienne",
+    tagline: "Le quotidien, toujours frais.",
     description:
-      "Prix cassés sur les produits du quotidien. Notre espace déstockage propose des réductions significatives pour tous les budgets.",
+      "Tous vos produits frais du quotidien. Notre espace fraîcheur propose un large choix pour tous les budgets.",
     longDescription:
-      "Notre espace déstockage : produits d'entretien, hygiène, épicerie sucrée et salée — aux prix les plus bas du magasin. Fin de série, fin de stock ou arrivage exceptionnel : les bonnes affaires changent chaque semaine.",
+      "Notre espace frais : charcuterie, traiteur, plats préparés et essentiels du réfrigérateur — aux prix les plus bas du magasin. Des arrivages réguliers pour une fraîcheur garantie.",
     image: "/images/rayons/produits-courants.jpg",
-    imageAlt: "Rayon produits courants discount Marché de Mo' Toulouse",
+    imageAlt: "Rayon produits frais Marché de Mo' Toulouse",
     culturel: false,
-    ordre: 9,
+    ordre: 5,
     icone: "cart",
-    featured: ["Épicerie sucrée", "Épicerie salée", "Entretien", "Hygiène"],
+    featured: ["Traiteur", "Charcuterie", "Plats préparés", "Essentiels"],
     accent: "#6B7280",
     keywords: [
       "discount Toulouse",
@@ -422,22 +421,22 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
   },
   surgeles: {
     slug: "surgeles",
-    nom: "Surgelé",
+    nom: "Surgelés",
     nomCourt: "Surgelés",
     eyebrow: "Praticité",
     tagline: "Le monde. En 10 minutes.",
     description:
       "Large sélection de surgelés du monde entier : plats cuisinés ethniques, viandes halal surgelées, légumes et snacking.",
     longDescription:
-      "Samoussas, bricks, nems, keftas halal, poulet yassa, mafé, rouleaux de printemps, naans au fromage, pizzas halal, légumes vapeur, glaces du monde. Le rayon qui dépanne quand il n'y a pas le temps — sans transiger sur l'origine.",
+      "Des produits surgelés pratiques et de qualité : samoussas, nems, viandes halal prêtes à cuire, légumes exotiques et desserts du monde. Tout pour un repas rapide sans compromis sur le goût.",
     image: "/images/rayons/surgeles.jpg",
-    imageAlt: "Rayon surgelés Marché de Mo' Toulouse — plats ethniques surgelés",
+    imageAlt: "Rayon surgelés Marché de Mo' Toulouse",
+    culturel: false,
+    ordre: 4,
     heroSlideshow: [
       "/images/rayons/surgeles.jpg",
       "/images/rayons/surgeles/vitrines-congelees.jpg",
     ],
-    culturel: false,
-    ordre: 10,
     icone: "snow",
     featured: ["Samoussas", "Bricks", "Nems", "Viande halal surgelée"],
     accent: "#2A7AB3",
@@ -467,28 +466,7 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
     ],
     accent: "#E29B56",
     keywords: ["boulangerie Toulouse", "pain chaud Toulouse", "galette orientale Toulouse"]
-  },
-  "produits-laitiers": {
-    slug: "produits-laitiers",
-    nom: "Produits Laitiers",
-    nomCourt: "Laitages",
-    eyebrow: "Fraîcheur & douceur",
-    tagline: "Les essentiels au rayon frais.",
-    description: "Sélection complète de yaourts, laits, beurres, crèmes et fromages traditionnels de tous horizons.",
-    longDescription: "Laits de vache, chèvre et brebis, yaourts classiques et brassés, beurres doux et demi-sel, fromages blancs et une large gamme de fromages traditionnels français et internationaux.",
-    image: "/images/rayons/produits-laitiers.jpg",
-    imageAlt: "Rayon produits laitiers Marché de Mo' — laits, fromages et yaourts",
-    culturel: false,
-    ordre: 12,
-    icone: "cheese",
-    featured: ["Lait frais", "Yaourt nature", "Fromage de brebis", "Beurre traditionnel"],
-    heroSlideshow: [
-      "/images/rayons/produits-laitiers.jpg",
-      "/images/rayons/produits-laitiers/fromages.jpg",
-    ],
-    accent: "#4A90E2",
-    keywords: ["produits laitiers Toulouse", "fromage brebis Toulouse", "yaourt frais Toulouse"]
-  },
+  }
 };
 
 export const RAYONS_LIST = Object.values(RAYONS).sort((a, b) => a.ordre - b.ordre);

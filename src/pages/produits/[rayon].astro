@@ -16,7 +16,6 @@
 import Layout from "@layouts/Layout.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
 import ProduitCard from "@components/ProduitCard.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import { RAYONS, RAYONS_LIST, SITE } from "@/lib/site";
 import type { RayonSlug } from "@/lib/site";
 import { getProduitsByRayon } from "@/lib/produits-repo";
@@ -278,7 +277,6 @@ const related = RAYONS_LIST.filter((r) => r.slug !== rayon.slug).slice(0, 3);
     </div>
   </section>
 
-  <NewsletterInline />
 </Layout>
 
 <style>

@@ -3,7 +3,6 @@ import Layout from "@layouts/Layout.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
 import Stats from "@components/Stats.astro";
 import FAQAccordion from "@components/FAQAccordion.astro";
-import NewsletterInline from "@components/NewsletterInline.astro";
 import { SITE, MAGASINS } from "@/lib/site";
 import { FAQ_HOME } from "@/lib/faqs";
 import { breadcrumbSchema, organizationSchema } from "@/lib/schema";
@@ -16,7 +15,7 @@ const TIMELINE = [
     date: "2022",
     label: "La naissance du projet",
     detail:
-      "Samir Ouaddaha, issu d'une famille de commerçants, conçoit le Marché de Mo' comme un hommage à son père Mohammed — et un pari : faire entrer les saveurs du monde dans un supermarché grand public, à prix juste.",
+      "Issu d'une famille de commerçants, le fondateur conçoit le Marché de Mo' comme un hommage à son père Mohammed — et un pari : faire entrer les saveurs du monde dans un supermarché grand public, à prix juste.",
   },
   {
     date: "Aujourd'hui",
@@ -168,7 +167,7 @@ const PILIERS = [
         </div>
         <div class="mt-6 bg-white rounded-2xl p-5">
           <p class="text-[13px] uppercase tracking-wider text-neutral-500 font-bold">Fondateur</p>
-          <p class="font-soft font-bold text-[22px] mt-1">Samir Ouaddaha</p>
+          <p class="font-soft font-bold text-[22px] mt-1">Le fondateur</p>
           <p class="text-[13.5px] text-neutral-600 mt-2">
             Lauréat 2024 · Réseau Entreprendre Occitanie · Parrainé par le
             directeur d'Auchan Gramont.
@@ -182,7 +181,7 @@ const PILIERS = [
           <h2 class="display-md mt-4">Mo', c'était <span class="text-vert">Mohammed</span>.</h2>
           <p class="mt-4 text-[15.5px] text-neutral-700 leading-relaxed">
             Le patriarche. Le père d'une famille de commerçants passionnés dont est
-            issu Samir Ouaddaha. C'est en son hommage — et pour perpétuer cet esprit
+            est issu le fondateur. C'est en son hommage — et pour perpétuer cet esprit
             de transmission — que l'enseigne porte son nom.
           </p>
         </div>
@@ -467,6 +466,5 @@ const PILIERS = [
     </div>
   </section>
 
-  <NewsletterInline />
   <FAQAccordion items={FAQ_HOME} />
 </Layout>
