@@ -8,7 +8,7 @@
 ---
 
 ## 0. How to read this document
-
+fr
 - Findings are grouped by area (A–K) and tagged with a **severity**:
   - **P0 — Critical**: broken in production, data loss, or crash.
   - **P1 — High**: significant incoherence, compliance gap, or broken UX.
