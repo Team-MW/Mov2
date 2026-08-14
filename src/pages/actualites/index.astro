@@ -48,47 +48,40 @@ const getMeta = (cat: string) =>
     </div>
   </section>
 
-  <!-- Featured article -->
-  {featured && (
-    <section class="section-sm bg-blanc">
-      <div class="container-mo">
-        <a href={`/actualites/${featured.slug}`} class="group grid lg:grid-cols-2 gap-8 lg:gap-14 items-center">
-          <div class="aspect-[4/3] lg:aspect-[5/4] overflow-hidden rounded-3xl bg-white">
-            <img
-              src={featured.data.image}
-              alt={featured.data.titre}
-              class="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-700"
-              loading="eager"
-            />
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="eyebrow">À la une</span>
-              <span
-                class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-pro font-bold uppercase tracking-wider"
-                style={`color: ${getMeta(featured.data.categorie).color}; background: ${getMeta(featured.data.categorie).bg}`}
-              >
-                <span class="w-1.5 h-1.5 rounded-full" style={`background: ${getMeta(featured.data.categorie).color}`}></span>
-                {getMeta(featured.data.categorie).label}
-              </span>
-            </div>
-            <h2 class="display-md mt-4 text-balance group-hover:text-vert transition-colors">
-              {featured.data.titre}
-            </h2>
-            <p class="mt-4 text-[15.5px] text-neutral-600 leading-relaxed max-w-lg">{featured.data.resume}</p>
-            <div class="mt-6 flex items-center gap-4 text-[13px] text-neutral-500">
-              <span>{featured.data.auteur}</span>
-              <span>·</span>
-              <time>{new Date(featured.data.date_publication).toLocaleDateString("fr-FR", { day:"numeric", month:"long", year:"numeric" })}</time>
-            </div>
-            <span class="mt-8 inline-flex items-center gap-2 font-bold text-[14px] text-vert group-hover:translate-x-1 transition-transform">
-              Lire l'article →
-            </span>
-          </div>
-        </a>
+  <!-- Featured article replaced by Picadeli -->
+  <section class="bg-white pb-12 pt-8">
+    <div class="container-mo grid lg:grid-cols-12 gap-10 items-center">
+      <div class="lg:col-span-6 reveal">
+        <span class="eyebrow">À la une</span>
+        <img 
+          src="/images/partenaires/picadeli-logo.png" 
+          alt="Picadeli Logo" 
+          class="h-16 object-contain mb-6 mt-4 mix-blend-multiply" 
+        />
+        <h2 class="display-xl mt-2 text-balance" data-split-reveal>
+          Créez votre propre<br/>
+          <span class="text-[#6BC172]">salade sur-mesure</span>.
+        </h2>
+        <p class="mt-6 max-w-xl text-[17px] text-neutral-600 leading-relaxed">
+          Le bar à salade <strong>Picadeli</strong> est désormais disponible dans notre magasin de Toulouse Sud — Cépière. 
+          Faites le plein de fraîcheur avec des dizaines d'ingrédients gourmands, sains, et préparés chaque jour.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a href="/magasins/toulouse-sud" class="btn btn-primary bg-[#6BC172] border-[#6BC172] text-white hover:bg-[#5AA161]">Venir en magasin</a>
+          <a href="https://www.picadeli.fr/fr/nos-produits" target="_blank" rel="noopener noreferrer" class="btn btn-outline border-[#6BC172] text-[#6BC172] hover:bg-[#6BC172] hover:text-white">Voir les recettes Picadeli</a>
+        </div>
       </div>
-    </section>
-  )}
+      <div class="lg:col-span-6 reveal" style="--reveal-delay: 200ms">
+        <div class="relative rounded-3xl overflow-hidden shadow-2xl bg-neutral-100 p-4">
+          <img 
+            src="/images/partenaires/picadeli-salade.webp" 
+            alt="Salade fraîche Picadeli" 
+            class="w-full h-auto object-cover rounded-2xl" 
+          />
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Grid -->
   {others.length > 0 && (

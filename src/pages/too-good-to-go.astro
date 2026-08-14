@@ -1,0 +1,71 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Breadcrumb from "@components/Breadcrumb.astro";
+import { SITE } from "@/lib/site";
+import { breadcrumbSchema } from "@/lib/schema";
+
+const bc = breadcrumbSchema([{ name: "Too Good To Go", url: "/too-good-to-go" }]);
+---
+
+<Layout
+  title={`Sauvez des paniers avec Too Good To Go — ${SITE.name}`}
+  description="Engagez-vous contre le gaspillage alimentaire ! Retrouvez nos paniers surprises à prix réduits tous les jours sur Too Good To Go."
+  schema={bc}
+>
+  <Breadcrumb items={[{ name: "Too Good To Go" }]} />
+
+  <!-- Hero -->
+  <section class="bg-white pb-8">
+    <div class="container-mo grid lg:grid-cols-12 gap-10 items-center py-10">
+      <div class="lg:col-span-6">
+        <img 
+          src="/images/partenaires/tgtg-logo.png" 
+          alt="Too Good To Go Logo" 
+          class="h-16 object-contain mb-6 mix-blend-multiply" 
+        />
+        <h1 class="display-xl mt-4 text-balance" data-split-reveal>
+          Engagez-vous contre le<br/>
+          <span class="text-[#00645A]">gaspillage alimentaire</span>.
+        </h1>
+        <p class="mt-6 max-w-xl text-[17px] text-neutral-600 leading-relaxed">
+          Le <strong>Marché de Mo'</strong> s'associe à Too Good To Go. 
+          Sauvez des paniers surprises composés d'invendus de la journée (fruits, légumes, produits frais) à prix très réduits. Un geste pour la planète, et pour votre porte-monnaie !
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a href="https://www.toogoodtogo.com/fr" target="_blank" rel="noopener noreferrer" class="btn btn-primary bg-[#00645A] border-[#00645A] text-white hover:bg-[#004e46]">Voir l'application</a>
+          <a href="/magasins/toulouse-sud" class="btn btn-outline border-[#00645A] text-[#00645A] hover:bg-[#00645A] hover:text-white">Venir en magasin</a>
+        </div>
+      </div>
+      <div class="lg:col-span-6">
+        <div class="relative rounded-3xl overflow-hidden shadow-2xl bg-neutral-100 p-4">
+          <img 
+            src="/images/partenaires/tgtg-banner.png" 
+            alt="Paniers Too Good To Go" 
+            class="w-full h-auto object-cover rounded-2xl" 
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Avantages -->
+  <section class="section bg-blanc">
+    <div class="container-mo">
+      <span class="eyebrow">Pourquoi participer ?</span>
+      <h2 class="display-md mt-4 text-balance max-w-2xl">Bon pour tous, bon pour la planète.</h2>
+      <div class="mt-12 grid md:grid-cols-3 gap-5">
+        {[
+          { n: "01", t: "Anti-gaspi", d: "Aidez-nous à réduire le gaspillage alimentaire en sauvant de bons produits destinés à être jetés." },
+          { n: "02", t: "Petits Prix", d: "Profitez de paniers remplis de produits frais à un tiers de leur valeur initiale." },
+          { n: "03", t: "Surprise", d: "Découvrez chaque jour une nouvelle sélection de produits selon les invendus du magasin." },
+        ].map((step) => (
+          <div class="bg-white rounded-3xl p-7">
+            <div class="font-soft font-bold text-[48px] leading-none text-[#00645A]">{step.n}</div>
+            <h3 class="font-soft font-bold text-[22px] mt-4">{step.t}</h3>
+            <p class="mt-2 text-[14.5px] text-neutral-600">{step.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>

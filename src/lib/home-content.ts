@@ -70,6 +70,32 @@ const FALLBACK_SLIDES: HomeEditorialSlide[] = [
     accent: "#C53030",
     videoUrl: null,
   },
+  {
+    kind: "editorial",
+    eyebrow: "Anti-gaspi",
+    titre: "Retrouvez-nous sur Too Good To Go.",
+    description:
+      "Engagez-vous avec nous contre le gaspillage alimentaire ! Sauvez des paniers surprises à prix réduits tous les jours et profitez de bons produits tout en faisant un geste pour la planète.",
+    image: "/images/partenaires/tgtg-banner.png",
+    imageAlt: "Paniers Too Good To Go",
+    ctaLabel: "Découvrir notre démarche",
+    ctaHref: "/too-good-to-go",
+    accent: "#00645A",
+    videoUrl: null,
+  },
+  {
+    kind: "editorial",
+    eyebrow: "Nouveau au magasin",
+    titre: "Découvrez notre nouveau bar à salade Picadeli !",
+    description:
+      "Composez votre propre salade sur-mesure avec des ingrédients frais, sains et gourmands. Le bar à salade Picadeli est maintenant disponible dans votre Marché de Mo'.",
+    image: "/images/partenaires/picadeli-salade.webp",
+    imageAlt: "Bar à salade Picadeli",
+    ctaLabel: "Découvrir Picadeli",
+    ctaHref: "/picadeli",
+    accent: "#6BC172",
+    videoUrl: null,
+  },
 ];
 
 function slideRowToEntry(row: any): HomeEditorialSlide {
@@ -93,6 +119,7 @@ function slideRowToEntry(row: any): HomeEditorialSlide {
  */
 export async function getHomeEditorialSlides(): Promise<HomeEditorialSlide[]> {
   try {
+    if (!supabase) return FALLBACK_SLIDES;
     const { data, error } = await supabase
       .from("home_editorial_slides")
       .select("*")
@@ -117,6 +144,8 @@ const FALLBACK_MARQUEE: string[] = [
   "Fruits exotiques",
   "20 000+ références",
   "60 ans d'expérience familiale",
+  "Disponible sur Too Good To Go",
+  "Nouveau Bar à salade Picadeli"
 ];
 
 /**
@@ -125,6 +154,7 @@ const FALLBACK_MARQUEE: string[] = [
  */
 export async function getHomeMarqueeItems(): Promise<string[]> {
   try {
+    if (!supabase) return FALLBACK_MARQUEE;
     const { data, error } = await supabase
       .from("home_marquee_items")
       .select("label, ordre")
@@ -156,6 +186,7 @@ const FALLBACK_SEO: HomeSeoSettings = {
  */
 export async function getHomeSeoSettings(): Promise<HomeSeoSettings> {
   try {
+    if (!supabase) return FALLBACK_SEO;
     const { data, error } = await supabase
       .from("site_settings")
       .select("key, value");

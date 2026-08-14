@@ -238,7 +238,7 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
       "/images/rayons/epices-du-monde/11062b-430368cba3be40c8b0065e900753a781f000.jpg",
       "/images/rayons/epices-du-monde/716c51-f9304.jpg",
     ],
-    culturel: false,
+    culturel: true,
     ordre: 3,
     icone: "spice",
     featured: ["Ras el hanout", "Curcuma", "Piment berbère", "Thés du monde"],

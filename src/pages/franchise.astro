@@ -2,6 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
 import FAQAccordion from "@components/FAQAccordion.astro";
+import FranchiseForm from "@components/islands/FranchiseForm.jsx";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema } from "@/lib/schema";
 
@@ -9,17 +10,14 @@ const bc = breadcrumbSchema([{ name: "Devenir Franchisé", url: "/franchise" }])
 
 const ATOUTS = [
   {
-    icon: "🌍",
     titre: "Un concept unique & porteur",
     detail: "Le plus grand supermarché du monde d'Occitanie. Une offre unique de 20 000+ références réparties sur 12 rayons thématiques répondant à une demande croissante d'authenticité et de saveurs d'ailleurs.",
   },
   {
-    icon: "📈",
     titre: "Une rentabilité éprouvée",
     detail: "Un modèle économique performant basé sur des volumes d'achat importants et des circuits d'importation directe sans intermédiaire, garantissant d'excellentes marges opérationnelles.",
   },
   {
-    icon: "🤝",
     titre: "60 ans d'expertise familiale",
     detail: "Nous transmettons notre savoir-faire de trois générations de commerçants indépendants. Vous bénéficiez d'une expérience solide en gestion, approvisionnement et relation client.",
   },
@@ -109,8 +107,8 @@ const faqItems = [
       <div class="lg:col-span-5">
         <div class="relative aspect-[4/3] rounded-[36px] overflow-hidden shadow-card bg-neutral-100 reveal reveal-mask border-3 border-vert">
           <img
-            src="/images/home/equipe.jpg"
-            alt="Intérieur supermarché Marché de Mo'"
+            src="/images/franchise-hero.avif"
+            alt="Caisse point de vente Marché de Mo'"
             class="w-full h-full object-cover"
           />
         </div>
@@ -159,7 +157,6 @@ const faqItems = [
             class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300 reveal border border-black/5"
             style={`--reveal-delay: ${i * 100}ms`}
           >
-            <span class="text-[32px]">{a.icon}</span>
             <h3 class="font-soft font-bold text-[22px] mt-4 text-neutral-900">{a.titre}</h3>
             <p class="mt-3 text-[14.5px] text-neutral-600 leading-relaxed">{a.detail}</p>
           </article>
@@ -214,163 +211,11 @@ const faqItems = [
           </p>
         </div>
 
-        <form id="franchise-form" class="space-y-6">
-          <div class="grid md:grid-cols-2 gap-6">
-            <div>
-              <label for="nom" class="block text-[13px] font-bold uppercase tracking-wider text-neutral-500 mb-2">Prénom & Nom</label>
-              <input
-                type="text"
-                id="nom"
-                name="nom"
-                required
-                class="w-full rounded-xl border border-black/10 bg-blanc px-4 py-3.5 text-[15px] focus:outline-none focus:ring-2 focus:ring-vert/30 focus:border-vert transition-all"
-                placeholder="Ex. Jean Dupont"
-              />
-            </div>
-            <div>
-              <label for="email" class="block text-[13px] font-bold uppercase tracking-wider text-neutral-500 mb-2">Adresse email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                class="w-full rounded-xl border border-black/10 bg-blanc px-4 py-3.5 text-[15px] focus:outline-none focus:ring-2 focus:ring-vert/30 focus:border-vert transition-all"
-                placeholder="Ex. contact@marchedemo.com"
-              />
-            </div>
-          </div>
-
-          <div class="grid md:grid-cols-2 gap-6">
-            <div>
-              <label for="tel" class="block text-[13px] font-bold uppercase tracking-wider text-neutral-500 mb-2">Téléphone</label>
-              <input
-                type="tel"
-                id="tel"
-                name="tel"
-                required
-                class="w-full rounded-xl border border-black/10 bg-blanc px-4 py-3.5 text-[15px] focus:outline-none focus:ring-2 focus:ring-vert/30 focus:border-vert transition-all"
-                placeholder="Ex. 05 82 95 82 52"
-              />
-            </div>
-            <div>
-              <label for="region" class="block text-[13px] font-bold uppercase tracking-wider text-neutral-500 mb-2">Région ou Ville ciblée</label>
-              <input
-                type="text"
-                id="region"
-                name="region"
-                required
-                class="w-full rounded-xl border border-black/10 bg-blanc px-4 py-3.5 text-[15px] focus:outline-none focus:ring-2 focus:ring-vert/30 focus:border-vert transition-all"
-                placeholder="Ex. Toulouse, Montpellier, Occitanie..."
-              />
-            </div>
-          </div>
-
-          <div>
-            <label for="apport" class="block text-[13px] font-bold uppercase tracking-wider text-neutral-500 mb-2">Apport personnel disponible</label>
-            <select
-              id="apport"
-              name="apport"
-              required
-              class="w-full rounded-xl border border-black/10 bg-blanc px-4 py-3.5 text-[15px] focus:outline-none focus:ring-2 focus:ring-vert/30 focus:border-vert transition-all"
-            >
-              <option value="" disabled selected>Sélectionnez votre niveau d'apport personnel</option>
-              <option value="moins-100k">Moins de 100 000 €</option>
-              <option value="100k-150k">100 000 € à 150 000 €</option>
-              <option value="150k-250k">150 000 € à 250 000 €</option>
-              <option value="plus-250k">Plus de 250 000 €</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="message" class="block text-[13px] font-bold uppercase tracking-wider text-neutral-500 mb-2">Présentation de votre parcours & Motivation</label>
-            <textarea
-              id="message"
-              name="message"
-              required
-              rows="5"
-              class="w-full rounded-xl border border-black/10 bg-blanc px-4 py-3.5 text-[15px] focus:outline-none focus:ring-2 focus:ring-vert/30 focus:border-vert transition-all resize-none"
-              placeholder="Décrivez brièvement votre parcours et pourquoi vous souhaitez ouvrir un Marché de Mo'..."
-            ></textarea>
-          </div>
-
-          <div class="pt-2">
-            <button
-              type="submit"
-              class="w-full btn btn-primary btn-sheen py-4 text-[16px] font-bold rounded-xl flex items-center justify-center gap-2"
-            >
-              Envoyer ma candidature
-              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-          </div>
-        </form>
+        <FranchiseForm client:visible />
       </div>
     </div>
   </section>
 
   <FAQAccordion items={faqItems} title="FAQ — Devenir Franchisé" />
 </Layout>
-
-<script is:inline>
-  document.addEventListener("astro:page-load", () => {
-    const form = document.getElementById("franchise-form");
-    if (!form) return;
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const button = form.querySelector("button[type='submit']");
-      if (button) {
-        button.disabled = true;
-        button.innerText = "Envoi en cours...";
-      }
-
-      try {
-        const formData = new FormData(form);
-        const nomComplet = String(formData.get("nom") || "").trim();
-        const tel = String(formData.get("tel") || "").trim();
-        const region = String(formData.get("region") || "").trim();
-        const apport = String(formData.get("apport") || "").trim();
-        const motivation = String(formData.get("message") || "").trim();
-
-        // Mappe sur le contrat partagé /api/contact (prenom, nom, email,
-        // sujet, message obligatoires). Les champs propres à la franchise
-        // sont repliés dans le message pour ne rien perdre.
-        const payload = {
-          prenom: "Candidature franchise",
-          nom: nomComplet,
-          email: formData.get("email"),
-          sujet: `Franchise${region ? " — " + region : ""}`,
-          message: `Téléphone : ${tel}\nApport personnel : ${apport}\nRégion ciblée : ${region}\n\n${motivation}`,
-          type: "franchise",
-        };
-
-        const res = await fetch("/api/contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) {
-          throw new Error(data.error || "L'envoi a échoué. Réessayez ou contactez-nous directement.");
-        }
-
-        if (window.showToast) {
-          window.showToast("Candidature reçue avec succès ! Notre équipe reviendra vers vous sous 48h.", "success");
-        } else {
-          alert("Votre candidature a bien été reçue. Notre équipe vous contactera sous 48h.");
-        }
-        form.reset();
-      } catch (err) {
-        if (window.showToast) {
-          window.showToast(err && err.message ? err.message : "Une erreur s'est produite lors de l'envoi de votre candidature.", "error");
-        }
-      } finally {
-        if (button) {
-          button.disabled = false;
-          button.innerHTML = `Envoyer ma candidature <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-        }
-      }
-    });
-  });
-</script>
+</Layout>

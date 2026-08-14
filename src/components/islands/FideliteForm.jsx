@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * ApplicationForm — React island.
- * Intègre maintenant le formulaire JotForm de recrutement
+ * FideliteForm — React island.
+ * Intègre le formulaire JotForm pour le programme de fidélité
  * avec une animation de chargement personnalisée Marché de Mo'.
  */
-export default function ApplicationForm({ poste = "spontanee", posteNom = "Candidature spontanée" }) {
+export default function FideliteForm() {
   const containerRef = useRef(null);
   const [loading, setLoading] = useState(true);
 
@@ -14,7 +14,7 @@ export default function ApplicationForm({ poste = "spontanee", posteNom = "Candi
     if (containerRef.current && containerRef.current.children.length === 0) {
       const script = document.createElement("script");
       script.type = "text/javascript";
-      script.src = "https://form.jotform.com/jsform/262253636484361";
+      script.src = "https://form.jotform.com/jsform/262253577205356";
       
       // On cache le chargement une fois le script Jotform chargé
       script.onload = () => {

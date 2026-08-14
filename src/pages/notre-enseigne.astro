@@ -12,48 +12,50 @@ const bc = breadcrumbSchema([{ name: "Notre enseigne", url: "/notre-enseigne" }]
 /* Timeline chronologique — dates réelles du parcours du groupe. */
 const TIMELINE = [
   {
-    date: "2022",
-    label: "La naissance du projet",
+    date: "1957",
+    label: "L'origine",
     detail:
-      "Issu d'une famille de commerçants, le fondateur conçoit le Marché de Mo' comme un hommage à son père Mohammed — et un pari : faire entrer les saveurs du monde dans un supermarché grand public, à prix juste.",
+      "Ouverture de la première épicerie familiale.",
   },
   {
-    date: "Aujourd'hui",
-    label: "Le plus grand supermarché ethnique",
+    date: "1961",
+    label: "La boucherie",
     detail:
-      "L'aboutissement de notre projet familial se concrétise à Toulouse Sud — Cépière. Avec 1 200 m² et plus de 20 000 références, c'est le nouveau phare de l'alimentation du monde.",
+      "Les bouchers rejoignent l'épicerie familiale.",
+  },
+  {
+    date: "1990",
+    label: "L'expansion",
+    detail:
+      "Succès familial avec l'ouverture de plus de 3 magasins.",
+  },
+  {
+    date: "2020",
+    label: "Premier grand format",
+    detail:
+      "Ouverture du premier magasin d'Occitanie à Portet-sur-Garonne avec 500 m² d'espace de vente.",
   },
   {
     date: "2024",
-    label: "Lauréat Réseau Entreprendre Occitanie",
+    label: "Le plus grand supermarché du Mirail",
     detail:
-      "Distinction entrepreneuriale majeure. Parrainage par le directeur du magasin Auchan Gramont. Le projet est reconnu par l'écosystème économique régional.",
-  },
-
-  {
-    date: "2026",
-    label: "15 nouveaux emplois",
-    detail:
-      "Plan de recrutement de 15 postes sur notre magasin — 12 CDI direct. Formation interne, grille salariale transparente, priorité à la motivation sur le diplôme.",
+      "Marché de Mo' devient le plus grand supermarché du Mirail avec plus de 1 200 m² d'espace de vente.",
   },
 ] as const;
 
 /* Les 3 piliers fondateurs du groupe — identité, pas slogan. */
 const PILIERS = [
   {
-    icon: "🎯",
     titre: "Qualité",
     detail:
       "Boucherie sur carcasse, fruits & légumes livrés chaque matin, épices importées en direct — pas de grossiste intermédiaire. La qualité n'est pas une option, c'est ce qui justifie le prix.",
   },
   {
-    icon: "🤝",
     titre: "Engagement",
     detail:
       "Dons réguliers aux banques alimentaires de Haute-Garonne, soutien aux associations sportives locales, partenariats avec les structures pour personnes âgées. On rend à la ville ce qu'elle nous donne.",
   },
   {
-    icon: "🌱",
     titre: "Inclusion",
     detail:
       "90 % de notre équipe n'avait pas d'emploi avant. 24 salariés entre 19 et 56 ans. Pas de diplôme exigé, pas de CV formel demandé — seule la motivation compte.",
@@ -156,8 +158,8 @@ const PILIERS = [
       <div class="lg:col-span-5 lg:sticky lg:top-28">
         <div class="relative aspect-square rounded-[36px] overflow-hidden shadow-card bg-noir-softer reveal reveal-mask">
           <img
-            src="/images/home/equipe.jpg"
-            alt="L'équipe Marché de Mo' Toulouse"
+            src="/images/franchise-hero.avif"
+            alt="L'équipe du Marché de Mo'"
             class="w-full h-full object-cover"
             loading="lazy"
             decoding="async"
@@ -283,9 +285,6 @@ const PILIERS = [
             class="bg-white rounded-3xl p-7 md:p-8 reveal transition-all hover:-translate-y-1 hover:shadow-card"
             style={`--reveal-delay: ${i * 90}ms`}
           >
-            <span class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white text-[26px]" aria-hidden="true">
-              {p.icon}
-            </span>
             <h3 class="font-soft font-bold text-[24px] mt-5">{p.titre}</h3>
             <p class="mt-3 text-[14.5px] text-neutral-700 leading-relaxed">{p.detail}</p>
           </article>

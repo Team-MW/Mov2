@@ -27,7 +27,36 @@ export default defineConfig({
     tailwind({ applyBaseStyles: false }),
     react(),
     sitemap({
-      filter: (page) => !page.includes('/admin'),
+      filter: (page) => 
+        !page.includes('/admin') && 
+        !page.includes('/404') && 
+        !page.includes('/recherche') &&
+        !page.includes('/mentions-legales') &&
+        !page.includes('/politique-de-cookies') &&
+        !page.includes('/termes-et-conditions'),
+      /**
+       * @param {import('@astrojs/sitemap').SitemapItem} item
+       */
+      serialize(item) {
+        // Personnalisation SEO : Priority et ChangeFreq
+        if (item.url === 'https://marchedemov2.vercel.app' || item.url === 'https://marchedemov2.vercel.app/') {
+          item.changefreq = 'daily';
+          item.priority = 1.0;
+        } else if (item.url.includes('/rayons/') || item.url.includes('/promos')) {
+          item.changefreq = 'daily';
+          item.priority = 0.9;
+        } else if (item.url.includes('/produits/') || item.url.includes('/recettes')) {
+          item.changefreq = 'weekly';
+          item.priority = 0.8;
+        } else if (item.url.includes('/actualites') || item.url.includes('/magasins')) {
+          item.changefreq = 'weekly';
+          item.priority = 0.8;
+        } else {
+          item.changefreq = 'monthly';
+          item.priority = 0.5;
+        }
+        return item;
+      }
     }),
   ],
   /* Prefetch every internal link the moment it scrolls into view.

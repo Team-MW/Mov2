@@ -1,0 +1,71 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Breadcrumb from "@components/Breadcrumb.astro";
+import { SITE } from "@/lib/site";
+import { breadcrumbSchema } from "@/lib/schema";
+
+const bc = breadcrumbSchema([{ name: "Bar à salade Picadeli", url: "/picadeli" }]);
+---
+
+<Layout
+  title={`Nouveau Bar à salade Picadeli — ${SITE.name}`}
+  description="Découvrez notre nouveau bar à salade Picadeli dans votre supermarché. Composez votre propre salade sur-mesure avec des ingrédients frais, sains et gourmands."
+  schema={bc}
+>
+  <Breadcrumb items={[{ name: "Bar à salade Picadeli" }]} />
+
+  <!-- Hero -->
+  <section class="bg-white pb-8">
+    <div class="container-mo grid lg:grid-cols-12 gap-10 items-center py-10">
+      <div class="lg:col-span-6">
+        <img 
+          src="/images/partenaires/picadeli-logo.png" 
+          alt="Picadeli Logo" 
+          class="h-16 object-contain mb-6 mix-blend-multiply" 
+        />
+        <h1 class="display-xl mt-4 text-balance" data-split-reveal>
+          Créez votre propre<br/>
+          <span class="text-[#6BC172]">salade sur-mesure</span>.
+        </h1>
+        <p class="mt-6 max-w-xl text-[17px] text-neutral-600 leading-relaxed">
+          Le bar à salade <strong>Picadeli</strong> est désormais disponible dans notre magasin de Toulouse Sud — Cépière. 
+          Faites le plein de fraîcheur avec des dizaines d'ingrédients gourmands, sains, et préparés chaque jour.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a href="/magasins/toulouse-sud" class="btn btn-primary bg-[#6BC172] border-[#6BC172] text-white hover:bg-[#5AA161]">Venir en magasin</a>
+          <a href="https://www.picadeli.fr/fr/nos-produits" target="_blank" rel="noopener noreferrer" class="btn btn-outline border-[#6BC172] text-[#6BC172] hover:bg-[#6BC172] hover:text-white">Voir les recettes Picadeli</a>
+        </div>
+      </div>
+      <div class="lg:col-span-6">
+        <div class="relative rounded-3xl overflow-hidden shadow-2xl bg-neutral-100 p-4">
+          <img 
+            src="/images/partenaires/picadeli-salade.webp" 
+            alt="Salade fraîche Picadeli" 
+            class="w-full h-auto object-cover rounded-2xl" 
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Avantages -->
+  <section class="section bg-blanc">
+    <div class="container-mo">
+      <span class="eyebrow">Pourquoi choisir Picadeli ?</span>
+      <h2 class="display-md mt-4 text-balance max-w-2xl">Frais, rapide et à votre goût.</h2>
+      <div class="mt-12 grid md:grid-cols-3 gap-5">
+        {[
+          { n: "01", t: "100% Personnalisable", d: "Choisissez exactement ce que vous voulez manger, sans compromis." },
+          { n: "02", t: "Ingrédients Frais", d: "Des produits de qualité, coupés et préparés avec soin." },
+          { n: "03", t: "Rapide & Pratique", d: "Idéal pour une pause déjeuner saine et équilibrée, prête en un instant." },
+        ].map((step) => (
+          <div class="bg-white rounded-3xl p-7">
+            <div class="font-soft font-bold text-[48px] leading-none text-[#6BC172]">{step.n}</div>
+            <h3 class="font-soft font-bold text-[22px] mt-4">{step.t}</h3>
+            <p class="mt-2 text-[14.5px] text-neutral-600">{step.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
