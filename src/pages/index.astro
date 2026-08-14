@@ -427,6 +427,50 @@ const schemas = [
     </div>
   </section>
 
+  {/* ====================== PRODUITS VEDETTES — vitrine sans prix ====================== */}
+  <section class="section bg-white">
+    <div class="container-mo">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 reveal">
+        <div class="max-w-2xl">
+          <span class="eyebrow">Produits vedettes</span>
+          <h2 class="display-lg mt-4 text-balance">
+            Du <span class="text-vert">monde entier</span>,<br/>
+            dans votre panier.
+          </h2>
+          <p class="mt-3 text-[15px] text-neutral-600">
+            Notre sélection du moment, rayon par rayon. Prix affichés à l'euro près en magasin.
+          </p>
+
+          <!-- Trust indicators (4 pills) moved from hero -->
+          <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-3 text-[13px] text-neutral-500 max-w-full">
+            <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-vert"></span> Halal certifié, sans électronarcose</span>
+            <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rouge"></span> Arrivage quotidien</span>
+            <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-noir"></span> Prix affichés en rayon</span>
+            <a
+              href="/rayons/produits-courants"
+              class="inline-flex items-center gap-2 group hover:text-rouge transition-colors"
+            >
+              <span class="w-2 h-2 rounded-full bg-rouge animate-pulse"></span>
+              <strong class="font-bold">Des prix cassés</strong>
+              <span class="text-rouge group-hover:translate-x-0.5 transition-transform">→</span>
+            </a>
+          </div>
+        </div>
+        <a href="/rayons" class="btn btn-secondary shrink-0 btn-sheen">
+          Explorer les rayons
+        </a>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+        {PRODUITS_VEDETTES.map((p, i) => (
+          <div class="reveal" style={`--reveal-delay: ${(i % 4) * 60}ms`}>
+            <ProduitCard produit={p} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
   {/* ====================== PICADELI ====================== */}
   <section class="section bg-white pb-12 pt-8">
     <div class="container-mo grid lg:grid-cols-12 gap-10 items-center">
@@ -518,7 +562,6 @@ const schemas = [
     </div>
   </section>
 
-
   {/* ====================== KINETIC MARQUEE — chapter break signature ======================
       Typographie display massive qui défile. Casse le rythme visuel après
       le mur des 12 rayons et annonce le chapitre "actualités". */}
@@ -557,50 +600,6 @@ const schemas = [
       </div>
     </section>
   )}
-
-  {/* ====================== PRODUITS VEDETTES — vitrine sans prix ====================== */}
-  <section class="section bg-white">
-    <div class="container-mo">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 reveal">
-        <div class="max-w-2xl">
-          <span class="eyebrow">Produits vedettes</span>
-          <h2 class="display-lg mt-4 text-balance">
-            Du <span class="text-vert">monde entier</span>,<br/>
-            dans votre panier.
-          </h2>
-          <p class="mt-3 text-[15px] text-neutral-600">
-            Notre sélection du moment, rayon par rayon. Prix affichés à l'euro près en magasin.
-          </p>
-
-          <!-- Trust indicators (4 pills) moved from hero -->
-          <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-3 text-[13px] text-neutral-500 max-w-full">
-            <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-vert"></span> Halal certifié, sans électronarcose</span>
-            <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rouge"></span> Arrivage quotidien</span>
-            <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-noir"></span> Prix affichés en rayon</span>
-            <a
-              href="/rayons/produits-courants"
-              class="inline-flex items-center gap-2 group hover:text-rouge transition-colors"
-            >
-              <span class="w-2 h-2 rounded-full bg-rouge animate-pulse"></span>
-              <strong class="font-bold">Des prix cassés</strong>
-              <span class="text-rouge group-hover:translate-x-0.5 transition-transform">→</span>
-            </a>
-          </div>
-        </div>
-        <a href="/rayons" class="btn btn-secondary shrink-0 btn-sheen">
-          Explorer les rayons
-        </a>
-      </div>
-
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
-        {PRODUITS_VEDETTES.map((p, i) => (
-          <div class="reveal" style={`--reveal-delay: ${(i % 4) * 60}ms`}>
-            <ProduitCard produit={p} />
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
 
   {/* ====================== STATS — chiffres rassurance ====================== */}
   <Stats variant="light" />
@@ -837,7 +836,6 @@ const schemas = [
       </div>
     </div>
   </section>
-
 
   {/* ====================== FAQ ====================== */}
   <FAQAccordion items={FAQ_HOME} />
@@ -1091,6 +1089,4 @@ const schemas = [
   runPhoneSimulator();
   document.addEventListener("astro:page-load", runPhoneSimulator);
 </script>
-
-
 

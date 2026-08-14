@@ -278,6 +278,9 @@ export const CATEGORY_IMAGES: Partial<Record<RayonSlug, RayonImagePack>> = {
   "produits-courants": {
     categories: {
       "Hygiène & entretien": L.cashier,              // supermarket checkout lane
+      "Épicerie salée": OFF.cornichonsPickles,
+      "Épicerie sucrée": OFF.figuesSechees,
+      "Boissons": OFF.theVert,
     },
     sousCategories: {},
   },
