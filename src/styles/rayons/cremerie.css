@@ -1,0 +1,46 @@
+/* DA Crémerie — Frais, pur, laitier
+   Blancs, bleus, textures douces et crémeuses.             */
+
+[data-rayon="cremerie"] {
+  --rayon-accent:       #2563EB;   /* bleu laitier */
+  --rayon-accent-dark:  #1E40AF;
+  --rayon-accent-2:     #3B82F6;
+  --rayon-accent-3:     #93C5FD;
+  --rayon-fond-section: #F8FAFC;
+  --rayon-fond-hero:    #EFF6FF;
+  --rayon-texte-hero:   #0F172A;
+  --rayon-font-deco:    var(--font-display);
+}
+
+[data-rayon="cremerie"] .rayon-hero {
+  background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+  color: var(--rayon-texte-hero);
+}
+
+/* Motif doux laitier */
+[data-rayon="cremerie"] .rayon-motif {
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(37, 99, 235, 0.05) 0%, transparent 20%);
+}
+
+/* Bande décorative */
+[data-rayon="cremerie"] .rayon-hero::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #93C5FD, #2563EB, #1E40AF);
+  opacity: 0.8;
+}
+
+[data-rayon="cremerie"] .rayon-badge {
+  background: var(--rayon-accent);
+  color: #FFFFFF;
+}
+
+[data-rayon="cremerie"] .rayon-pill {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--rayon-accent-dark);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}

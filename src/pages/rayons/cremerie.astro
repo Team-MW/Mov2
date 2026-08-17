@@ -1,0 +1,141 @@
+---
+/**
+ * /rayons/cremerie — stub SEO pour le rayon Crémerie
+ *
+ * Page stub légère et "carrée" comme demandé. 
+ * Pas de catalogue e-commerce complexe, juste l'essentiel pour 
+ * présenter le rayon crémerie.
+ */
+import Layout from "@layouts/Layout.astro";
+import Breadcrumb from "@components/Breadcrumb.astro";
+import FAQAccordion from "@components/FAQAccordion.astro";
+import { SITE } from "@/lib/site";
+import { breadcrumbSchema } from "@/lib/schema";
+
+const bc = breadcrumbSchema([
+  { name: "Rayons", url: "/rayons" },
+  { name: "Crémerie", url: "/rayons/cremerie" },
+]);
+
+const produits = [
+  { nom: "Fromages affinés", desc: "Camembert, Comté, Roquefort et spécialités." },
+  { nom: "Beurres de baratte", desc: "Doux, demi-sel et aux cristaux de sel marin." },
+  { nom: "Yaourts & Desserts", desc: "Yaourts nature, aux fruits, et crèmes desserts." },
+  { nom: "Crèmes fraîches", desc: "Épaisse, fluide, entière ou allégée." },
+  { nom: "Laits frais", desc: "Lait entier, demi-écrémé et laits végétaux." },
+  { nom: "Œufs frais", desc: "Poules élevées en plein air, bio et datés du jour." },
+  { nom: "Spécialités du monde", desc: "Feta, Halloumi, Mozzarella di Bufala." },
+  { nom: "Fromages blancs", desc: "Lisses, battus, faisselles traditionnelles." },
+];
+
+const faqItems = [
+  {
+    q: "Proposez-vous des fromages à la coupe ?",
+    r: "Nous proposons une large sélection de fromages pré-emballés garantissant une fraîcheur optimale et une DLC claire, ainsi que des pièces entières pour les amateurs.",
+  },
+  {
+    q: "Avez-vous des produits laitiers locaux ?",
+    r: "Oui, nous travaillons avec plusieurs laiteries et producteurs de la région Occitanie pour vous offrir des fromages et yaourts en circuit court.",
+  },
+  {
+    q: "Où se trouve le rayon Crémerie en magasin ?",
+    r: "Le rayon Crémerie est situé dans l'allée centrale des produits frais, juste après les fruits et légumes, dans nos vitrines réfrigérées maintenues à température optimale.",
+  },
+];
+---
+
+<Layout
+  title={`Crémerie — Fromages et Produits Laitiers · ${SITE.name}`}
+  description="Découvrez notre sélection de fromages, beurres, yaourts et crèmes fraîches. Le meilleur des produits laitiers au Marché de Mo'."
+  faqItems={faqItems}
+  schema={bc}
+>
+  <!-- Hero -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-[#F0F7FF] via-[#E0EFFF] to-[#BFDBFE]">
+    <Breadcrumb items={[{ name: "Rayons", href: "/rayons" }, { name: "Crémerie" }]} />
+    <div class="container-mo pt-4 pb-14 md:pt-6 md:pb-20 relative z-10">
+      <span class="eyebrow text-[#1E3A8A]">Rayon Crémerie</span>
+      <h1 class="display-xl mt-4 text-balance max-w-3xl text-[#0F172A]" data-split-reveal>
+        L'excellence <span class="text-[#2563EB]">laitière</span>,<br/>
+        pour tous les jours.
+      </h1>
+      <p class="mt-6 max-w-2xl text-[17px] md:text-[18px] leading-relaxed text-[#334155]">
+        Fromages affinés, beurres onctueux, yaourts onctueux et spécialités fromagères du monde.
+        Une gamme complète sélectionnée pour son goût et sa fraîcheur incomparable.
+      </p>
+
+      <div class="mt-8 flex flex-wrap gap-2">
+        <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#2563EB] text-white text-[13px] font-bold">
+          <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+          Fraîcheur garantie
+        </span>
+        <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 text-[#0F172A] text-[13px] font-bold">
+          Large sélection
+        </span>
+        <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 text-[#0F172A] text-[13px] font-bold">
+          Arrivages réguliers
+        </span>
+      </div>
+
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a href="/magasins" class="btn btn-primary btn-sheen">
+          Voir notre magasin
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="/rayons" class="btn btn-secondary">
+          Explorer les autres rayons
+        </a>
+      </div>
+    </div>
+
+    <!-- Motif visuel discret -->
+    <div class="absolute top-10 right-10 w-40 h-40 md:w-56 md:h-56 opacity-[0.05] pointer-events-none">
+      <svg viewBox="0 0 100 100" class="w-full h-full text-[#1E3A8A]" fill="currentColor">
+        <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M30 60 Q 50 80 70 60 Q 50 40 30 60" stroke="currentColor" stroke-width="1.5" fill="none"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Produits — grille simple et carrée -->
+  <section class="section bg-blanc">
+    <div class="container-mo">
+      <div class="max-w-2xl mb-10">
+        <span class="eyebrow text-[#2563EB]">Ce que vous trouverez en rayon</span>
+        <h2 class="display-md mt-4 text-balance">
+          Les essentiels, <span class="text-[#2563EB]">toujours frais.</span>
+        </h2>
+        <p class="mt-3 text-[15px] text-neutral-600 leading-relaxed">
+          Une présentation claire de nos familles de produits laitiers.
+          Les prix et formats sont à découvrir directement en magasin.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        {produits.map((p, i) => (
+          <div
+            class="group p-5 rounded-2xl bg-white ring-1 ring-black/5 hover:ring-black/10 hover:-translate-y-0.5 transition-all reveal"
+            style={`--reveal-delay: ${(i % 4) * 60}ms`}
+          >
+            <div class="w-10 h-10 rounded-full bg-[#2563EB]/10 flex items-center justify-center mb-3 group-hover:bg-[#2563EB] group-hover:text-white transition-colors">
+              <svg class="w-5 h-5 text-[#2563EB] group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke-linecap="round"/>
+                <circle cx="12" cy="12" r="4"/>
+              </svg>
+            </div>
+            <h3 class="font-soft font-bold text-[17px] leading-tight text-noir">
+              {p.nom}
+            </h3>
+            <p class="mt-2 text-[13.5px] text-neutral-600 leading-relaxed">
+              {p.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <FAQAccordion items={faqItems} title="FAQ — Crémerie" />
+</Layout>

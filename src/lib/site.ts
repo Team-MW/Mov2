@@ -122,7 +122,7 @@ export type RayonSlug =
   | "boucherie-halal"
   | "fruits-legumes"
   | "epices-du-monde"
-  | "saveurs-afrique"
+  | "cremerie"
   | "saveurs-asie"
   | "saveur-mediterranee"
   | "saveur-sud-amer"
@@ -250,35 +250,29 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
       "thé oriental Toulouse",
     ],
   },
-  "saveurs-afrique": {
-    slug: "saveurs-afrique",
-    nom: "Saveurs d'Afrique & Créole",
-    nomCourt: "Afrique & Créole",
-    eyebrow: "Rayon culturel",
-    tagline: "Dakar. Lagos. Abidjan. Ici.",
+  "cremerie": {
+    slug: "cremerie",
+    nom: "Crémerie",
+    nomCourt: "Crémerie",
+    eyebrow: "Frais & Laitiers",
+    tagline: "L'excellence laitière.",
     description:
-      "Produits de la gastronomie africaine et créole : plats cuisinés, conserves, condiments, boissons et spécialités introuvables ailleurs.",
+      "Découvrez notre sélection de fromages, beurres, yaourts et crèmes. Qualité et fraîcheur garanties.",
     longDescription:
-      "Afrique de l'Ouest, Afrique centrale, Maghreb, Antilles. Gombo, fufu, sauce graine, attiéké, bissap, ginger beer, plantain précuit, huile de palme rouge, poisson fumé — les produits qu'il fallait aller chercher à Paris sont maintenant à Toulouse, au prix juste.",
-    image: "/images/rayons/saveurs-afrique.jpg",
-    heroSlideshow: [
-      "/images/rayons/saveurs-afrique.jpg",
-      "/images/rayons/saveurs-afrique/image-de-annie-spratt.jpg",
-      "/images/rayons/saveurs-afrique/11062b-9138c0db6e6443b7a1e1d02e0163279ff000.jpg",
-      "/images/rayons/saveurs-afrique/slide-02-homepage-maceo-groupe-distributeur-produits-creole-.webp",
-    ],
+      "Un grand choix de produits laitiers pour tous les goûts. Fromages affinés, yaourts natures ou aux fruits, beurres doux et demi-sel, crèmes épaisses et liquides. Le meilleur du lait au meilleur prix.",
+    image: "/images/rayons/cremerie.jpg",
     imageAlt:
-      "Rayon saveurs africaines et créoles Marché de Mo' Toulouse — produits du continent africain",
-    culturel: true,
+      "Rayon crémerie Marché de Mo' Toulouse — fromages et produits laitiers",
+    culturel: false,
     ordre: 7,
-    icone: "africa",
-    featured: ["Gombo", "Fufu", "Sauce graine", "Bissap"],
-    accent: "#C8751A",
+    icone: "cheese",
+    featured: ["Fromages", "Beurres", "Yaourts", "Crèmes"],
+    accent: "#2563EB",
     keywords: [
-      "épicerie africaine Toulouse",
-      "produits africains Toulouse",
-      "créole Toulouse",
-      "gombo Toulouse",
+      "crémerie Toulouse",
+      "fromage Toulouse",
+      "produits laitiers Toulouse",
+      "yaourt Toulouse",
     ],
   },
   "saveurs-asie": {

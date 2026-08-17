@@ -3,7 +3,7 @@
 
 /* DA tokens per rayon — activated via body[data-rayon="..."] */
 /* 5 culturels (hero dark + motif typé) */
-@import "./rayons/saveurs-afrique.css";
+@import "./rayons/cremerie.css";
 @import "./rayons/saveurs-asie.css";
 @import "./rayons/saveur-mediterranee.css";
 @import "./rayons/saveur-sud-amer.css";

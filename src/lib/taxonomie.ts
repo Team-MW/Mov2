@@ -55,12 +55,7 @@ export const TAXONOMIE: Record<RayonSlug, RayonTaxonomie> = {
     "Piments": null,
   },
 
-  "saveurs-afrique": {
-    "Sauces & condiments": null,
-    "Féculents & farines": ["Attiéké", "Mil", "Manioc", "Riz"],
-    "Huiles": null,
-    "Épicerie": ["Bouillons", "Poudres", "Boissons"],
-  },
+
 
   "saveurs-asie": {
     "Riz & nouilles": ["Riz", "Nouilles", "Vermicelles"],
@@ -113,7 +108,7 @@ export const TAXONOMIE: Record<RayonSlug, RayonTaxonomie> = {
     "Pâtisseries orientales": null,
   },
 
-  "produits-laitiers": {
+  "cremerie": {
     "Laits & yaourts": null,
     "Fromages du monde": ["AOP", "Frais", "À pâte dure"],
     "Beurres & crèmes": null,
