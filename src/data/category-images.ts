@@ -44,7 +44,7 @@ const OFF = {
   racinesOignon:       "https://images.openfoodfacts.org/images/products/900/251/560/1018/front_fr.66.400.jpg",
   figuesSechees:       "https://images.openfoodfacts.org/images/products/327/072/000/4115/front.4.400.jpg",
   persillade:          "https://images.openfoodfacts.org/images/products/20226572/front.9.400.jpg",
-  /* saveurs-afrique */
+  /* cremerie */
   maniocCongele:       "https://images.openfoodfacts.org/images/products/341/600/901/1010/front_fr.12.400.jpg",
   rizThai:             "https://images.openfoodfacts.org/images/products/541/067/300/5052/front_fr.3.400.jpg",
   sesameGraines:       "https://images.openfoodfacts.org/images/products/360/090/002/1050/front_fr.41.400.jpg",
@@ -93,7 +93,7 @@ const L = {
   floralSpicePile: "/images/rayons/epices-du-monde/nsplsh-528df.jpg",        // white powder in clay bowl
   indianSpiceMarket: "/images/rayons/epices-du-monde/image-de-paolo-bendandi.jpg", // curry/tandoori/masala bins
   almondCookies: "/images/rayons/epices-du-monde/716c51-32bbd.jpg",          // almond cookies on wood
-  /* saveurs-afrique */
+  /* cremerie */
   africanRiceDishes: "/images/rayons/saveurs-afrique/image-de-keesha-x27-s-kitchen.jpg", // rice/stew/plantain
   peelingManioc: "/images/rayons/saveurs-afrique/image-de-annie-spratt.jpg",             // woman peeling cassava
   coffeeBeans: "/images/rayons/saveurs-afrique/11062b-9138c0db6e6443b7a1e1d02e0163279ff000.jpg", // roasted beans
@@ -183,7 +183,7 @@ export const CATEGORY_IMAGES: Partial<Record<RayonSlug, RayonImagePack>> = {
     sousCategories: {},
   },
 
-  "saveurs-afrique": {
+  "cremerie": {
     categories: {
       "Sauces & condiments": L.africanRiceDishes,    // rice/stew/plantain plates
       "Féculents & farines": L.peelingManioc,        // woman peeling cassava
