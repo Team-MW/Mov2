@@ -76,7 +76,7 @@ export const BANNERS: Banner[] = [
     kind: "culture",
     image: "/images/banners/creole.jpg",
     tagline: "Antilles & Caraïbes — le soleil dans l'assiette",
-    rayonScope: ["saveurs-afrique"],
+    rayonScope: ["cremerie"],
     palette: {
       from: "#E8C390",
       to: "#7FBED4",

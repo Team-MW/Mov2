@@ -310,7 +310,7 @@ const recetteCultureLabel = pageBanners.length > 1 ? pageBanners[1].label : (pag
      · ≥ 2 primary banners       → banner A ⇄ banner B
        (saveurs-asie: asie ⇄ inde ; saveur-mediterranee: maghreb ⇄ italie)
      · exactly 1 primary banner  → "current hero look" ⇄ banner
-       (saveurs-afrique: empty ⇄ créole ; produits-courants: empty ⇄ hygiène)
+       (cremerie: empty ⇄ créole ; produits-courants: empty ⇄ hygiène)
        The "empty" slide is a transparent placeholder so the crossfade
        reveals the palette gradient + .rayon-motif underneath — i.e.
        exactly what the page looked like before this DA layer existed.
@@ -331,7 +331,7 @@ const heroHasBgDa = heroBgBanners.length > 0;
 /* Slide spec for the backdrop slideshow. `kind: "empty"` is the
    transparent placeholder used on single-banner rayons so the
    rotation alternates current-hero ⇄ banner-DA per the user's
-   explicit request for saveurs-afrique. */
+   explicit request for cremerie. */
 type HeroBgSlide =
   | { kind: "banner"; src: string; alt: string; banner: Banner }
   | { kind: "empty"; banner: Banner };
@@ -366,7 +366,7 @@ interface CultureCopy {
   intro: string;
 }
 const CULTURE_COPY: Partial<Record<RayonSlug, { primary?: CultureCopy; crossRef?: CultureCopy }>> = {
-  "saveurs-afrique": {
+  "cremerie": {
     primary: {
       eyebrow: "Au-delà de l'Afrique",
       title: "L'Afrique, et la Caraïbe au passage.",
@@ -1153,7 +1153,7 @@ const pageDesc = (() => {
      copier la disgin / suivre la même DA".
      ------------------------------------------------------------
      Activated on level-1 cultural rayons :
-       saveurs-asie (asie ⇄ inde) · saveurs-afrique (∅ ⇄ créole)
+       saveurs-asie (asie ⇄ inde) · cremerie (∅ ⇄ créole)
        saveur-mediterranee (maghreb ⇄ italie)
        epices-du-monde (maghreb ⇄ inde)
        produits-courants (∅ ⇄ hygiène)

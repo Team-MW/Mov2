@@ -125,7 +125,7 @@ export const RECETTES_HOME: Recette[] = [
     tempsMin: 90,
     portions: 6,
     difficulte: "Facile",
-    rayon: "saveurs-afrique",
+    rayon: "cremerie",
   },
   {
     id: "bibimbap-coreen",

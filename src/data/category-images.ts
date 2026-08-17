@@ -204,6 +204,7 @@ export const CATEGORY_IMAGES: Partial<Record<RayonSlug, RayonImagePack>> = {
     },
   },
 
+
   "saveurs-asie": {
     categories: {
       "Riz & nouilles": L.riceGrains,                // white rice macro

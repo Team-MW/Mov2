@@ -1,15 +1,15 @@
 ---
 titre: "Yassa poulet mariné aux oignons confits"
 resume: "Poulet mariné citron-moutarde, grillé, puis mijoté dans une sauce aux oignons longuement confits. La recette sénégalaise la plus demandée en France."
-image: "/images/rayons/saveurs-afrique/image-de-annie-spratt.jpg"
+image: "/images/rayons/cremerie/image-de-annie-spratt.jpg"
 imageAlt: "Poulet yassa sénégalais sur riz, oignons confits dorés"
 tempsMin: 75
 tempsPrepMin: 15
 tempsCuissonMin: 60
 portions: 4
 difficulte: "Facile"
-rayons: ["boucherie-halal", "saveurs-afrique", "epices-du-monde"]
-rayonPrincipal: "saveurs-afrique"
+rayons: ["boucherie-halal", "cremerie", "epices-du-monde"]
+rayonPrincipal: "cremerie"
 origine: "Sénégal — Casamance"
 keywords: ["yassa", "yassa poulet", "recette sénégalaise", "poulet au citron", "cuisine africaine"]
 date_publication: 2026-04-08
