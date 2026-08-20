@@ -1,7 +1,7 @@
 ---
 titre: "Baklava turc aux pistaches d'Antep"
 resume: "Le dessert ottoman le plus iconique : feuilles de filo dorées au beurre clarifié, pistaches d'Antep concassées, sirop au miel et fleur d'oranger. Pour 12 parts."
-image: "/images/rayons/balkans-turques.jpg"
+image: "/images/recettes/baklava-turc.png"
 imageAlt: "Parts de baklava turc aux pistaches sur plateau doré"
 tempsMin: 90
 tempsPrepMin: 40
