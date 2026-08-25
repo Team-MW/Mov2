@@ -21,6 +21,7 @@ import PromoCard from "@components/PromoCard.astro";
 import RecetteCard from "@components/RecetteCard.astro";
 import FAQAccordion from "@components/FAQAccordion.astro";
 import LocalVideoPlayer from "@components/islands/LocalVideoPlayer.jsx";
+import InteractiveMeatMap from "@components/islands/InteractiveMeatMap.jsx";
 import BoucherieHalalSeo from "@components/BoucherieHalalSeo.astro";
 import { getCollection } from "astro:content";
 import { RAYONS, RAYONS_LIST, SITE, type RayonSlug } from "@/lib/site";
@@ -645,6 +646,27 @@ const pageDesc = (() => {
       </div>
     </div>
   </section>
+
+  {/* CARTE INTERACTIVE BOUCHERIE - Deuxième section */}
+  {level === 1 && rayonSlug === "boucherie-halal" && (
+    <section class="section bg-neutral-50/50 border-t border-black/5">
+      <div class="container-mo">
+        <div class="max-w-2xl mb-10">
+          <span class="eyebrow reveal">Guide de la découpe</span>
+          <h2 class="display-md mt-4 text-balance reveal">
+            Connaître vos <span class="text-rouge">viandes</span>
+          </h2>
+          <p class="mt-3 text-[15px] text-neutral-600 leading-relaxed reveal">
+            Explorez notre carte interactive pour découvrir les différentes pièces, leurs spécificités et nos meilleurs conseils de cuisson pour chaque animal.
+          </p>
+        </div>
+        
+        <div class="reveal">
+          <InteractiveMeatMap client:visible />
+        </div>
+      </div>
+    </section>
+  )}
 
   <!-- PROMOS : ne changent pas entre les niveaux -->
   {promos.length > 0 && (

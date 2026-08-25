@@ -1,0 +1,94 @@
+export const animalsData = [
+  {
+    id: 'agneau',
+    name: 'Agneau',
+    image: '/images/lamb-silhouette.jpg',
+    cuts: [
+      { id: 'collier', name: 'Collier', top: '32%', left: '28%', availableMeats: ['Collier avec os', 'Collier désossé'], cookingMethods: ['Mijoter (Navarin)', 'Braiser'], description: "Morceau charnu et économique, parfait pour vos ragoûts et navarins." },
+      { id: 'epaule', name: 'Épaule', top: '48%', left: '35%', availableMeats: ['Épaule entière', 'Épaule roulée', "Sauté d'agneau"], cookingMethods: ['Rôtir', 'Mijoter'], description: "L'épaule est un morceau exceptionnellement tendre, idéal pour les repas en famille." },
+      { id: 'cote-decouverte', name: 'Côte découverte', top: '32%', left: '45%', availableMeats: ['Côtelettes découvertes'], cookingMethods: ['Griller', 'Poêler'], description: "Côtelettes persillées très savoureuses, situées dans le prolongement du collier." },
+      { id: 'cotes', name: 'Côtes (Premières & Secondes)', top: '32%', left: '55%', availableMeats: ['Côtelettes', "Carré d'agneau"], cookingMethods: ['Griller', 'Poêler', 'Rôtir'], description: "Les morceaux les plus nobles. Une chair très tendre et finement persillée." },
+      { id: 'haut-de-cotes', name: 'Haut de côtes', top: '48%', left: '55%', availableMeats: ['Haut de côtes'], cookingMethods: ['Mijoter', 'Braiser'], description: "Morceau riche souvent marié au collier pour de délicieux plats en sauce." },
+      { id: 'filet', name: 'Filet & Selle', top: '32%', left: '68%', availableMeats: ['Côtes filet', 'Selle entière', 'Noisettes'], cookingMethods: ['Poêler', 'Griller', 'Rôtir'], description: "Partie très tendre, souvent rôtie entière ou découpée en médaillons." },
+      { id: 'gigot', name: 'Gigot', top: '50%', left: '73%', availableMeats: ['Gigot entier', 'Gigot raccourci', 'Tranches'], cookingMethods: ['Rôtir', 'Griller (en tranches)'], description: "Le grand classique. Viande maigre et fondante lorsqu'elle est servie rosée." },
+      { id: 'poitrine', name: 'Poitrine', top: '60%', left: '45%', availableMeats: ['Poitrine entière', 'Tendrons'], cookingMethods: ['Mijoter', 'Griller (marinée)'], description: "Un morceau entrelardé, indispensable pour les tajines ou grillé au barbecue." }
+    ]
+  },
+  {
+    id: 'boeuf',
+    name: 'Bœuf',
+    image: '/images/boeuf-silhouette.jpg',
+    cuts: [
+      { id: 'collier', name: 'Collier / Basses côtes', top: '35%', left: '22%', availableMeats: ['Basses côtes', 'Collier'], cookingMethods: ['Mijoter', 'Braiser'], description: "Morceaux persillés nécessitant une cuisson lente (Bourguignon, pot-au-feu)." },
+      { id: 'entrecote', name: 'Côte & Entrecôte', top: '28%', left: '38%', availableMeats: ['Côte de bœuf', 'Entrecôte'], cookingMethods: ['Griller', 'Poêler', 'Rôtir'], description: "Le morceau roi des amateurs de viande. Persillé, fondant et riche en goût." },
+      { id: 'faux-filet', name: 'Faux-filet', top: '28%', left: '55%', availableMeats: ['Faux-filet', 'Aloyau'], cookingMethods: ['Griller', 'Poêler'], description: "Moins gras que l'entrecôte mais tout aussi tendre. Parfait en steak." },
+      { id: 'rumsteak', name: 'Rumsteak', top: '28%', left: '72%', availableMeats: ['Rumsteak', 'Aiguillette'], cookingMethods: ['Griller', 'Poêler', 'Fondue'], description: "Une viande maigre à fibres courtes, extrêmement tendre et goûteuse." },
+      { id: 'gite', name: 'Gîte & Cuissot', top: '55%', left: '78%', availableMeats: ['Gîte', 'Gîte à la noix', 'Macreuse'], cookingMethods: ['Mijoter', 'Bouillir'], description: "Morceaux riches en collagène, idéals pour le pot-au-feu ou les daubes." },
+      { id: 'bavette', name: 'Bavette & Onglet', top: '50%', left: '55%', availableMeats: ['Bavette d\'aloyau', 'Onglet'], cookingMethods: ['Poêler', 'Griller'], description: "Des morceaux à fibres longues, réputés pour leur mâche et leur saveur intense." },
+      { id: 'poitrine', name: 'Poitrine & Plat de côtes', top: '60%', left: '38%', availableMeats: ['Plat de côtes', 'Tendron', 'Flanchet'], cookingMethods: ['Bouillir', 'Mijoter'], description: "Indispensables pour un bon pot-au-feu ou braisés lentement." },
+      { id: 'paleron', name: 'Paleron / Macreuse', top: '48%', left: '25%', availableMeats: ['Paleron', 'Macreuse', 'Jumeau'], cookingMethods: ['Mijoter', 'Braiser'], description: "Traversé par un nerf gélatineux qui fond à la cuisson, rendant la viande moelleuse." }
+    ]
+  },
+  {
+    id: 'veau',
+    name: 'Veau',
+    image: '/images/veau-silhouette.jpg',
+    cuts: [
+      { id: 'collier', name: 'Collier', top: '35%', left: '25%', availableMeats: ['Collier avec os', 'Collier sans os'], cookingMethods: ['Mijoter (Blanquette)'], description: "Morceau gélatineux et moelleux, la star incontestée de la blanquette de veau." },
+      { id: 'epaule', name: 'Épaule', top: '50%', left: '30%', availableMeats: ['Épaule roulée', 'Sauté de veau', 'Marengo'], cookingMethods: ['Rôtir', 'Mijoter'], description: "Un classique tendre, parfait pour les sautés ou rôti au four." },
+      { id: 'cotes', name: 'Côtes', top: '32%', left: '45%', availableMeats: ['Côtes premières', 'Côtes secondes', 'Côtes découvertes'], cookingMethods: ['Griller', 'Poêler'], description: "Une viande rosée, délicate et raffinée pour des repas élégants." },
+      { id: 'longe', name: 'Longe & Filet', top: '32%', left: '60%', availableMeats: ['Filet mignon', 'Longe', 'Médaillons'], cookingMethods: ['Poêler', 'Rôtir'], description: "La partie la plus noble du veau. D'une tendreté incomparable." },
+      { id: 'quasi', name: 'Quasi & Noix', top: '38%', left: '72%', availableMeats: ['Escalopes', 'Quasi', 'Noix pâtissière'], cookingMethods: ['Poêler', 'Paner'], description: "Des morceaux maigres idéals pour des escalopes milanaises ou des rôtis de choix." },
+      { id: 'cuissot', name: 'Jarret & Osso Buco', top: '60%', left: '72%', availableMeats: ['Jarret', 'Osso Buco', 'Rouelle'], cookingMethods: ['Braiser', 'Mijoter'], description: "Morceau osseux et gélatineux célèbre pour le fameux plat italien Osso Buco." },
+      { id: 'poitrine', name: 'Poitrine & Tendron', top: '55%', left: '45%', availableMeats: ['Poitrine farcie', 'Tendrons'], cookingMethods: ['Mijoter', 'Braiser'], description: "Parfaits pour apporter du moelleux à vos blanquettes et plats mijotés." }
+    ]
+  },
+  {
+    id: 'poulet',
+    name: 'Poulet',
+    image: '/images/poulet-silhouette.jpg',
+    cuts: [
+      { id: 'blanc', name: 'Blanc & Filet', top: '55%', left: '35%', availableMeats: ['Filets purs', 'Suprêmes', 'Émincés'], cookingMethods: ['Poêler', 'Griller', 'Vapeur'], description: "La partie la plus maigre. Idéale en escalope, en curry ou panée." },
+      { id: 'aiguillette', name: 'Aiguillette', top: '50%', left: '42%', availableMeats: ['Aiguillettes'], cookingMethods: ['Poêler rapide', 'Frire'], description: "Petite bande de chair située sous le filet, extrêmement tendre." },
+      { id: 'aile', name: 'Aile', top: '40%', left: '50%', availableMeats: ['Ailes entières', 'Manchons'], cookingMethods: ['Griller', 'Frire', 'Rôtir'], description: "Parfaites marinées pour l'apéritif, les barbecues ou des buffalo wings." },
+      { id: 'cuisse', name: 'Cuisse entière', top: '60%', left: '65%', availableMeats: ['Cuisse entière'], cookingMethods: ['Rôtir', 'Mijoter', 'Griller'], description: "Une viande plus foncée, juteuse et très goûtue." },
+      { id: 'haut-cuisse', name: 'Haut de cuisse', top: '52%', left: '62%', availableMeats: ['Haut de cuisse désossé', 'Haut avec os'], cookingMethods: ['Mijoter', 'Griller'], description: "Le meilleur compromis: tendre comme le filet, savoureux comme la cuisse." },
+      { id: 'pilon', name: 'Pilon', top: '75%', left: '68%', availableMeats: ['Pilons'], cookingMethods: ['Rôtir', 'Frire', 'Griller'], description: "La partie inférieure de la cuisse, adorée des enfants et pratique à manger." },
+      { id: 'sot-ly-laisse', name: 'Sot-l\'y-laisse', top: '40%', left: '72%', availableMeats: ['Sot-l\'y-laisse (sur commande)'], cookingMethods: ['Poêler'], description: "Deux petits morceaux très fins de chaque côté de la colonne vertébrale. Le 'caviar' du poulet." }
+    ]
+  },
+  {
+    id: 'dinde',
+    name: 'Dinde',
+    image: '/images/dinde-silhouette.jpg',
+    cuts: [
+      { id: 'blanc', name: 'Blanc & Filet', top: '55%', left: '32%', availableMeats: ['Filets', 'Escalopes', 'Rôti de dinde'], cookingMethods: ['Poêler', 'Rôtir'], description: "Viande très maigre et économique, parfaite pour des escalopes de tous les jours." },
+      { id: 'cuisse', name: 'Cuisse & Pilon', top: '65%', left: '60%', availableMeats: ['Cuisse entière', 'Osso Buco de dinde'], cookingMethods: ['Rôtir', 'Mijoter'], description: "De gros morceaux savoureux qui supportent très bien les cuissons longues en cocotte." },
+      { id: 'aile', name: 'Aile', top: '42%', left: '48%', availableMeats: ['Ailerons', 'Ailes'], cookingMethods: ['Mijoter', 'Bouillon'], description: "Souvent utilisés pour réaliser de formidables bouillons ou des ragoûts économiques." },
+      { id: 'sot-ly-laisse', name: 'Sot-l\'y-laisse', top: '40%', left: '65%', availableMeats: ['Sot-l\'y-laisse'], cookingMethods: ['Poêler', 'Mijoter en crème'], description: "Des morceaux nobles, ronds et tendres, très prisés par les gourmets." }
+    ]
+  },
+  {
+    id: 'lapin',
+    name: 'Lapin',
+    image: '/images/lapin-silhouette.jpg',
+    cuts: [
+      { id: 'rable', name: 'Râble', top: '35%', left: '55%', availableMeats: ['Râbles', 'Filet de lapin'], cookingMethods: ['Rôtir', 'Poêler (moutarde)'], description: "Le dos du lapin. C'est le morceau le plus charnu, d'une grande finesse." },
+      { id: 'cuisse', name: 'Cuisse', top: '60%', left: '75%', availableMeats: ['Cuisses'], cookingMethods: ['Mijoter', 'Braiser', 'Rôtir'], description: "Parfaite pour un lapin à la moutarde ou aux pruneaux, viande fondante." },
+      { id: 'epaule', name: 'Épaule & Patte avant', top: '60%', left: '35%', availableMeats: ['Épaules (gigolettes)'], cookingMethods: ['Mijoter', 'Sauté'], description: "Petits morceaux savoureux (souvent appelés gigolettes) parfaits en sauce." },
+      { id: 'avant', name: 'Avant & Côtes', top: '40%', left: '40%', availableMeats: ['Coffre', 'Avant'], cookingMethods: ['Mijoter', 'Bouillon'], description: "Idéal pour les terrines, les rillettes de lapin ou pour parfumer un fond." },
+      { id: 'abats', name: 'Foie & Rognons', top: '55%', left: '50%', availableMeats: ['Foie', 'Rognons'], cookingMethods: ['Poêler rapidement'], description: "Des abats délicats, parfaits juste poêlés avec une persillade." }
+    ]
+  },
+  {
+    id: 'chevre',
+    name: 'Chèvre / Chevreau',
+    image: '/images/chevre-silhouette.jpg',
+    cuts: [
+      { id: 'collier', name: 'Collier & Épaule', top: '35%', left: '30%', availableMeats: ['Collier', 'Épaule (Cabri)'], cookingMethods: ['Mijoter', 'Ragoût (Colombo)'], description: "Des morceaux qui demandent à mijoter longtemps. Très populaires dans la cuisine antillaise." },
+      { id: 'cotes', name: 'Côtes & Filet', top: '35%', left: '55%', availableMeats: ['Côtelettes'], cookingMethods: ['Griller', 'Poêler'], description: "Une chair au goût affirmé, excellente juste grillée aux herbes." },
+      { id: 'gigot', name: 'Gigot', top: '55%', left: '75%', availableMeats: ['Gigot de chevreau'], cookingMethods: ['Rôtir (four/broche)'], description: "Traditionnellement rôti entier à Pâques, sa chair est délicate (chevreau) ou corsée (chèvre)." },
+      { id: 'poitrine', name: 'Poitrine', top: '55%', left: '45%', availableMeats: ['Poitrine', 'Tendrons'], cookingMethods: ['Mijoter', 'Curry'], description: "Idéale pour les plats mijotés épicés, les currys et les colombos." }
+    ]
+  }
+];

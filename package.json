@@ -12,11 +12,12 @@
     "prebuild": "node ./scripts/fetch-tiktok-thumbs.mjs",
     "build": "astro build",
     "postbuild": "node ./scripts/fix-vercel-runtime.mjs",
+    "postinstall": "node ./scripts/patch-gray-matter.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
   "engines": {
-    "node": "22.x"
+    "node": ">=20.0.0"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
@@ -30,6 +31,7 @@
     "astro": "^4.16.10",
     "chart.js": "^4.5.1",
     "fuse.js": "^7.3.0",
+    "js-yaml": "^3.14.1",
     "jsbarcode": "^3.12.3",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
