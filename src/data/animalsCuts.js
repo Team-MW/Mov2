@@ -4,14 +4,16 @@ export const animalsData = [
     name: 'Agneau',
     image: '/images/lamb-silhouette.jpg',
     cuts: [
-      { id: 'collier', name: 'Collier', top: '32%', left: '28%', availableMeats: ['Collier avec os', 'Collier désossé'], cookingMethods: ['Mijoter (Navarin)', 'Braiser'], description: "Morceau charnu et économique, parfait pour vos ragoûts et navarins." },
-      { id: 'epaule', name: 'Épaule', top: '48%', left: '35%', availableMeats: ['Épaule entière', 'Épaule roulée', "Sauté d'agneau"], cookingMethods: ['Rôtir', 'Mijoter'], description: "L'épaule est un morceau exceptionnellement tendre, idéal pour les repas en famille." },
-      { id: 'cote-decouverte', name: 'Côte découverte', top: '32%', left: '45%', availableMeats: ['Côtelettes découvertes'], cookingMethods: ['Griller', 'Poêler'], description: "Côtelettes persillées très savoureuses, situées dans le prolongement du collier." },
-      { id: 'cotes', name: 'Côtes (Premières & Secondes)', top: '32%', left: '55%', availableMeats: ['Côtelettes', "Carré d'agneau"], cookingMethods: ['Griller', 'Poêler', 'Rôtir'], description: "Les morceaux les plus nobles. Une chair très tendre et finement persillée." },
-      { id: 'haut-de-cotes', name: 'Haut de côtes', top: '48%', left: '55%', availableMeats: ['Haut de côtes'], cookingMethods: ['Mijoter', 'Braiser'], description: "Morceau riche souvent marié au collier pour de délicieux plats en sauce." },
-      { id: 'filet', name: 'Filet & Selle', top: '32%', left: '68%', availableMeats: ['Côtes filet', 'Selle entière', 'Noisettes'], cookingMethods: ['Poêler', 'Griller', 'Rôtir'], description: "Partie très tendre, souvent rôtie entière ou découpée en médaillons." },
-      { id: 'gigot', name: 'Gigot', top: '50%', left: '73%', availableMeats: ['Gigot entier', 'Gigot raccourci', 'Tranches'], cookingMethods: ['Rôtir', 'Griller (en tranches)'], description: "Le grand classique. Viande maigre et fondante lorsqu'elle est servie rosée." },
-      { id: 'poitrine', name: 'Poitrine', top: '60%', left: '45%', availableMeats: ['Poitrine entière', 'Tendrons'], cookingMethods: ['Mijoter', 'Griller (marinée)'], description: "Un morceau entrelardé, indispensable pour les tajines ou grillé au barbecue." }
+      { id: 'collier', name: 'Collier', top: '25%', left: '20%', availableMeats: ['Collier avec os', 'Collier désossé'], cookingMethods: ['Mijoter', 'Braiser'], description: "Morceau charnu et économique, situé dans le cou. Parfait pour vos ragoûts et navarins." },
+      { id: 'cote-decouverte', name: 'Côte découverte', top: '30%', left: '35%', availableMeats: ['Côtelettes découvertes'], cookingMethods: ['Griller', 'Poêler'], description: "Situées après le collier, des côtelettes persillées et très savoureuses." },
+      { id: 'epaule', name: 'Épaule', top: '50%', left: '25%', availableMeats: ['Épaule entière', 'Épaule roulée', "Sauté d'agneau"], cookingMethods: ['Rôtir', 'Mijoter'], description: "L'épaule est un morceau exceptionnellement tendre, idéal pour les repas en famille." },
+      { id: 'cote-seconde-premiere', name: 'Côte seconde et Côte première', top: '30%', left: '45%', availableMeats: ['Côtelettes', "Carré d'agneau"], cookingMethods: ['Griller', 'Poêler', 'Rôtir'], description: "Les morceaux les plus nobles du dos. Une chair très tendre et finement persillée." },
+      { id: 'haut-de-cotes', name: 'Haut de côtes', top: '45%', left: '45%', availableMeats: ['Haut de côtes'], cookingMethods: ['Mijoter', 'Braiser'], description: "Morceau riche souvent marié au collier pour de délicieux plats en sauce." },
+      { id: 'poitrine', name: 'Poitrine', top: '65%', left: '40%', availableMeats: ['Poitrine entière', 'Tendrons'], cookingMethods: ['Mijoter', 'Griller'], description: "Un morceau entrelardé, idéal pour les tajines ou grillé au barbecue." },
+      { id: 'filet-cote-filet', name: 'Filet et Côte filet', top: '30%', left: '60%', availableMeats: ['Côtes filet', 'Filet mignon'], cookingMethods: ['Poêler', 'Griller'], description: "Partie extrêmement tendre du bas du dos, ne comportant pas de manche osseux." },
+      { id: 'selle', name: 'Selle', top: '30%', left: '75%', availableMeats: ['Selle entière', 'Noisettes'], cookingMethods: ['Rôtir'], description: "Partie charnue à la base de la queue, souvent rôtie entière." },
+      { id: 'gigot-entier', name: 'Gigot entier', top: '45%', left: '80%', availableMeats: ['Gigot entier'], cookingMethods: ['Rôtir'], description: "Le grand classique du dimanche. Viande fondante, à servir de préférence rosée." },
+      { id: 'gigot-raccourci', name: 'Gigot raccourci', top: '65%', left: '80%', availableMeats: ['Gigot raccourci', 'Tranches de gigot'], cookingMethods: ['Rôtir', 'Griller'], description: "La base de la patte arrière, viande maigre excellente en tranches." }
     ]
   },
   {
