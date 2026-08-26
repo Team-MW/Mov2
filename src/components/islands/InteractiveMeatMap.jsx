@@ -79,8 +79,13 @@ export default function InteractiveMeatMap() {
         <div className="lg:w-1/2 flex flex-col justify-center w-full">
           <div className="bg-neutral-50/80 p-8 rounded-3xl ring-1 ring-black/5 transition-all duration-300 relative overflow-hidden min-h-[450px] flex flex-col">
              <div className="absolute -top-12 -right-12 w-32 h-32 bg-rouge opacity-5 rounded-full blur-3xl pointer-events-none"></div>
+             
+             {/* Halal Logo */}
+             <div className="absolute top-6 right-6 w-16 h-16 opacity-90 drop-shadow-sm">
+                <img src="/images/halal-logo.png" alt="Certification Halal" className="w-full h-full object-contain" />
+             </div>
 
-             <div className="flex items-center gap-3 mb-5 relative">
+             <div className="flex items-center gap-3 mb-5 relative mt-2">
                 <span className="w-10 h-1 bg-rouge rounded-full inline-block"></span>
                 <span className="eyebrow !text-rouge tracking-widest text-[11px] uppercase">Le conseil du boucher</span>
              </div>
