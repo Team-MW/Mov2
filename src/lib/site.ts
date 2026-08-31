@@ -260,7 +260,7 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
     ordre: 7,
     icone: "cheese",
     featured: ["Fromages", "Beurres", "Yaourts", "Crèmes"],
-    accent: "#2563EB",
+    accent: "#F59E0B",
     keywords: [
       "crémerie Toulouse",
       "fromage Toulouse",
