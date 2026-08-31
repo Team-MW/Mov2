@@ -176,6 +176,43 @@ const schemas = [
     </section>
   )}
 
+  {/* ====================== WHATSAPP COMMUNITY ====================== */}
+  <section class="bg-[#0B141A] text-white relative overflow-hidden py-16 md:py-24">
+    <!-- WhatsApp Background / Pattern -->
+    <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(#25D366 1.5px, transparent 1.5px); background-size: 32px 32px;"></div>
+    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-[#25D366]/10 blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+    
+    <div class="container-mo relative z-10 flex flex-col md:flex-row items-center justify-between gap-10 md:gap-16">
+      <div class="flex-1 text-center md:text-left">
+        <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#25D366]/15 text-[#25D366] font-bold text-[13px] tracking-wide uppercase mb-6 border border-[#25D366]/20 shadow-sm">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#25D366]"></span>
+          </span>
+          Rejoignez le canal officiel
+        </span>
+        <h2 class="display-lg text-balance mb-5 leading-[1.1] !text-white">
+          Notre catalogue & nos offres,<br/>
+          <span class="text-[#25D366]">directement sur WhatsApp</span>
+        </h2>
+        <p class="text-[17px] md:text-[19px] text-white/80 leading-relaxed max-w-2xl mb-10 text-pretty">
+          Soyez les premiers informés de nos arrivages, de nos promos exclusives et recevez notre catalogue numérique <strong>mis à jour tous les jours</strong>. Une communauté VIP pour ne rater aucune bonne affaire.
+        </p>
+        <a href="#" class="inline-flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#1DA851] text-neutral-950 font-bold px-8 py-4.5 rounded-[1.25rem] transition-all hover:-translate-y-1 hover:shadow-xl shadow-[#25D366]/25 text-[17px]">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.711.927 3.149.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.768-5.77zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964 1.006-3.585c-.605-1.085-.928-2.34-.928-3.633 0-4.133 3.366-7.499 7.502-7.499 4.134 0 7.499 3.365 7.499 7.499 0 4.133-3.365 7.499-7.499 7.499z"/></svg>
+          Rejoindre le canal WhatsApp
+        </a>
+      </div>
+
+      <div class="w-48 md:w-64 lg:w-72 shrink-0 relative group mt-8 md:mt-0">
+        <div class="absolute inset-0 bg-[#25D366] blur-[60px] opacity-20 group-hover:opacity-40 transition-opacity duration-700 rounded-full"></div>
+        <div class="relative z-10 rounded-[2.5rem] bg-white p-2 shadow-2xl rotate-[-3deg] group-hover:rotate-0 group-hover:scale-105 transition-transform duration-700 ease-out border border-white/20">
+          <img src="/images/whatsapp-logo.avif" alt="WhatsApp Canal" class="w-full h-auto rounded-[2rem] object-cover" />
+        </div>
+      </div>
+    </div>
+  </section>
+
   {/* ====================== 3 · HERO ====================== */}
   <section class="relative overflow-hidden bg-gradient-to-br from-white via-neutral-50 to-neutral-100">
     <!-- Watermark Mo' — parallax léger pour feel "profondeur" -->
@@ -617,25 +654,20 @@ const schemas = [
         <span class="eyebrow !text-vert-light">Notre histoire</span>
         <h2 class="display-lg mt-4 text-balance !text-white">
           Mo', c'était<br/>
-          <span class="text-vert-light">Mohammed</span>
+          <span class="text-vert-light">Mohamed</span>
         </h2>
         <div class="mt-6 space-y-4 text-white/75 text-[16px] leading-relaxed max-w-2xl">
           <p>
-            Le patriarche. Le père de cette famille de commerçants passionnés
-            dont est issu <strong class="text-white">le fondateur</strong>,
-            fondateur du Marché de Mo'.
+            Le patriarche. Le père d’une famille de commerçants passionnés, à l’origine de l’histoire et des valeurs qui ont donné naissance au Marché de Mo’.
           </p>
           <p>
-            Lauréat du <strong class="text-white">Réseau Entreprendre Occitanie</strong>,
-            Samir a ouvert le magasin à Toulouse.
-            Avec une conviction simple : les saveurs du monde doivent être
-            accessibles à tous, avec la <strong class="text-white">qualité d'un ultra-frais</strong>
-            et le prix d'un supermarché.
+            Une aventure familiale portée par une conviction simple : rendre les saveurs du monde accessibles à tous, en associant la qualité et la fraîcheur des produits aux prix d’un supermarché.
           </p>
           <p>
-            Aujourd'hui, une équipe de <strong class="text-white">24 salariés</strong>,
-            et une certitude : <strong class="text-white">90% de notre équipe</strong>
-            n'avait pas d'emploi avant de rejoindre le Marché de Mo'.
+            Aujourd’hui, le Marché de Mo’, c’est une équipe de <strong class="text-white">24 salariés</strong> et un engagement fort pour l’emploi local : <strong class="text-white">90 % de nos collaborateurs</strong> étaient sans emploi avant de rejoindre l’aventure.
+          </p>
+          <p>
+            Plus qu’un supermarché, c’est une histoire de transmission, de commerce et de proximité.
           </p>
         </div>
         <div class="mt-10 flex flex-col sm:flex-row gap-3">
@@ -650,7 +682,7 @@ const schemas = [
         <div class="relative aspect-square rounded-full overflow-hidden bg-gradient-to-br from-vert-dark/40 to-black/60 ring-4 ring-white/10 reveal reveal-mask">
           <img
             src="/images/home/fondateur-mo.png"
-            alt="Mohammed — le père, patriarche de la famille fondatrice du Marché de Mo'"
+            alt="Mohamed — le père, patriarche de la famille fondatrice du Marché de Mo'"
             class="absolute inset-0 w-full h-full object-contain object-bottom p-6"
             width="900"
             height="900"

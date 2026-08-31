@@ -49,9 +49,7 @@ export interface Magasin {
   surface: string;
   parking: string;
   horaires: {
-    lundiJeudi: string;
-    vendredi: string;
-    samedi: string;
+    lundiSamedi: string;
     dimanche: string;
   };
   /** Schema.org openingHours array */
@@ -81,17 +79,12 @@ export const MAGASINS: Record<MagasinSlug, Magasin> = {
     surface: "1 200 m²",
     parking: "600 places",
     horaires: {
-      lundiJeudi: "8h30 – 20h30",
-      vendredi: "8h30 – 13h & 14h – 21h",
-      samedi: "8h30 – 21h",
-      dimanche: "8h30 – 13h",
+      lundiSamedi: "9h – 20h",
+      dimanche: "10h – 20h",
     },
     openingHoursSchema: [
-      "Mo-Th 08:30-20:30",
-      "Fr 08:30-13:00",
-      "Fr 14:00-21:00",
-      "Sa 08:30-21:00",
-      "Su 08:30-13:00",
+      "Mo-Sa 09:00-20:00",
+      "Su 10:00-20:00",
     ],
     telephone: "05 82 95 82 52",
     telE164: "+33582958252",

@@ -106,7 +106,7 @@ const slideCount = Math.min(uniqueSlides.length, 4);
       </div>
 
       <div>
-        <h3 class="font-soft font-bold text-[28px] md:text-[32px] leading-none text-white drop-shadow-sm">
+        <h3 class={`font-soft font-bold text-[28px] md:text-[32px] leading-none drop-shadow-sm ${rayon.slug === 'cremerie' ? 'text-yellow-400' : 'text-white'}`}>
           {rayon.nom}
         </h3>
         <p class="mt-2 text-white/85 text-[14px] leading-snug max-w-[34ch]">

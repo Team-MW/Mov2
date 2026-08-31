@@ -39,6 +39,19 @@ const bc = breadcrumbSchema([{ name: "Recrutement", url: "/recrutement" }]);
         rejoindre le Marché de Mo'. Nous recrutons <strong class="text-white">entre 19 et 56 ans</strong>,
         sur la motivation et le sens du service. Le reste, on vous l'apprend.
       </p>
+
+      <div class="mt-10 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+        <a href="https://fr.linkedin.com/company/march%C3%A9-de-mo" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl p-2 pr-5 transition-all border border-white/10 shadow-xl">
+           <div class="w-11 h-11 rounded-[10px] bg-white flex items-center justify-center p-1.5 shrink-0 overflow-hidden">
+             <img src="/images/linkedin_logo.png" alt="LinkedIn" class="w-full h-full object-contain" />
+           </div>
+           <div class="flex flex-col">
+             <span class="text-[13px] text-white/70 font-medium leading-tight">Suivez nos actualités sur</span>
+             <span class="font-bold text-white leading-tight group-hover:text-vert-light transition-colors mt-0.5">LinkedIn</span>
+           </div>
+           <svg class="w-4 h-4 text-white/50 group-hover:text-vert-light transition-colors ml-2 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -78,6 +91,32 @@ const bc = breadcrumbSchema([{ name: "Recrutement", url: "/recrutement" }]);
           </li>
         ))}
       </ul>
+    </div>
+  </section>
+
+  <!-- LinkedIn Banner -->
+  <section class="section-sm bg-neutral-100/50">
+    <div class="container-mo">
+      <div class="bg-white rounded-[2rem] p-8 md:p-12 border border-black/5 shadow-sm flex flex-col md:flex-row items-center gap-8 md:gap-12 relative overflow-hidden group">
+        <div class="absolute -right-20 -top-20 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity pointer-events-none select-none">
+           <img src="/images/linkedin_logo.png" alt="" class="w-[400px] h-[400px] object-contain grayscale" />
+        </div>
+        <div class="w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-[1.5rem] bg-[#0077B5]/10 flex items-center justify-center p-5 shadow-inner">
+          <img src="/images/linkedin_logo.png" alt="LinkedIn Marché de Mo'" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
+        </div>
+        <div class="flex-1 text-center md:text-left relative z-10">
+          <h2 class="display-sm text-balance">Retrouvez-nous aussi sur <span class="text-[#0077B5]">LinkedIn</span></h2>
+          <p class="mt-4 text-[16px] text-neutral-600 max-w-xl mx-auto md:mx-0 leading-relaxed">
+            Plongez dans les coulisses du Marché de Mo', suivez nos actualités RH, découvrez nos métiers et soyez les premiers informés de nos nouvelles ouvertures de postes.
+          </p>
+          <div class="mt-8 flex justify-center md:justify-start">
+            <a href="https://fr.linkedin.com/company/march%C3%A9-de-mo" target="_blank" rel="noopener noreferrer" class="btn btn-primary bg-[#0077B5] hover:bg-[#0077B5]/90 border-transparent text-white shadow-lg shadow-[#0077B5]/20 flex items-center gap-2">
+              <span>S'abonner à notre page</span>
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 

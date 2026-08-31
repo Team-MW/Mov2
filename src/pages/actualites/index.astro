@@ -11,7 +11,7 @@ const articles = (await getCollection("articles", (a) => a.data.actif))
   );
 
 const featured = articles[0];
-const others = articles.slice(1);
+const others = articles; // Changed: Do not slice so the newest article still appears in the grid
 
 const bc = breadcrumbSchema([{ name: "Actualités", url: "/actualites" }]);
 
