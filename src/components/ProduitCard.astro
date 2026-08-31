@@ -55,7 +55,8 @@ const produitSizes =
         decoding="async"
         width="600"
         height="600"
-        class="w-full h-full object-cover group-hover:scale-[1.07] transition-transform duration-500"
+        class="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-500"
+        onerror="this.closest('.group').remove()"
       />
     ) : (
       <div class="absolute inset-0 bg-gradient-to-br from-white via-neutral-100 to-[#EEEAE0] flex flex-col items-center justify-center p-5 text-center">

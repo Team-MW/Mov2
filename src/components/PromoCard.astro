@@ -80,6 +80,7 @@ const promoSizes =
       width="1200"
       height="900"
       class="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
+      onerror="this.closest('article').remove()"
     />
     <!-- Badge réduction : animation d'entrée "tampon" (scale + rotation). -->
     <div class="absolute top-4 left-4 badge-promo badge-stamp">
