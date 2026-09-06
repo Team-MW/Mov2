@@ -29,7 +29,7 @@ export const SITE = {
 export const SOCIAL = {
   facebook: "https://www.facebook.com/marchedemo/",
   instagram: "https://www.instagram.com/marchedemo_supermarches/",
-  linkedin: "https://linkedin.com/company/marché-de-mo/about/",
+  linkedin: "https://www.linkedin.com/company/march%C3%A9-de-mo/",
   tiktok: "https://www.tiktok.com/@marchedemo",
 } as const;
 

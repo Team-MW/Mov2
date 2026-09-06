@@ -1,5 +1,5 @@
 ---
-titre: "Boucher·ère halal"
+titre: "Boucher·ère"
 magasin: "toulouse-sud"
 type_contrat: "CDI"
 temps: "Temps plein"
