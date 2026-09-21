@@ -1,36 +1,50 @@
 /**
- * Jotform API client — lit les soumissions des 3 formulaires du site
- * (recrutement, franchise, fidélité) pour l'admin.
+ * Jotform API client — soumissions des formulaires Marché de Mo'
+ * visibles dans /admin/formulaires.
  *
- * Clé : JOTFORM_API_KEY (My Account → API → Full Access)
- * Base EU optionnelle : JOTFORM_API_BASE=https://eu-api.jotform.com
+ * Clé : JOTFORM_API_KEY (lecture seule suffit)
+ * Base EU (compte Safe mode) : JOTFORM_API_BASE=https://eu-api.jotform.com
  */
 
-export const JOTFORM_FORMS = [
-  {
-    id: "262253636484361",
+/** Formulaires connus du site public — enrichis avec page + libellé court. */
+export const KNOWN_SITE_FORMS: Record<
+  string,
+  { key: string; label: string; description: string; page: string }
+> = {
+  "262253636484361": {
     key: "recrutement",
     label: "Recrutement",
     description: "Candidatures (boucher, polyvalent, apprentissage…)",
     page: "/recrutement",
   },
-  {
-    id: "262254008330345",
+  "262254008330345": {
     key: "franchise",
     label: "Franchise",
     description: "Demandes de franchise",
     page: "/franchise",
   },
-  {
-    id: "262253577205356",
+  "262253577205356": {
     key: "fidelite",
     label: "Fidélité",
     description: "Inscriptions programme de fidélité",
     page: "/programme-fidelite",
   },
-] as const;
+};
 
-export type JotformFormKey = (typeof JOTFORM_FORMS)[number]["key"];
+/** Fallback si l'API /user/forms est indisponible. */
+export const JOTFORM_FORMS = Object.entries(KNOWN_SITE_FORMS).map(
+  ([id, meta]) => ({ id, ...meta })
+);
+
+export interface JotformFormMeta {
+  id: string;
+  key: string;
+  label: string;
+  description: string;
+  page: string;
+  status?: string;
+  count?: number;
+}
 
 export interface JotformAnswer {
   name: string;
@@ -55,61 +69,213 @@ export interface JotformListResult {
   error?: string;
 }
 
+export function getJotformApiKey(): string | null {
+  const key =
+    import.meta.env.JOTFORM_API_KEY ||
+    (typeof process !== "undefined" && process.env?.JOTFORM_API_KEY) ||
+    "";
+  return String(key).trim() || null;
+}
+
 function apiBase(): string {
   const fromEnv =
-    (typeof process !== "undefined" && process.env?.JOTFORM_API_BASE) || "";
-  if (fromEnv.trim()) return fromEnv.replace(/\/$/, "");
-  // Compte Marché de Mo' = EU Safe mode (eu-api.jotform.com)
+    import.meta.env.JOTFORM_API_BASE ||
+    (typeof process !== "undefined" && process.env?.JOTFORM_API_BASE) ||
+    "";
+  if (String(fromEnv).trim()) return String(fromEnv).replace(/\/$/, "");
   return "https://eu-api.jotform.com";
 }
 
-export function getJotformApiKey(): string | null {
-  const key =
-    (typeof process !== "undefined" && process.env?.JOTFORM_API_KEY) || "";
-  return key.trim() || null;
-}
-
-function formatAnswerValue(
-  a: JotformAnswer
-): string {
-  if (a.prettyFormat) return String(a.prettyFormat);
+function formatAnswerValue(a: JotformAnswer): string {
   const v = a.answer;
-  if (v == null || v === "") return "—";
+  if (v == null || v === "" || v === "None") {
+    // Prefer structured name over prettyFormat when empty answer
+    if (a.prettyFormat && a.prettyFormat !== "None") return String(a.prettyFormat);
+    return "";
+  }
   if (typeof v === "string" || typeof v === "number" || typeof v === "boolean") {
-    return String(v);
+    const s = String(v);
+    return s === "None" ? "" : s;
   }
-  if (Array.isArray(v)) return v.filter(Boolean).join(", ") || "—";
+  if (Array.isArray(v)) {
+    // File uploads often come as URL arrays
+    return v.filter(Boolean).join("\n") || "";
+  }
   if (typeof v === "object") {
-    // name / address fields often land as { first, last } etc.
-    const parts = Object.values(v).filter(
-      (x) => typeof x === "string" && x.trim()
+    const obj = v as Record<string, string>;
+    if (obj.full) return String(obj.full);
+    if (obj.first || obj.last) {
+      return [obj.first, obj.last].filter(Boolean).join(" ").trim();
+    }
+    const parts = Object.values(obj).filter(
+      (x) => typeof x === "string" && x.trim() && x !== "None"
     );
-    return parts.length ? parts.join(" ") : "—";
+    return parts.length ? parts.join(" ") : "";
   }
-  return String(v);
+  if (a.prettyFormat && a.prettyFormat !== "None") return String(a.prettyFormat);
+  return "";
 }
 
-/** Flatten answers into ordered { label, value } for UI. */
+const SKIP_TYPES = new Set([
+  "control_button",
+  "control_head",
+  "control_divider",
+  "control_pagebreak",
+]);
+
 export function flattenAnswers(
   answers: Record<string, JotformAnswer>
-): { label: string; value: string }[] {
+): { label: string; value: string; fullWidth?: boolean }[] {
   return Object.values(answers)
-    .filter((a) => a && a.text && a.type !== "control_button" && a.type !== "control_head")
+    .filter((a) => a && a.text && !SKIP_TYPES.has(a.type || ""))
     .sort((a, b) => Number(a.order) - Number(b.order))
-    .map((a) => ({
-      label: a.text,
-      value: formatAnswerValue(a),
-    }));
+    .map((a) => {
+      const value = formatAnswerValue(a);
+      return {
+        label: a.text.replace(/bbbb$/i, "").trim(),
+        value,
+        fullWidth:
+          a.type === "control_textarea" ||
+          a.type === "control_fileupload" ||
+          value.length > 120,
+      };
+    })
+    .filter((row) => row.value.length > 0);
 }
 
-export function getFormByKey(key: string) {
-  return JOTFORM_FORMS.find((f) => f.key === key) ?? JOTFORM_FORMS[0];
+
+function slugifyKey(title: string, id: string): string {
+  const base = title
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/marche de mo['']?\s*[-x:]?\s*/i, "")
+    .replace(/fomu?laire/gi, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 40);
+  return base || `form-${id.slice(-6)}`;
+}
+
+function cleanLabel(title: string): string {
+  return title
+    .replace(/MARCHE DE MO\s*[-–:]?\s*/i, "")
+    .replace(/Marché de Mo['']?\s*[-x:]\s*/i, "")
+    .replace(/FOMULAIRE|FORMULAIRE/gi, "")
+    .replace(/\s+/g, " ")
+    .trim() || title;
+}
+
+function isMarcheDeMoForm(title: string): boolean {
+  return /march[eé]\s*de\s*mo/i.test(title);
 }
 
 /**
- * Fetch latest submissions for a form.
- * Docs: GET /form/{id}/submissions
+ * Tous les formulaires Jotform « Marché de Mo' » du compte
+ * (site + éventuels concours / anciens).
  */
+export async function listMarcheDeMoForms(): Promise<{
+  forms: JotformFormMeta[];
+  error?: string;
+}> {
+  const apiKey = getJotformApiKey();
+  if (!apiKey) {
+    return {
+      forms: JOTFORM_FORMS,
+      error:
+        "JOTFORM_API_KEY manquante sur ce serveur. Ajoutez-la dans Vercel → Settings → Environment Variables (Production), puis redéployez.",
+    };
+  }
+
+  try {
+    const url = new URL(`${apiBase()}/user/forms`);
+    url.searchParams.set("apiKey", apiKey);
+    url.searchParams.set("limit", "100");
+
+    const res = await fetch(url.toString(), {
+      headers: { Accept: "application/json" },
+    });
+    const json = (await res.json()) as {
+      responseCode?: number;
+      message?: string;
+      content?: Array<{
+        id: string;
+        title: string;
+        status: string;
+        count?: string | number;
+      }>;
+    };
+
+    if (!res.ok || (json.responseCode && json.responseCode >= 400)) {
+      return {
+        forms: JOTFORM_FORMS,
+        error: json.message || `Jotform ${res.status}`,
+      };
+    }
+
+    const raw = (json.content || []).filter((f) => isMarcheDeMoForm(f.title));
+
+    // Toujours inclure les 3 formulaires du site même s'ils changent de titre
+    const byId = new Map(raw.map((f) => [f.id, f]));
+    for (const id of Object.keys(KNOWN_SITE_FORMS)) {
+      if (!byId.has(id)) {
+        byId.set(id, {
+          id,
+          title: KNOWN_SITE_FORMS[id].label,
+          status: "ENABLED",
+          count: 0,
+        });
+      }
+    }
+
+    const forms: JotformFormMeta[] = [...byId.values()]
+      .map((f) => {
+        const known = KNOWN_SITE_FORMS[f.id];
+        const count =
+          typeof f.count === "string" ? parseInt(f.count, 10) : Number(f.count) || 0;
+        return {
+          id: f.id,
+          key: known?.key ?? slugifyKey(f.title, f.id),
+          label: known?.label ?? cleanLabel(f.title),
+          description:
+            known?.description ??
+            (f.status === "DISABLED"
+              ? "Formulaire archivé / désactivé"
+              : "Formulaire Marché de Mo'"),
+          page: known?.page ?? "#",
+          status: f.status,
+          count,
+        };
+      })
+      // Actifs d'abord, puis plus de réponses
+      .sort((a, b) => {
+        const aOff = a.status === "DISABLED" ? 1 : 0;
+        const bOff = b.status === "DISABLED" ? 1 : 0;
+        if (aOff !== bOff) return aOff - bOff;
+        return (b.count ?? 0) - (a.count ?? 0);
+      });
+
+    return { forms };
+  } catch (e) {
+    const err = e as Error & { cause?: { code?: string; message?: string } };
+    const detail =
+      err.cause?.code ||
+      err.cause?.message ||
+      (e instanceof Error ? e.message : "Erreur réseau Jotform");
+    return {
+      forms: JOTFORM_FORMS,
+      error: `Connexion Jotform impossible (${detail}). Vérifie ta connexion internet ou relance npm run dev dans ton terminal.`,
+    };
+  }
+}
+
+export function getFormByKey(
+  forms: JotformFormMeta[],
+  key: string
+): JotformFormMeta {
+  return forms.find((f) => f.key === key || f.id === key) ?? forms[0];
+}
+
 export async function fetchFormSubmissions(
   formId: string,
   opts: { limit?: number; offset?: number } = {}
@@ -120,7 +286,7 @@ export async function fetchFormSubmissions(
       submissions: [],
       total: 0,
       error:
-        "JOTFORM_API_KEY manquante. Créez une clé Full Access sur jotform.com → My Account → API, puis ajoutez-la dans .env.local et Vercel.",
+        "JOTFORM_API_KEY manquante. Ajoutez-la dans Vercel (Production) et redéployez.",
     };
   }
 
@@ -149,20 +315,29 @@ export async function fetchFormSubmissions(
         total: 0,
         error:
           json.message ||
-          `Jotform a renvoyé ${res.status}. Vérifiez la clé API et les droits Full Access.`,
+          `Jotform a renvoyé ${res.status}. Vérifiez la clé API.`,
       };
     }
 
     const submissions = Array.isArray(json.content) ? json.content : [];
-    const totalRaw = json.resultSet?.total ?? json.resultSet?.count ?? submissions.length;
-    const total = typeof totalRaw === "string" ? parseInt(totalRaw, 10) || submissions.length : Number(totalRaw) || submissions.length;
+    const totalRaw =
+      json.resultSet?.total ?? json.resultSet?.count ?? submissions.length;
+    const total =
+      typeof totalRaw === "string"
+        ? parseInt(totalRaw, 10) || submissions.length
+        : Number(totalRaw) || submissions.length;
 
     return { submissions, total };
   } catch (e) {
+    const err = e as Error & { cause?: { code?: string; message?: string } };
+    const detail =
+      err.cause?.code ||
+      err.cause?.message ||
+      (e instanceof Error ? e.message : "Erreur réseau Jotform");
     return {
       submissions: [],
       total: 0,
-      error: e instanceof Error ? e.message : "Erreur réseau Jotform",
+      error: `Connexion Jotform impossible (${detail}).`,
     };
   }
 }

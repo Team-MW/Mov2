@@ -7,8 +7,8 @@ import JotformSubmissionsView from "@components/islands/admin/JotformSubmissions
 import { SITE } from "@/lib/site";
 import { isAuthenticated } from "@/lib/auth";
 import {
-  JOTFORM_FORMS,
   getJotformApiKey,
+  listMarcheDeMoForms,
   fetchFormSubmissions,
   flattenAnswers,
   getFormByKey,
@@ -18,45 +18,58 @@ if (!(await isAuthenticated(Astro.cookies))) {
   return Astro.redirect("/admin/login");
 }
 
-const requested = Astro.url.searchParams.get("form") || "recrutement";
-const initialForm = getFormByKey(requested);
 const configured = !!getJotformApiKey();
+const { forms: formMetas, error: listError } = await listMarcheDeMoForms();
+
+const requested =
+  Astro.url.searchParams.get("form") || formMetas[0]?.key || "recrutement";
+const initialForm = getFormByKey(formMetas, requested);
 
 function previewFromAnswers(
   answers: ReturnType<typeof flattenAnswers>
 ): string {
-  const prefer = [/nom/i, /name/i, /email/i, /mail/i, /poste/i, /téléphone|telephone|phone/i];
+  const prefer = [
+    /nom/i,
+    /name/i,
+    /email/i,
+    /mail/i,
+    /poste/i,
+    /téléphone|telephone|phone/i,
+  ];
   for (const re of prefer) {
-    const hit = answers.find((a) => re.test(a.label) && a.value && a.value !== "—");
+    const hit = answers.find(
+      (a) => re.test(a.label) && a.value
+    );
     if (hit) return hit.value;
   }
-  const first = answers.find((a) => a.value && a.value !== "—");
-  return first?.value ?? "";
+  return answers.find((a) => a.value)?.value ?? "";
 }
 
 const forms = await Promise.all(
-  JOTFORM_FORMS.map(async (meta) => {
+  formMetas.map(async (meta) => {
     if (!configured) {
       return {
         key: meta.key,
         label: meta.label,
         description: meta.description,
         page: meta.page,
-        total: 0,
+        total: meta.count ?? 0,
         submissions: [],
         error: null,
+        disabled: meta.status === "DISABLED",
       };
     }
     const { submissions, total, error } = await fetchFormSubmissions(meta.id, {
-      limit: 40,
+      limit: 50,
     });
     return {
       key: meta.key,
       label: meta.label,
       description: meta.description,
       page: meta.page,
-      total,
+      total: total || meta.count || 0,
       error: error ?? null,
+      disabled: meta.status === "DISABLED",
       submissions: submissions.map((s) => {
         const answers = flattenAnswers(s.answers || {});
         return {
@@ -70,11 +83,13 @@ const forms = await Promise.all(
     };
   })
 );
+
+const totalAll = forms.reduce((n, f) => n + (f.total || 0), 0);
 ---
 
 <Layout
-  title={`Formulaires Jotform · ${SITE.name} — Admin`}
-  description="Soumissions des formulaires recrutement, franchise et fidélité."
+  title={`Formulaires · ${SITE.name} — Admin`}
+  description="Toutes les réponses aux formulaires Marché de Mo'."
   noIndex
   hideChrome
 >
@@ -83,23 +98,35 @@ const forms = await Promise.all(
 
     <main class="container-mo py-8 md:py-12">
       <section class="mb-8">
-        <span class="eyebrow">Jotform</span>
+        <span class="eyebrow">Jotform · Marché de Mo'</span>
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mt-3">
-          <h1 class="display-sm leading-tight">
-            Résultats des formulaires
-          </h1>
+          <div>
+            <h1 class="display-sm leading-tight">
+              Réponses aux formulaires
+            </h1>
+            <p class="mt-2 text-[14px] text-neutral-500">
+              {forms.length} formulaire{forms.length > 1 ? "s" : ""} · {totalAll} réponse{totalAll > 1 ? "s" : ""} au total
+            </p>
+          </div>
           <p class="text-[13px] text-neutral-500 max-w-md md:text-right">
-            Recrutement, franchise et fidélité — synchronisés en direct depuis Jotform.
-            Les nouvelles réponses apparaissent ici dès qu’elles sont envoyées.
+            Recrutement, franchise, fidélité et tout autre formulaire Marché de Mo' —
+            synchronisés en direct depuis Jotform.
           </p>
         </div>
       </section>
 
+      {listError && configured && (
+        <div class="mb-6 bg-orange-50 border border-orange-200 text-orange-900 rounded-2xl p-4 text-[13.5px]">
+          {listError}
+        </div>
+      )}
+
       <JotformSubmissionsView
         client:load
         forms={forms}
-        initialKey={initialForm.key}
+        initialKey={initialForm?.key || "recrutement"}
         configured={configured}
+        setupHint={listError && !configured ? listError : null}
       />
     </main>
   </div>
