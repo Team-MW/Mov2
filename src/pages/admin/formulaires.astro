@@ -1,0 +1,106 @@
+---
+export const prerender = false;
+
+import Layout from "@layouts/Layout.astro";
+import AdminTopbar from "@components/admin/AdminTopbar.astro";
+import JotformSubmissionsView from "@components/islands/admin/JotformSubmissionsView.jsx";
+import { SITE } from "@/lib/site";
+import { isAuthenticated } from "@/lib/auth";
+import {
+  JOTFORM_FORMS,
+  getJotformApiKey,
+  fetchFormSubmissions,
+  flattenAnswers,
+  getFormByKey,
+} from "@/lib/jotform";
+
+if (!(await isAuthenticated(Astro.cookies))) {
+  return Astro.redirect("/admin/login");
+}
+
+const requested = Astro.url.searchParams.get("form") || "recrutement";
+const initialForm = getFormByKey(requested);
+const configured = !!getJotformApiKey();
+
+function previewFromAnswers(
+  answers: ReturnType<typeof flattenAnswers>
+): string {
+  const prefer = [/nom/i, /name/i, /email/i, /mail/i, /poste/i, /téléphone|telephone|phone/i];
+  for (const re of prefer) {
+    const hit = answers.find((a) => re.test(a.label) && a.value && a.value !== "—");
+    if (hit) return hit.value;
+  }
+  const first = answers.find((a) => a.value && a.value !== "—");
+  return first?.value ?? "";
+}
+
+const forms = await Promise.all(
+  JOTFORM_FORMS.map(async (meta) => {
+    if (!configured) {
+      return {
+        key: meta.key,
+        label: meta.label,
+        description: meta.description,
+        page: meta.page,
+        total: 0,
+        submissions: [],
+        error: null,
+      };
+    }
+    const { submissions, total, error } = await fetchFormSubmissions(meta.id, {
+      limit: 40,
+    });
+    return {
+      key: meta.key,
+      label: meta.label,
+      description: meta.description,
+      page: meta.page,
+      total,
+      error: error ?? null,
+      submissions: submissions.map((s) => {
+        const answers = flattenAnswers(s.answers || {});
+        return {
+          id: s.id,
+          created_at: s.created_at,
+          status: s.status,
+          preview: previewFromAnswers(answers),
+          answers,
+        };
+      }),
+    };
+  })
+);
+---
+
+<Layout
+  title={`Formulaires Jotform · ${SITE.name} — Admin`}
+  description="Soumissions des formulaires recrutement, franchise et fidélité."
+  noIndex
+  hideChrome
+>
+  <div class="min-h-screen bg-white">
+    <AdminTopbar current="formulaires" subtitle="Formulaires" />
+
+    <main class="container-mo py-8 md:py-12">
+      <section class="mb-8">
+        <span class="eyebrow">Jotform</span>
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mt-3">
+          <h1 class="display-sm leading-tight">
+            Résultats des formulaires
+          </h1>
+          <p class="text-[13px] text-neutral-500 max-w-md md:text-right">
+            Recrutement, franchise et fidélité — synchronisés en direct depuis Jotform.
+            Les nouvelles réponses apparaissent ici dès qu’elles sont envoyées.
+          </p>
+        </div>
+      </section>
+
+      <JotformSubmissionsView
+        client:load
+        forms={forms}
+        initialKey={initialForm.key}
+        configured={configured}
+      />
+    </main>
+  </div>
+</Layout>

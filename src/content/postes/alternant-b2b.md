@@ -16,7 +16,7 @@ profil:
   - "Sens de l'initiative, autonomie"
   - "Maîtrise des outils bureautiques (Excel, CRM)"
 date_publication: 2026-04-15
-actif: true
+actif: false
 ---
 
 Rejoignez le développement du pôle B2B du Marché de Mo' — une aventure

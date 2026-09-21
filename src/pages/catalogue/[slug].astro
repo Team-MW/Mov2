@@ -1,0 +1,246 @@
+---
+export const prerender = false;
+
+import Layout from "@layouts/Layout.astro";
+import Breadcrumb from "@components/Breadcrumb.astro";
+import PromoCard from "@components/PromoCard.astro";
+import { SITE } from "@/lib/site";
+import { breadcrumbSchema } from "@/lib/schema";
+import { getActivePromos } from "@/lib/promos-repo";
+import {
+  getCatalogue,
+  getCatalogueSlugs,
+  formatWeekLabel,
+  formatWeekShort,
+} from "@/lib/catalogues";
+
+const { slug } = Astro.params;
+const catalogue = slug ? getCatalogue(slug) : undefined;
+
+if (!catalogue) {
+  return Astro.redirect("/catalogue");
+}
+
+const weekLabel = formatWeekLabel(catalogue.periode);
+const weekShort = formatWeekShort(catalogue.periode);
+
+const promos =
+  catalogue.periode === "current"
+    ? (await getActivePromos()).sort((a, b) =>
+        a.data.mise_en_avant === b.data.mise_en_avant
+          ? 0
+          : a.data.mise_en_avant
+            ? -1
+            : 1
+      )
+    : [];
+
+const bc = breadcrumbSchema([
+  { name: "Catalogues", url: "/catalogue" },
+  { name: catalogue.titre, url: `/catalogue/${catalogue.slug}` },
+]);
+
+const WHATSAPP =
+  "https://whatsapp.com/channel/0029Vb8ix0yI1rcr1BkAll1I";
+---
+
+<Layout
+  title={`${catalogue.titre} — ${weekShort} · ${SITE.name}`}
+  description={`${catalogue.description} ${weekLabel}. Offres valables dans notre magasin de Toulouse Sud.`}
+  schema={bc}
+>
+  <Breadcrumb
+    items={[
+      { name: "Catalogues", href: "/catalogue" },
+      { name: catalogue.titre },
+    ]}
+  />
+
+  <!-- Hero catalogue -->
+  <section class="relative overflow-hidden text-white" style={`background:${catalogue.accent}`}>
+    <img
+      src="/logos/favicon-marchedemo-contourwh.png"
+      alt=""
+      aria-hidden="true"
+      class="absolute -right-20 top-0 w-[480px] opacity-[0.08] pointer-events-none select-none"
+    />
+    <div class="container-mo relative z-10 py-12 md:py-16 grid lg:grid-cols-12 gap-8 items-center">
+      <div class="lg:col-span-7">
+        <a href="/catalogue" class="inline-flex items-center gap-1.5 text-white/80 hover:text-white text-[13px] font-bold mb-4 transition">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M19 12H5M12 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          Tous les catalogues
+        </a>
+        <span class="eyebrow !text-white/75">{weekLabel}</span>
+        <h1 class="display-lg mt-3 text-balance max-w-2xl !text-white" data-split-reveal>
+          {catalogue.titre}
+        </h1>
+        <p class="mt-5 max-w-xl text-[16px] text-white/85 leading-relaxed">
+          {catalogue.description}
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          {catalogue.pdf && (
+            <a
+              href={catalogue.pdf}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn bg-white text-neutral-900 hover:bg-white/90 border-transparent font-bold"
+            >
+              Ouvrir le PDF
+            </a>
+          )}
+          {catalogue.periode === "current" && (
+            <a href="/promos" class="btn bg-white/15 hover:bg-white/25 text-white border border-white/30">
+              Voir les promos
+            </a>
+          )}
+          {catalogue.periode === "next" && (
+            <a
+              href={WHATSAPP}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn bg-[#25D366] hover:bg-[#1DA851] text-white border-transparent"
+            >
+              Recevoir sur WhatsApp
+            </a>
+          )}
+        </div>
+      </div>
+      <div class="lg:col-span-5">
+        <div class="relative mx-auto max-w-xs aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl rotate-1 hover:rotate-0 transition-transform duration-500">
+          <img
+            src={catalogue.cover}
+            alt={catalogue.coverAlt}
+            class="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PDF embed si disponible -->
+  {catalogue.pdf ? (
+    <section class="section bg-blanc">
+      <div class="container-mo">
+        <div class="rounded-2xl overflow-hidden border border-black/10 bg-neutral-100 shadow-inner">
+          <iframe
+            src={`${catalogue.pdf}#view=FitH`}
+            title={catalogue.titre}
+            class="w-full h-[75vh] min-h-[520px]"
+          />
+        </div>
+        <p class="mt-4 text-center text-[13px] text-neutral-500">
+          Le PDF ne s'affiche pas ?
+          <a href={catalogue.pdf} target="_blank" rel="noopener noreferrer" class="text-vert font-bold underline">
+            Télécharger le catalogue
+          </a>
+        </p>
+      </div>
+    </section>
+  ) : catalogue.periode === "current" && promos.length > 0 ? (
+    <section class="section bg-blanc">
+      <div class="container-mo">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+          <div>
+            <span class="eyebrow">Catalogue numérique</span>
+            <h2 class="display-md mt-3 text-balance">
+              {promos.length} offres cette semaine
+            </h2>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {promos.map((p) => (
+            <PromoCard
+              slug={p.slug}
+              titre={p.data.titre}
+              description={p.data.description}
+              image={p.data.image}
+              prix_original={p.data.prix_original}
+              prix_promo={p.data.prix_promo}
+              reduction_pct={p.data.reduction_pct}
+              rayon={p.data.rayon}
+              magasin={p.data.magasin}
+              date_fin={p.data.date_fin}
+              featured={p.data.mise_en_avant}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  ) : (
+    <section class="section bg-blanc">
+      <div class="container-mo max-w-2xl text-center">
+        {catalogue.periode === "previous" && (
+          <>
+            <h2 class="display-sm text-balance">Les offres de la semaine dernière</h2>
+            <p class="mt-4 text-[15.5px] text-neutral-600 leading-relaxed">
+              Les bons plans de la semaine passée touchent à leur fin.
+              Retrouvez le catalogue en cours pour les offres encore valables en magasin.
+            </p>
+            <a href="/catalogue/cette-semaine" class="btn btn-primary mt-8 inline-flex">
+              Catalogue de cette semaine
+            </a>
+          </>
+        )}
+        {catalogue.periode === "next" && (
+          <>
+            <h2 class="display-sm text-balance">Bientôt disponible</h2>
+            <p class="mt-4 text-[15.5px] text-neutral-600 leading-relaxed">
+              Le catalogue de la semaine prochaine arrive bientôt.
+              Rejoignez notre canal WhatsApp pour le recevoir en avant-première.
+            </p>
+            <div class="mt-8 flex flex-wrap gap-3 justify-center">
+              <a
+                href={WHATSAPP}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn bg-[#25D366] hover:bg-[#1DA851] text-white border-transparent"
+              >
+                Canal WhatsApp
+              </a>
+              <a href="/catalogue/cette-semaine" class="btn btn-outline">
+                Catalogue en cours
+              </a>
+            </div>
+          </>
+        )}
+        {catalogue.periode === "current" && (
+          <>
+            <h2 class="display-sm text-balance">Catalogue en préparation</h2>
+            <p class="mt-4 text-[15.5px] text-neutral-600 leading-relaxed">
+              Les offres de la semaine seront bientôt en ligne.
+              En attendant, jetez un œil à nos rayons ou rejoignez WhatsApp.
+            </p>
+            <div class="mt-8 flex flex-wrap gap-3 justify-center">
+              <a href="/promos" class="btn btn-primary">Voir les promos</a>
+              <a href="/rayons" class="btn btn-outline">Nos rayons</a>
+            </div>
+          </>
+        )}
+      </div>
+    </section>
+  )}
+
+  <!-- Autres catalogues -->
+  <section class="section-sm bg-white border-t border-black/5">
+    <div class="container-mo">
+      <h2 class="font-soft font-bold text-[18px] mb-5">Autres catalogues</h2>
+      <div class="flex flex-wrap gap-3">
+        {getCatalogueSlugs()
+          .filter((s) => s !== catalogue.slug)
+          .map((s) => {
+            const other = getCatalogue(s)!;
+            return (
+              <a
+                href={`/catalogue/${other.slug}`}
+                class="px-5 py-3 rounded-full border border-black/10 hover:border-vert hover:text-vert font-bold text-[14px] transition"
+              >
+                {other.titre}
+              </a>
+            );
+          })}
+      </div>
+    </div>
+  </section>
+</Layout>

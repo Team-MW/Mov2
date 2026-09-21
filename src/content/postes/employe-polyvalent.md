@@ -27,7 +27,7 @@ nos meilleurs atouts.
 
 - **Formation sur le terrain** par nos chefs de rayon
 - **Égalité des chances** — nous recrutons entre 19 et 56 ans
-- **Évolution possible** vers chef de rayon, responsable caisse, alternant B2B
+- **Évolution possible** vers chef de rayon ou responsable caisse
 - **Accompagnement** en cas de difficultés personnelles
 
 ## Pour postuler

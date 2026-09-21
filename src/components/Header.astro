@@ -142,8 +142,14 @@ const NATIVE_EMOJIS: Record<string, string> = {
         </div>
       </div>
 
-      <!-- Right: Promos & Magasins -->
+      <!-- Right: Catalogues, Promos & Magasins -->
       <div class="flex items-center gap-3 shrink-0">
+        <a
+          href="/catalogue"
+          class="hidden xl:inline-flex px-4 py-2 rounded-full font-soft font-bold text-[13px] text-vert border border-vert/30 hover:bg-vert hover:text-white transition hover:-translate-y-0.5"
+        >
+          Catalogues
+        </a>
         <a
           href="/promos"
           class="inline-flex items-center hover:opacity-90 transition relative z-20 my-[-20px]"
@@ -286,6 +292,7 @@ const NATIVE_EMOJIS: Record<string, string> = {
         id="header-scrolled-links"
         class="hidden items-center gap-5 text-[13.5px] font-soft font-bold text-neutral-500 font-pro shrink-0 transition-all duration-300 opacity-0 translate-x-5 pointer-events-none"
       >
+        <a href="/catalogue" class="hover:text-vert transition-colors">Catalogues</a>
         <a href="/actualites" class="hover:text-vert transition-colors">Actualités</a>
         <a href="/franchise" class="hover:text-vert transition-colors text-vert-dark font-black">Franchise</a>
         <a href="/programme-fidelite" class="hover:text-vert transition-colors">Fidélité</a>
@@ -337,6 +344,7 @@ const NATIVE_EMOJIS: Record<string, string> = {
         </div>
       </details>
 
+      <a href="/catalogue" class="block py-2.5 border-b border-black/5 font-bold text-vert">Catalogues</a>
       <a href="/promos" class="py-2.5 border-b border-black/5 text-rouge font-bold flex items-center gap-3">
         <img src="/promos/codepromo.jpeg" alt="Promos" class="h-6 w-auto object-contain mix-blend-multiply" />
         Promos

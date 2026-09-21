@@ -82,7 +82,7 @@ export const FAQ_MAGASINS: FAQItem[] = [
 export const FAQ_PROMOS: FAQItem[] = [
   {
     q: "Comment sont choisies les promotions ?",
-    r: "Nos équipes mettent à jour les offres chaque semaine selon les rayons. Consultez /promos pour voir toutes les offres actives.",
+    r: "Nos équipes mettent à jour les offres chaque semaine selon les rayons. Consultez /catalogue pour le prospectus en ligne, ou /promos pour toutes les offres actives.",
   },
   {
     q: "Les promos sont-elles valables en magasin ?",
