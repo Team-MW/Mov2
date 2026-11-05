@@ -1,0 +1,24 @@
+/* Couleurs charte « Nos Rayons ». DA Poissonnerie — bleu-vert marée, fraîcheur. */
+
+[data-rayon="poissonnerie"] {
+  --rayon-accent:       #12808C;
+  --rayon-on-accent:    #FFFFFF;
+  --rayon-accent-dark:  #0C5C65;
+  --rayon-accent-2:     #7CC4CC;
+  --rayon-accent-3:     #E8F5F6;
+  --rayon-fond-section: #F0F8F9;
+  --rayon-fond-hero:    #FFFFFF;
+  --rayon-texte-hero:   #0F0F0F;
+}
+
+[data-rayon="poissonnerie"] .rayon-hero {
+  background:
+    radial-gradient(circle at 85% 15%, rgba(18, 128, 140, 0.09), transparent 55%),
+    linear-gradient(180deg, #FFFFFF 0%, #F0F8F9 100%);
+}
+
+/* Motif vagues discret */
+[data-rayon="poissonnerie"] .rayon-motif {
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='20' viewBox='0 0 80 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 Q 20 0, 40 10 T 80 10' fill='none' stroke='%2312808C' stroke-width='1.5' stroke-opacity='0.08'/%3E%3C/svg%3E");
+  background-size: 80px 20px;
+}

@@ -15,7 +15,8 @@ interface Props {
 
 const { recette } = Astro.props as Props;
 const rayonData = RAYONS[recette.rayon];
-const accent = rayonData?.accent ?? "#1C6B35";
+// Variante foncée : utilisée en couleur de texte sur fond blanc.
+const accent = rayonData?.accentDark ?? rayonData?.accent ?? "#1C6B35";
 
 const href = recette.lien ?? `/rayons/${recette.rayon}`;
 

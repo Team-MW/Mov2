@@ -111,7 +111,7 @@ export default function ChatMo({
               />
             </span>
             <div className="flex-1 min-w-0">
-              <p className="font-soft font-black text-[16px] leading-tight">
+              <p className="font-pro font-black text-[16px] leading-tight">
                 Monsieur Mo'
               </p>
               <p className="text-white/90 text-[12px] mt-0.5 flex items-center gap-1.5">
@@ -166,7 +166,7 @@ export default function ChatMo({
               </svg>
             </span>
             <div className="flex-1 min-w-0">
-              <p className="font-soft font-bold text-[14px] text-neutral-900">
+              <p className="font-pro font-bold text-[14px] text-neutral-900">
                 WhatsApp
               </p>
               <p className="text-[12px] text-neutral-500 truncate">
@@ -207,7 +207,7 @@ export default function ChatMo({
               </svg>
             </span>
             <div className="flex-1 min-w-0">
-              <p className="font-soft font-bold text-[14px] text-neutral-900">
+              <p className="font-pro font-bold text-[14px] text-neutral-900">
                 Téléphone
               </p>
               <p className="text-[12px] text-neutral-500 truncate">
@@ -245,7 +245,7 @@ export default function ChatMo({
               </svg>
             </span>
             <div className="flex-1 min-w-0">
-              <p className="font-soft font-bold text-[14px] text-neutral-900">
+              <p className="font-pro font-bold text-[14px] text-neutral-900">
                 Email
               </p>
               <p className="text-[12px] text-neutral-500 truncate">{email}</p>

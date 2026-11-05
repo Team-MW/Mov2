@@ -83,7 +83,7 @@ export default function LocalVideoPlayer({ src, title, href }) {
 
       <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/75 via-black/20 to-transparent pointer-events-none" />
       <div className="absolute inset-x-0 bottom-0 p-4 text-white pointer-events-none">
-        <p className="font-soft font-bold text-[15px] leading-tight line-clamp-2">{title}</p>
+        <p className="font-pro font-bold text-[15px] leading-tight line-clamp-2">{title}</p>
       </div>
     </div>
   );

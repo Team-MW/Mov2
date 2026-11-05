@@ -5,6 +5,7 @@ import { publishAdminEvent, ADMIN_EVENT } from "./admin-bus.js";
 const ALLOWED_RAYONS = [
   "boucherie-halal",
   "fruits-legumes",
+  "poissonnerie",
   "epices-du-monde",
   "saveurs-afrique",
   "saveurs-asie",

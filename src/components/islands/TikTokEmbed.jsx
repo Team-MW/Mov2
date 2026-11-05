@@ -145,7 +145,7 @@ export default function TikTokEmbed({ url, title, thumbnail, embedHtml, author =
             )}
           </span>
 
-          <span className="relative z-10 mt-4 font-soft font-bold text-white text-[16px] px-6 text-center text-balance leading-tight">
+          <span className="relative z-10 mt-4 font-pro font-bold text-white text-[16px] px-6 text-center text-balance leading-tight">
             {title}
           </span>
           <span className="relative z-10 mt-1.5 text-white/70 text-xs">

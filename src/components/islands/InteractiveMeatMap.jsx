@@ -100,7 +100,7 @@ export default function InteractiveMeatMap() {
 
              <div className="space-y-6 mt-auto">
                 <div>
-                  <h4 className="font-soft font-bold text-[14px] uppercase text-noir tracking-wide mb-3 flex items-center gap-2">
+                  <h4 className="font-pro font-bold text-[14px] uppercase text-noir tracking-wide mb-3 flex items-center gap-2">
                     <svg className="w-5 h-5 text-rouge" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
@@ -116,7 +116,7 @@ export default function InteractiveMeatMap() {
                 </div>
 
                 <div>
-                  <h4 className="font-soft font-bold text-[14px] uppercase text-noir tracking-wide mb-3 flex items-center gap-2">
+                  <h4 className="font-pro font-bold text-[14px] uppercase text-noir tracking-wide mb-3 flex items-center gap-2">
                     <svg className="w-5 h-5 text-rouge" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z" />
                     </svg>

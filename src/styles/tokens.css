@@ -23,11 +23,17 @@
   --color-texte-muted:  #6B6B6B;
   --color-border:       #E5E5E3;
 
-  /* Typographie (Adobe Fonts / Typekit : tci0qgy) */
-  --font-pro:  "filson-pro", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-  --font-soft: "filson-soft", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-  --font-display: var(--font-soft);
-  --font-body:    var(--font-pro);
+  /* Typographie (Google Fonts)
+     - Anton  : titres, toujours en capitales (display, h1, h2, h3, campaign,
+                campaign-sm) + prix. Police condensée des campagnes.
+     - Outfit : tout le reste (body, small, label, hashtag, rayon, boutons).
+     --font-soft / --font-pro conservés comme alias historiques. */
+  --font-anton:  "Anton", Impact, "Arial Narrow", sans-serif;
+  --font-outfit: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-display: var(--font-anton);
+  --font-body:    var(--font-outfit);
+  --font-soft:    var(--font-anton);
+  --font-pro:     var(--font-outfit);
 
   /* Échelles */
   --radius-xs: 4px;

@@ -1,7 +1,7 @@
 /* ============================================================
    Marché de Mo' — Millimeter-precise A4 Landscape Poster Styles
    Artistic Direction: Vert #1C6B35, Rouge #8B1919, Noir #0F0F0F, Blanc #FFFFFF
-   Font: filson-pro / filson-soft loaded via Typekit
+   Fonts: Anton (titres/prix) + Outfit (texte) via Google Fonts
    ============================================================ */
 
 :root {
@@ -20,9 +20,9 @@
   --theme-accent:   var(--mo-red);
   --theme-gold:     var(--mo-gold);
   
-  --font-mo-display: "filson-pro", system-ui, -apple-system, sans-serif;
-  --font-mo-body:    "filson-soft", system-ui, -apple-system, sans-serif;
-  --font-mo-cond:    "filson-pro", Impact, sans-serif; /* Condensed feel */
+  --font-mo-display: "Anton", Impact, sans-serif;
+  --font-mo-body:    "Outfit", system-ui, -apple-system, sans-serif;
+  --font-mo-cond:    "Anton", Impact, sans-serif; /* Condensée des campagnes */
 }
 
 /* ============================================================

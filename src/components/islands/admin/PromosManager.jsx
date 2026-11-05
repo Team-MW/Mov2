@@ -1478,7 +1478,7 @@ function EditModal({ promo, rayonsOptions, magasinsOptions, onCancel, onSave }) 
               />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-soft font-bold text-[14px] text-rouge">
+                  <span className="font-pro font-bold text-[14px] text-rouge">
                     🚨 Offre de la semaine — bandeau rouge
                   </span>
                   <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-rouge/10 text-rouge">

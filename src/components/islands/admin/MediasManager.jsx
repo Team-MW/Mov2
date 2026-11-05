@@ -224,7 +224,7 @@ export default function MediasManager({ initialFolder, initialFiles, folders }) 
       >
         <div className="p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4">
           <div className="flex-1">
-            <p className="font-soft font-bold text-[16px]">
+            <p className="font-pro font-bold text-[16px]">
               Dossier <span className="text-vert">{folder || "racine"}</span>
             </p>
             <p className="text-[13px] text-neutral-500 mt-0.5">

@@ -21,7 +21,8 @@ interface Props {
 
 const { produit, linkTo = "produit" } = Astro.props as Props;
 const rayonData = RAYONS[produit.rayon];
-const accent = rayonData?.accent ?? "#1C6B35";
+// Variante foncée : utilisée en couleur de texte sur fond blanc.
+const accent = rayonData?.accentDark ?? rayonData?.accent ?? "#1C6B35";
 const href =
   linkTo === "rayon" ? `/rayons/${produit.rayon}` : `/produits/${produit.id}`;
 
@@ -69,7 +70,7 @@ const produitSizes =
           class="w-14 h-14 opacity-15 mb-3"
           loading="lazy"
         />
-        <p class="font-soft font-bold text-[12px] md:text-[13px] leading-tight text-neutral-500 uppercase tracking-wider line-clamp-3">
+        <p class="font-pro font-bold text-[12px] md:text-[13px] leading-tight text-neutral-500 uppercase tracking-wider line-clamp-3">
           {produit.nom}
         </p>
         <span class="mt-2 text-[10px] text-neutral-500 italic">Photo à venir</span>

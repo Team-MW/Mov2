@@ -1,9 +1,10 @@
-/* DA Crémerie — Frais, pur, laitier
+/* Couleurs charte « Nos Rayons ». DA Crémerie — Frais, pur, laitier
    Jaunes doux, textures crémeuses.             */
 
 [data-rayon="cremerie"] {
-  --rayon-accent:       #F59E0B;   /* jaune fromage */
-  --rayon-accent-dark:  #B45309;
+  --rayon-accent:       #F2A955;   /* charte Nos Rayons */
+  --rayon-on-accent:    #1A1A1A;
+  --rayon-accent-dark:  #8A5A16;
   --rayon-accent-2:     #FCD34D;
   --rayon-accent-3:     #FEF3C7;
   --rayon-fond-section: #FFFBEB;
@@ -20,8 +21,8 @@
 /* Motif doux laitier */
 [data-rayon="cremerie"] .rayon-motif {
   background-image:
-    radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.05) 0%, transparent 20%),
-    radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 20%);
+    radial-gradient(circle at 10% 20%, rgba(242, 169, 85, 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(242, 169, 85, 0.05) 0%, transparent 20%);
 }
 
 /* Bande décorative */
@@ -36,11 +37,11 @@
 
 [data-rayon="cremerie"] .rayon-badge {
   background: var(--rayon-accent);
-  color: #FFFFFF;
+  color: var(--rayon-on-accent);
 }
 
 [data-rayon="cremerie"] .rayon-pill {
-  background: rgba(245, 158, 11, 0.1);
+  background: rgba(242, 169, 85, 0.1);
   color: var(--rayon-accent-dark);
-  border: 1px solid rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(242, 169, 85, 0.2);
 }

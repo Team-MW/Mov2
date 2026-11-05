@@ -32,6 +32,16 @@ export const RAYONS = [
     ],
   },
   {
+    slug: 'poissonnerie',
+    label: 'Poissonnerie',
+    short: 'Poissonnerie',
+    keywords: [
+      'poisson', 'dorade', 'bar', 'sardine', 'maquereau', 'tilapia', 'capitaine',
+      'thiof', 'saumon', 'crevette', 'calamar', 'moule', 'fruits de mer',
+      'fish', 'seafood', 'shrimp',
+    ],
+  },
+  {
     slug: 'epices-du-monde',
     label: 'Épices du monde',
     short: 'Épices',

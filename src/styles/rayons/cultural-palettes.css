@@ -210,9 +210,10 @@ section[data-culture]::after {
 
 /* Section title typography & watermark */
 section[data-culture] h2 {
-  font-family: var(--font-soft, system-ui), sans-serif !important;
-  font-weight: 900 !important;
-  letter-spacing: -0.025em !important;
+  font-family: var(--font-display, 'Anton'), sans-serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.005em !important;
+  text-transform: uppercase;
 }
 
 section[data-culture] h2[data-watermark] {
@@ -225,7 +226,7 @@ section[data-culture] h2[data-watermark]::before {
   position: absolute;
   left: -10px;
   top: -45px;
-  font-family: 'Mulish', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-anton, 'Anton'), Impact, sans-serif;
   font-weight: 900;
   font-size: clamp(52px, 8vw, 96px);
   text-transform: uppercase;

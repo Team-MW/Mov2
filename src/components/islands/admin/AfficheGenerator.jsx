@@ -6,6 +6,7 @@ import { subscribeAdminEvents, ADMIN_EVENT } from './admin-bus.js';
 const RAYONS_NAMES = {
   'boucherie-halal': 'Boucherie Halal',
   'fruits-legumes': 'Fruits & Légumes',
+  'poissonnerie': 'Poissonnerie',
   'epices-du-monde': 'Épices du Monde',
   'saveurs-afrique': 'Saveurs d\'Afrique',
   'saveurs-asie': 'Saveurs d\'Asie',

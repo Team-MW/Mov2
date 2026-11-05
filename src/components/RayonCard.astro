@@ -22,6 +22,7 @@ interface Props {
 
 const { rayon, large = false } = Astro.props as Props;
 const accent = rayon.accent ?? "#1C6B35";
+const accentInk = rayon.accentInk ?? "#FFFFFF";
 
 /* Filtrer heroSlideshow : ≥ 2 entrées uniques → activer carousel */
 const uniqueSlides = Array.from(new Set(rayon.heroSlideshow ?? []));
@@ -93,8 +94,8 @@ const slideCount = Math.min(uniqueSlides.length, 4);
     <div class="absolute inset-0 p-6 md:p-8 flex flex-col justify-between">
       <div class="flex items-start justify-between gap-3">
         <span
-          class="pill text-white"
-          style={`background: ${accent}`}
+          class="pill"
+          style={`background: ${accent}; color: ${accentInk}`}
         >
           {rayon.eyebrow}
         </span>

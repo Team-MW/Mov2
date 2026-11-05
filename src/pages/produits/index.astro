@@ -131,7 +131,7 @@ const cards: Minimal[] = produits.map((p) => ({
             data-rayon={r.slug}
             role="tab"
             aria-selected="false"
-            style={`--pill-accent: ${r.accent ?? "#1C6B35"}`}
+            style={`--pill-accent: ${r.accent ?? "#1C6B35"}; --pill-ink: ${r.accentInk ?? "#FFFFFF"}`}
           >
             {r.nomCourt}
             <span class="filter-pill-count">{countByRayon[r.slug]}</span>
@@ -207,7 +207,7 @@ const cards: Minimal[] = produits.map((p) => ({
             />
             <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
             <div class="absolute bottom-3 left-4 right-4">
-              <p class="text-white font-soft font-bold text-[15px] leading-tight">
+              <p class="text-white font-pro font-bold text-[15px] leading-tight">
                 {r.nomCourt}
               </p>
               <p class="text-white/70 text-[11px] mt-0.5">
@@ -247,7 +247,7 @@ const cards: Minimal[] = produits.map((p) => ({
   }
   .filter-pill--active {
     background: var(--pill-accent, #1C6B35);
-    color: white;
+    color: var(--pill-ink, white);
     border-color: var(--pill-accent, #1C6B35);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   }
@@ -265,7 +265,7 @@ const cards: Minimal[] = produits.map((p) => ({
   }
   .filter-pill--active .filter-pill-count {
     background: rgba(255, 255, 255, 0.22);
-    color: white;
+    color: var(--pill-ink, white);
   }
   .scrollbar-thin::-webkit-scrollbar {
     height: 4px;

@@ -295,7 +295,7 @@ export default function AdminCatalogueTree({ tree = [], activePath = "", publicU
     >
       {/* Header + search */}
       <div className="px-4 py-3 border-b border-black/5 bg-white">
-        <p className="font-soft font-bold text-[14px] text-noir">
+        <p className="font-pro font-bold text-[14px] text-noir">
           Catalogue
           <span className="ml-2 text-[]-neutral-600">
             {totalProduits} produit(s) · {totalRayons} rayons

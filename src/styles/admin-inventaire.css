@@ -14,7 +14,7 @@
    INTERDITS absolus :
      - Pas de beige / crème / ocre.
      - Pas de dark mode dominant.
-     - Pas de fonts serif élégantes — Filson Pro/Soft uniquement.
+     - Pas de fonts serif élégantes — Anton (titres) + Outfit (texte) uniquement.
 
    On override les palettes Tailwind par défaut (indigo/amber/emerald/blue/
    slate) pour que TOUS les utilitaires existants (text-indigo-600,
@@ -32,9 +32,9 @@
   --color-rouge-light: #ad2828;
   --color-noir:        #0F0F0F;
 
-  /* ── Police (Typekit : Filson Pro display + Filson Soft body) ────────── */
-  --font-sans:    "filson-soft", "Filson Soft", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-display: "filson-pro",  "Filson Pro",  system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* ── Police (Google Fonts : Anton titres + Outfit texte) ────────── */
+  --font-sans:    "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Anton", Impact, "Arial Narrow", sans-serif;
 }
 
 /* ── Application root ───────────────────────────────────────────────────── */
@@ -51,10 +51,13 @@ body {
   background: #FFFFFF;
 }
 
-/* Titres : police display Filson Pro */
+/* Titres : Anton, en capitales */
 h1, h2, h3, .font-display {
   font-family: var(--font-display);
-  letter-spacing: -0.01em;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+  font-synthesis-weight: none;
 }
 
 /* Tabular numbers pour les colonnes prix/quantité */

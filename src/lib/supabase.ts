@@ -39,6 +39,7 @@ export const supabaseAdmin: SupabaseClient | null = serviceKey && url
 export type RayonSlug =
   | "boucherie-halal"
   | "fruits-legumes"
+  | "poissonnerie"
   | "epices-du-monde"
   | "saveurs-afrique"
   | "saveurs-asie"

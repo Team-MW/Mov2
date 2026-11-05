@@ -16,6 +16,7 @@ const promos = defineCollection({
     rayon: z.enum([
       'boucherie-halal',
       'fruits-legumes',
+      'poissonnerie',
       'epices-du-monde',
       'cremerie',
       'saveurs-asie',
@@ -50,6 +51,7 @@ const videos = defineCollection({
       'home',
       'boucherie-halal',
       'fruits-legumes',
+      'poissonnerie',
       'epices-du-monde',
       'cremerie',
       'saveurs-asie',
@@ -122,6 +124,7 @@ const recettes = defineCollection({
     rayons: z.array(z.enum([
       'boucherie-halal',
       'fruits-legumes',
+      'poissonnerie',
       'epices-du-monde',
       'cremerie',
       'saveurs-asie',
@@ -136,6 +139,7 @@ const recettes = defineCollection({
     rayonPrincipal: z.enum([
       'boucherie-halal',
       'fruits-legumes',
+      'poissonnerie',
       'epices-du-monde',
       'cremerie',
       'saveurs-asie',

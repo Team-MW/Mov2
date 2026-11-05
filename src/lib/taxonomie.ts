@@ -46,6 +46,13 @@ export const TAXONOMIE: Record<RayonSlug, RayonTaxonomie> = {
     "Dattes & fruits secs": ["Dattes", "Figues", "Abricots secs"],
   },
 
+  "poissonnerie": {
+    "Poissons entiers": ["Mer", "Eau douce", "Poissons du monde"],
+    "Filets & darnes": null,
+    "Fruits de mer": ["Crevettes", "Coquillages", "Céphalopodes"],
+    "Poissons salés & séchés": null,
+  },
+
   "epices-du-monde": {
     "Maghreb": ["Mélanges", "Simples"],
     "Inde": ["Currys", "Masalas", "Simples"],

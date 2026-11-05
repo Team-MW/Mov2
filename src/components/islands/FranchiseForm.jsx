@@ -39,7 +39,7 @@ export default function FranchiseForm() {
             {/* Point central */}
             <div className="w-2 h-2 bg-vert rounded-full"></div>
           </div>
-          <p className="mt-5 font-soft font-bold text-vert text-[15px] animate-pulse">
+          <p className="mt-5 font-pro font-bold text-vert text-[15px] animate-pulse">
             Chargement du formulaire...
           </p>
         </div>

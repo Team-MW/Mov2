@@ -361,7 +361,7 @@ const quickSuggestions = [
             ${
               p.image
                 ? `<img src="${p.image}" alt="${escapeHtml(p.title)}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-[1.06] transition-transform duration-500" />`
-                : `<div class="absolute inset-0 bg-gradient-to-br from-white to-[#EEEAE0] flex items-center justify-center p-3 text-center"><p class="font-soft font-bold text-[12px] text-neutral-500 uppercase tracking-wider line-clamp-3">${escapeHtml(p.title)}</p></div>`
+                : `<div class="absolute inset-0 bg-gradient-to-br from-white to-[#EEEAE0] flex items-center justify-center p-3 text-center"><p class="font-pro font-bold text-[12px] text-neutral-500 uppercase tracking-wider line-clamp-3">${escapeHtml(p.title)}</p></div>`
             }
           </div>
           <div class="p-3">
@@ -387,7 +387,7 @@ const quickSuggestions = [
       return `
         <a href="${href}" class="flex items-center justify-between gap-4 bg-white rounded-2xl px-5 py-4 shadow-sm hover:shadow-card transition-all">
           <div class="min-w-0">
-            <p class="font-soft font-bold text-[15px] leading-tight line-clamp-1">${escapeHtml(title)}</p>
+            <p class="font-pro font-bold text-[15px] leading-tight line-clamp-1">${escapeHtml(title)}</p>
             <p class="text-[11px] font-pro font-bold uppercase tracking-wider text-neutral-500 mt-0.5">${escapeHtml(meta)}</p>
           </div>
           <span class="text-vert font-bold shrink-0 group-hover:translate-x-0.5 transition-transform">→</span>

@@ -30,6 +30,7 @@ const ALLOWED_FIELDS = new Set([
 const ALLOWED_RAYONS: readonly RayonSlug[] = [
   "boucherie-halal",
   "fruits-legumes",
+  "poissonnerie",
   "epices-du-monde",
   "saveurs-afrique",
   "saveurs-asie",

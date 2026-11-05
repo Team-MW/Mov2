@@ -116,14 +116,16 @@ export default {
         },
       },
       fontFamily: {
-        // Typekit — loaded via <link rel="stylesheet" href="https://use.typekit.net/tci0qgy.css">
-        pro: ['"filson-pro"', 'system-ui', 'sans-serif'],
-        soft: ['"filson-soft"', 'system-ui', 'sans-serif'],
-        sans: ['"filson-pro"', 'system-ui', 'sans-serif'],
-        display: ['"filson-soft"', 'system-ui', 'sans-serif'],
+        // Google Fonts — Anton (titres/prix, capitales) + Outfit (tout le reste)
+        anton: ['Anton', 'Impact', '"Arial Narrow"', 'sans-serif'],
+        outfit: ['Outfit', 'system-ui', 'sans-serif'],
+        display: ['Anton', 'Impact', '"Arial Narrow"', 'sans-serif'],
+        soft: ['Anton', 'Impact', '"Arial Narrow"', 'sans-serif'],
+        pro: ['Outfit', 'system-ui', 'sans-serif'],
+        sans: ['Outfit', 'system-ui', 'sans-serif'],
       },
       fontSize: {
-        // Display scale tuned for Filson Soft
+        // Display scale (Anton)
         'display-sm': ['2.5rem', { lineHeight: '1.05', letterSpacing: '-0.01em', fontWeight: '700' }],
         'display-md': ['3.5rem', { lineHeight: '1.02', letterSpacing: '-0.02em', fontWeight: '700' }],
         'display-lg': ['4.5rem', { lineHeight: '1', letterSpacing: '-0.02em', fontWeight: '700' }],

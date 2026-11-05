@@ -75,26 +75,6 @@ interface Props {
 
 const { promos = [], extraSlides = [], autoAdvanceMs = 2800 } = Astro.props as Props;
 
-/* Featured rectangular banner — always first slide.
- * `imageMobile` is swapped in via <picture><source media> below 768px.
- * Both files live in /public/promos/ and are served by Astro static. */
-const agneauBannerSlide = {
-  kind: "banner" as const,
-  titre: "Promo Agneau Aïd el Kebir",
-  description: "",
-  eyebrow: "",
-  image: "/promos/promo_rectangulaire.webp",
-  imageMobile: "/promos/promo_mobile_marchedemo.jpeg" as string | null,
-  imageAlt: "Promo agneau Aïd — 290€ prix coûtant, Marché de Mo'",
-  ctaLabel: "",
-  ctaHref: "/promos",
-  accent: "#1C6B35",
-  prixPromo: null as number | null,
-  prixOriginal: null as number | null,
-  reductionPct: null as number | null,
-  videoUrl: null as string | null,
-};
-
 /* Build slides array — promos first, editorial after. Max 5 total. */
 const promoSlides = promos.slice(0, 5).map((p) => ({
   kind: "promo" as const,
@@ -130,33 +110,8 @@ const editorialSlides = extraSlides.map((s) => ({
   videoUrl: s.videoUrl || null,
 }));
 
-const hasDynamicVideo = editorialSlides.some((s) => s.kind === "video");
-
-const initialSlides: Slide[] = [agneauBannerSlide, ...promoSlides, ...editorialSlides];
-const videoSlide = {
-  kind: "video" as const,
-  titre: "Votre supermarché du monde à Toulouse",
-  description: "Boucherie halal sur carcasse, fruits & légumes exotiques, épices du monde. Ouvert 7j/7.",
-  eyebrow: "Vidéo · Marché de Mo'",
-  image: "/images/home/hero.jpg",
-  imageMobile: null as string | null,
-  imageAlt: "Vidéo Marché de Mo'",
-  ctaLabel: "Voir nos rayons",
-  ctaHref: "/rayons",
-  accent: "#1C6B35",
-  prixPromo: null as number | null,
-  prixOriginal: null as number | null,
-  reductionPct: null as number | null,
-  videoUrl: "/videos/marchedemo-promo.mp4",
-};
-
-if (!hasDynamicVideo) {
-  if (initialSlides.length > 0) {
-    initialSlides.splice(1, 0, videoSlide);
-  } else {
-    initialSlides.push(videoSlide);
-  }
-}
+/* Bannière Agneau Aïd et diapo vidéo par défaut retirées (nov. 2026). */
+const initialSlides: Slide[] = [...promoSlides, ...editorialSlides];
 
 const baseSlides = initialSlides;
 const slideCount = baseSlides.length;
@@ -554,11 +509,12 @@ const heroSources = loopSlides.map((s) =>
   }
 
   .promo-hero-title {
-    font-family: var(--font-soft, inherit);
-    font-weight: 900;
+    font-family: var(--font-display, inherit);
+    font-weight: 400;
     font-size: clamp(22px, 3.5vw, 40px);
     line-height: 0.98;
-    letter-spacing: -0.025em;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
     margin: 0 0 8px;
     /* Override the global `h1..h6 { color: var(--color-noir) }` rule
        in styles/global.css — the title sits on top of a dark photo
@@ -583,8 +539,8 @@ const heroSources = loopSlides.map((s) =>
     margin-bottom: 10px;
   }
   .promo-hero-price-now {
-    font-family: var(--font-soft, inherit);
-    font-weight: 900;
+    font-family: var(--font-display, inherit);
+    font-weight: 400;
     font-size: clamp(36px, 5vw, 52px);
     line-height: 1;
     color: white;

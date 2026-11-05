@@ -11,6 +11,7 @@
 /* 5 non-culturels (hero clair teinté + motif discret) */
 @import "./rayons/boucherie-halal.css";
 @import "./rayons/fruits-legumes.css";
+@import "./rayons/poissonnerie.css";
 @import "./rayons/epices-du-monde.css";
 @import "./rayons/produits-courants.css";
 @import "./rayons/surgeles.css";
@@ -28,6 +29,10 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    /* Anton n'existe qu'en un seul poids : on interdit le faux-gras
+       généré par le navigateur (font-bold / font-black). Outfit est
+       chargée de 300 à 900, donc non concernée. */
+    font-synthesis-weight: none;
     overflow-x: hidden;
   }
 
@@ -58,8 +63,17 @@
     body::after { display: none; }
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  /* Titres h1–h3 : Anton, toujours en capitales */
+  h1, h2, h3 {
     font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.005em;
+    color: var(--color-noir);
+  }
+  /* h4–h6 : Outfit (étiquettes / sous-titres) */
+  h4, h5, h6 {
+    font-family: var(--font-body);
     font-weight: 700;
     letter-spacing: -0.01em;
     color: var(--color-noir);
@@ -165,31 +179,54 @@
     background: currentColor;
   }
 
+  /* ------------------------------------------------------------
+     Typographie — Anton (titres, prix, campagnes) / Outfit (reste)
+     ------------------------------------------------------------ */
+  .font-display, .font-soft, .font-anton,
+  .display-xl, .display-lg, .display-md, .stat-number,
+  .display, .h1, .h2, .h3, .campaign, .campaign-sm {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+  }
+  .display     { font-size: clamp(2.75rem, 8vw, 7rem);   line-height: 0.92; letter-spacing: 0.005em; }
+  .h1          { font-size: clamp(2.25rem, 5vw, 4.5rem); line-height: 0.95; letter-spacing: 0.005em; }
+  .h2          { font-size: clamp(1.75rem, 3.5vw, 3rem); line-height: 1;    letter-spacing: 0.01em; }
+  .h3          { font-size: clamp(1.25rem, 2vw, 1.75rem); line-height: 1.05; letter-spacing: 0.01em; }
+  .campaign    { font-size: clamp(3rem, 10vw, 9rem);     line-height: 0.88; letter-spacing: 0; }
+  .campaign-sm { font-size: clamp(1.5rem, 4vw, 3rem);    line-height: 0.92; letter-spacing: 0.005em; }
+
+  .body, .small, .label, .hashtag, .rayon { font-family: var(--font-body); }
+  .body    { font-size: 1rem;     line-height: 1.55; font-weight: 400; }
+  .small   { font-size: 0.875rem; line-height: 1.5;  font-weight: 400; }
+  .label   { font-size: 0.75rem;  line-height: 1.2;  font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; }
+  .hashtag { font-size: 1rem;     line-height: 1.2;  font-weight: 700; letter-spacing: -0.01em; }
+  .rayon   { font-size: 0.875rem; line-height: 1.2;  font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+
   /* Titres display responsive */
   .display-xl {
     font-family: var(--font-display);
-    font-weight: 700;
+    font-weight: 400;
     font-size: clamp(2.2rem, 7vw, 6.5rem);
-    line-height: 0.95;
-    letter-spacing: -0.03em;
+    line-height: 0.92;
+    letter-spacing: 0.005em;
     word-break: break-word;
     overflow-wrap: break-word;
   }
   .display-lg {
     font-family: var(--font-display);
-    font-weight: 700;
+    font-weight: 400;
     font-size: clamp(2.25rem, 5vw, 4.5rem);
-    line-height: 1;
-    letter-spacing: -0.02em;
+    line-height: 0.95;
+    letter-spacing: 0.005em;
     word-break: break-word;
     overflow-wrap: break-word;
   }
   .display-md {
     font-family: var(--font-display);
-    font-weight: 700;
+    font-weight: 400;
     font-size: clamp(1.75rem, 3.5vw, 3rem);
-    line-height: 1.05;
-    letter-spacing: -0.01em;
+    line-height: 1;
+    letter-spacing: 0.01em;
     word-break: break-word;
     overflow-wrap: break-word;
   }
@@ -272,7 +309,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 2rem;
-    font-family: var(--font-display);
+    font-family: var(--font-body);
     font-weight: 700;
     font-size: clamp(1.05rem, 1.4vw, 1.25rem);
     color: var(--color-noir);
@@ -321,7 +358,18 @@
   .rayon-hero--dark  .rayon-tagline      { color: var(--rayon-texte-hero); opacity: 0.82; }
   .rayon-hero--dark  .rayon-lead         { color: var(--rayon-texte-hero); opacity: 0.66; }
 
-  .rayon-eyebrow { color: var(--rayon-accent); }
+  .rayon-eyebrow { color: var(--rayon-accent-dark, var(--rayon-accent)); }
+
+  /* Étiquette rayon façon charte « Nos Rayons » : bloc plein à la couleur
+     du rayon, texte blanc ou noir selon la charte, légère inclinaison. */
+  .rayon-hero--light .rayon-eyebrow {
+    background: var(--rayon-accent);
+    color: var(--rayon-on-accent, #fff);
+    padding: 0.45em 0.9em;
+    transform: rotate(-1.2deg);
+    letter-spacing: 0.12em;
+  }
+  .rayon-hero--light .rayon-eyebrow::before { display: none; }
 
   .rayon-pill {
     background: color-mix(in srgb, var(--rayon-accent) 12%, transparent);
@@ -331,10 +379,11 @@
 
   .rayon-btn-primary {
     background: var(--rayon-accent);
-    color: #ffffff;
+    color: var(--rayon-on-accent, #ffffff);
   }
   .rayon-btn-primary:hover {
     background: var(--rayon-accent-dark, var(--rayon-accent));
+    color: #ffffff;
     transform: translateY(-1px);
     box-shadow: 0 8px 24px color-mix(in srgb, var(--rayon-accent) 35%, transparent);
   }
@@ -346,7 +395,7 @@
   }
   .rayon-btn-ghost:hover {
     border-color: var(--rayon-accent);
-    color: var(--rayon-accent);
+    color: var(--rayon-accent-dark, var(--rayon-accent));
   }
   .rayon-hero--dark .rayon-btn-ghost {
     color: var(--rayon-texte-hero);
@@ -396,10 +445,10 @@
   /* Number display */
   .stat-number {
     font-family: var(--font-display);
-    font-weight: 700;
+    font-weight: 400;
     font-size: clamp(3rem, 8vw, 6rem);
     line-height: 0.9;
-    letter-spacing: -0.04em;
+    letter-spacing: 0;
     color: var(--color-vert);
   }
 

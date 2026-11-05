@@ -67,6 +67,7 @@ const cards = produits.map((p) => ({
 }));
 
 const accent = rayon.accent ?? "#1C6B35";
+const accentInk = rayon.accentInk ?? "#FFFFFF";
 
 const bc = breadcrumbSchema([
   { name: "Produits", url: "/produits" },
@@ -92,7 +93,7 @@ const related = RAYONS_LIST.filter((r) => r.slug !== rayon.slug).slice(0, 3);
   {/* ---------- HERO ---------- */}
   <section
     class="relative overflow-hidden bg-noir-softer text-white"
-    style={`--rayon-accent: ${accent}`}
+    style={`--rayon-accent: ${accent}; --rayon-on-accent: ${accentInk}`}
   >
     {rayon.heroImage || rayon.image ? (
       <img
@@ -140,7 +141,7 @@ const related = RAYONS_LIST.filter((r) => r.slug !== rayon.slug).slice(0, 3);
   {/* ---------- FILTRES ---------- */}
   <div
     class="sticky top-16 z-30 bg-blanc/95 backdrop-blur-sm border-y border-black/5 py-3 md:py-4"
-    style={`--rayon-accent: ${accent}`}
+    style={`--rayon-accent: ${accent}; --rayon-on-accent: ${accentInk}`}
   >
     <div class="container-mo">
       <div class="flex items-center gap-4 flex-wrap">
@@ -303,7 +304,7 @@ const related = RAYONS_LIST.filter((r) => r.slug !== rayon.slug).slice(0, 3);
   }
   .rayon-pill--active {
     background: var(--rayon-accent, #1C6B35);
-    color: white;
+    color: var(--rayon-on-accent, white);
     border-color: var(--rayon-accent, #1C6B35);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   }
@@ -321,7 +322,7 @@ const related = RAYONS_LIST.filter((r) => r.slug !== rayon.slug).slice(0, 3);
   }
   .rayon-pill--active .rayon-pill-count {
     background: rgba(255, 255, 255, 0.22);
-    color: white;
+    color: var(--rayon-on-accent, white);
   }
   .produit-item.is-hidden {
     display: none;
