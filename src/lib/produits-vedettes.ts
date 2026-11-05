@@ -8,7 +8,7 @@
 
    All `.image` values are intentionally empty ("") — we don't
    want to ship misleading rayon/ambiance photos as product shots.
-   ProduitCard renders a clean branded 'Photo à venir' placeholder
+   ProduitCard n'affiche rien sans photo (aucun cadre vide)
    when image is falsy. Admins upload the real product photos via
    /admin/medias + /admin/produits.
 

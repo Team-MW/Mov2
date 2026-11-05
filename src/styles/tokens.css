@@ -44,9 +44,10 @@
   --radius-pill: 999px;
 
   /* Rythme vertical */
-  --space-section:    6rem;
-  --space-section-lg: 8rem;
-  --space-section-sm: 4rem;
+  /* Mobile d'abord : l'ancien 6rem laissait ~190px de blanc entre deux sections. */
+  --space-section:    3.5rem;
+  --space-section-lg: 4.5rem;
+  --space-section-sm: 2.5rem;
 
   /* Header sticky */
   --header-height: 80px;
@@ -56,6 +57,21 @@
 
   /* Conteneur */
   --max-content: 1280px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --space-section:    4.5rem;
+    --space-section-lg: 6rem;
+    --space-section-sm: 3rem;
+  }
+}
+@media (min-width: 1024px) {
+  :root {
+    --space-section:    5.5rem;
+    --space-section-lg: 7rem;
+    --space-section-sm: 3.5rem;
+  }
 }
 
 /* --- Rayons : tokens culturels par défaut (overridés par /src/styles/rayons/[slug].css) --- */

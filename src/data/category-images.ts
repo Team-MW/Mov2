@@ -286,6 +286,18 @@ export const CATEGORY_IMAGES: Partial<Record<RayonSlug, RayonImagePack>> = {
     sousCategories: {},
   },
 
+  "poissonnerie": {
+    categories: {
+      "Poissons entiers": "/images/rayons/poissonnerie/bars-dorades.jpg",
+      "Fruits de mer": "/images/rayons/poissonnerie/fruits-de-mer.jpg",
+    },
+    sousCategories: {
+      "Poissons entiers": {
+        "Mer": "/images/rayons/poissonnerie/etal-glace.jpg",
+      },
+    },
+  },
+
   "surgeles": {
     categories: {
       "Légumes": L.frozenVegs,                       // frozen veg bags

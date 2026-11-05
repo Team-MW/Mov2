@@ -1021,3 +1021,43 @@ img {
   .store-facts dd { font-size: 16px; line-height: 1.45; color: var(--color-noir); font-weight: 500; }
   @media (max-width: 520px) { .store-facts { grid-template-columns: 1fr; } }
 }
+
+/* ------------------------------------------------------------
+   Cartes catégorie / sous-catégorie (pages rayon)
+   Image facultative en haut ; sans image (ou image cassée) la carte
+   reste une carte texte propre — jamais de cadre vide.
+   ------------------------------------------------------------ */
+@layer components {
+  .cat-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.09);
+    transition: box-shadow 0.15s ease;
+  }
+  .cat-card:hover { box-shadow: 0 0 0 2px var(--cat-accent, var(--color-vert)); }
+  .cat-card__media { position: relative; overflow: hidden; background: #f3f3f1; }
+  .cat-card__body {
+    padding: 1.1rem 1.25rem 1.2rem;
+    border-top: 4px solid var(--cat-accent, var(--color-vert));
+  }
+  .cat-card:not([data-has-img]) .cat-card__body { border-top: 0; border-left: 5px solid var(--cat-accent, var(--color-vert)); }
+  .cat-card__title {
+    font-size: clamp(1.25rem, 2vw, 1.6rem);
+    line-height: 1.05;
+    color: var(--color-noir);
+  }
+  .cat-card--sm .cat-card__body { padding: 0.85rem 1rem 0.95rem; }
+  .cat-card--sm .cat-card__title { font-size: clamp(1rem, 1.5vw, 1.2rem); }
+  .cat-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--cat-accent, var(--color-vert));
+    filter: brightness(0.85);
+  }
+}

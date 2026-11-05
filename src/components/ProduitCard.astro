@@ -39,6 +39,8 @@ const produitSizes =
   "(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 22vw";
 ---
 
+{/* Pas d'image = pas de carte (aucun cadre vide sur le site). */}
+{produit.image && (
 <a
   href={href}
   class="group relative flex flex-col overflow-hidden rounded-lg bg-white shadow-card hover:shadow-card-hover transition-shadow duration-150"
@@ -57,23 +59,7 @@ const produitSizes =
         class="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-500"
         onerror="this.closest('.group').remove()"
       />
-    ) : (
-      <div class="absolute inset-0 bg-gradient-to-br from-white via-neutral-100 to-[#EEEAE0] flex flex-col items-center justify-center p-5 text-center">
-        <img
-          src="/logos/favicon-marchedemo.png"
-          alt=""
-          aria-hidden="true"
-          width="64"
-          height="64"
-          class="w-14 h-14 opacity-15 mb-3"
-          loading="lazy"
-        />
-        <p class="font-pro font-bold text-[12px] md:text-[13px] leading-tight text-neutral-500 uppercase tracking-wider line-clamp-3">
-          {produit.nom}
-        </p>
-        <span class="mt-2 text-[10px] text-neutral-500 italic">Photo à venir</span>
-      </div>
-    )}
+    ) : null}
     {produit.badge && (
       <span
         class="absolute top-3 left-3 inline-flex items-center px-2.5 py-1 rounded-full bg-white/95 text-[11px] font-pro font-bold tracking-wide uppercase shadow-sm"
@@ -102,3 +88,4 @@ const produitSizes =
     </div>
   </div>
 </a>
+)}

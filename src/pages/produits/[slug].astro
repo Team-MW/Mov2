@@ -102,10 +102,11 @@ const tagline = produit.description?.trim() || rayon?.tagline || "";
   {/* ---------- DETAIL ---------- */}
   <section class="bg-blanc pb-16 md:pb-24">
     <div class="container-mo">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-start">
-        {/* Image side */}
+      <div class={`grid grid-cols-1 ${produit.image ? "md:grid-cols-2" : "max-w-3xl"} gap-8 md:gap-12 lg:gap-16 items-start`}>
+        {/* Image side — absente si pas de photo (aucun cadre vide) */}
+        {produit.image && (
         <div
-          class="relative rounded-3xl overflow-hidden bg-white shadow-card aspect-square"
+          class="relative rounded-lg overflow-hidden bg-white shadow-card aspect-square"
           style={`--rayon-accent: ${accent}`}
         >
           {produit.image ? (
@@ -118,24 +119,7 @@ const tagline = produit.description?.trim() || rayon?.tagline || "";
               class="absolute inset-0 w-full h-full object-cover reveal reveal-mask"
               data-parallax="0.04"
             />
-          ) : (
-            <div class="absolute inset-0 bg-gradient-to-br from-white via-neutral-100 to-[#EEEAE0] flex flex-col items-center justify-center p-10 text-center">
-              <img
-                src="/logos/favicon-marchedemo.png"
-                alt=""
-                aria-hidden="true"
-                width="120"
-                height="120"
-                class="w-24 h-24 opacity-20 mb-6"
-              />
-              <p class="font-pro font-bold text-[17px] leading-snug text-neutral-500 uppercase tracking-wider line-clamp-4">
-                {produit.nom}
-              </p>
-              <span class="mt-3 text-[11px] text-neutral-500 italic font-pro">
-                Photo à venir — disponible en magasin
-              </span>
-            </div>
-          )}
+          ) : null}
           {produit.badge && (
             <span
               class="absolute top-4 left-4 inline-flex items-center px-3 py-1.5 rounded-full bg-white/95 text-[12px] font-pro font-bold tracking-wide uppercase shadow-md"
@@ -145,6 +129,7 @@ const tagline = produit.description?.trim() || rayon?.tagline || "";
             </span>
           )}
         </div>
+        )}
 
         {/* Text side */}
         <div>
