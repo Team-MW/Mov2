@@ -1061,3 +1061,34 @@ img {
     filter: brightness(0.85);
   }
 }
+
+/* Pastille « étiquette de prix » sur la photo d'en-tête d'un rayon */
+.rayon-hero-sticker {
+  position: absolute;
+  left: 16px;
+  bottom: 18px;
+  z-index: 2;
+  background: #F2A955;
+  color: #1A1A1A;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  line-height: 1.02;
+  padding: 0.55em 0.8em;
+  transform: rotate(-4deg);
+}
+
+/* Cartes « Autres rayons » : nom en étiquette couleur (charte) */
+.other-rayon-tag {
+  display: inline-block;
+  background: var(--tag-bg);
+  color: var(--tag-ink);
+  font-family: var(--font-body);
+  text-transform: none;
+  font-weight: 700;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  line-height: 1.05;
+  padding: 0.35em 0.6em 0.4em;
+  transform: rotate(-1.5deg);
+  transform-origin: left bottom;
+}

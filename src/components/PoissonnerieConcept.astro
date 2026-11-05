@@ -1,0 +1,248 @@
+---
+/**
+ * PoissonnerieConcept — sections propres à la page /rayons/poissonnerie.
+ *
+ * 1. Le concept : arrivage UNIQUEMENT vendredi, samedi, dimanche
+ *    (semaine de 7 jours, seuls ven/sam/dim allumés).
+ * 2. Reconnaître un poisson frais (œil, ouïes, peau, chair).
+ * 3. Rendez-vous ce week-end : adresse + horaires des 3 jours d'arrivage.
+ */
+import { MAGASINS } from "@/lib/site";
+
+const m = Object.values(MAGASINS)[0];
+const base = "/images/rayons/poissonnerie";
+
+const semaine = [
+  { court: "Lun", long: "Lundi", arrivage: false },
+  { court: "Mar", long: "Mardi", arrivage: false },
+  { court: "Mer", long: "Mercredi", arrivage: false },
+  { court: "Jeu", long: "Jeudi", arrivage: false },
+  { court: "Ven", long: "Vendredi", arrivage: true },
+  { court: "Sam", long: "Samedi", arrivage: true },
+  { court: "Dim", long: "Dimanche", arrivage: true },
+];
+
+const horaires = [
+  { jour: "Vendredi", heures: m.horaires.lundiSamedi },
+  { jour: "Samedi", heures: m.horaires.lundiSamedi },
+  { jour: "Dimanche", heures: m.horaires.dimanche },
+];
+
+const reperes = [
+  {
+    titre: "L'œil",
+    texte: "Bombé, brillant, la pupille bien noire. Un œil terne ou creux, on passe.",
+    icon: `<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/>`,
+  },
+  {
+    titre: "Les ouïes",
+    texte: "Rouge vif et humides. Plus elles sont sombres, plus le poisson a attendu.",
+    icon: `<path d="M8 4c-3 3-3 13 0 16"/><path d="M12 5c-2.5 3-2.5 11 0 14"/><path d="M16 6c-2 3-2 9 0 12"/>`,
+  },
+  {
+    titre: "La peau",
+    texte: "Brillante, nacrée, avec des écailles bien accrochées.",
+    icon: `<path d="M3 12c4-6 14-6 18 0-4 6-14 6-18 0z"/><path d="M9 10l2 2-2 2M13 10l2 2-2 2"/>`,
+  },
+  {
+    titre: "La chair",
+    texte: "Ferme et élastique : elle reprend sa forme quand on appuie du doigt.",
+    icon: `<path d="M12 3v6"/><path d="M8 13a4 4 0 0 0 8 0c0-2-1.5-3-4-4-2.5 1-4 2-4 4z"/><path d="M5 21h14"/>`,
+  },
+];
+---
+
+{/* 1 · LE CONCEPT ------------------------------------------------ */}
+<section class="pc-concept" aria-labelledby="pc-concept-title">
+  <div class="container-mo py-16 md:py-20">
+    <div class="grid lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-16 items-center">
+      <div>
+        <span class="pc-tag">Le concept Mo'</span>
+        <h2 id="pc-concept-title" class="display-lg mt-5 text-white text-balance">
+          Le poisson arrive le <span class="whitespace-nowrap">week-end</span>. Uniquement.
+        </h2>
+        <p class="mt-5 text-[17px] md:text-[19px] leading-relaxed text-white/90 max-w-xl">
+          À la poissonnerie Mo', le poisson n'arrive que trois jours par semaine :
+          <strong class="text-white">le vendredi, le samedi et le dimanche</strong>.
+          Pas de poisson qui attend en vitrine toute la semaine : un poisson
+          ultra frais, choisi pour le week-end. Un concept unique.
+        </p>
+      </div>
+
+      <div>
+        <ol class="pc-week" aria-label="Jours d'arrivage du poisson">
+          {semaine.map((d) => (
+            <li class="pc-day" data-on={d.arrivage || undefined} aria-label={`${d.long} : ${d.arrivage ? "arrivage" : "pas d'arrivage"}`}>
+              <span class="pc-day__name">{d.court}</span>
+              <span class="pc-day__mark" aria-hidden="true">
+                {d.arrivage ? (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                ) : "—"}
+              </span>
+            </li>
+          ))}
+        </ol>
+        <p class="mt-4 text-[14px] text-white/80 font-medium">
+          Arrivage le vendredi, le samedi et le dimanche · pas d'arrivage du lundi au jeudi
+        </p>
+
+        <div class="pc-proof mt-8">
+          <div>
+            <span class="pc-proof__big">3</span>
+            <span class="pc-proof__label">jours d'arrivage<br />par semaine</span>
+          </div>
+          <div>
+            <span class="pc-proof__big">100 %</span>
+            <span class="pc-proof__label">poisson<br />ultra frais</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* 2 · RECONNAÎTRE UN POISSON FRAIS ------------------------------- */}
+<section class="section bg-white" aria-labelledby="pc-frais-title">
+  <div class="container-mo grid lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-14 items-center">
+    <div class="pc-photo reveal">
+      <img src={`${base}/etal-glace.jpg`} alt="Étal de poissons et fruits de mer sur glace" loading="lazy" decoding="async" width="1800" height="1200" />
+    </div>
+    <div class="reveal">
+      <span class="eyebrow" style="--eyebrow-bg: #12808C">Le bon réflexe</span>
+      <h2 id="pc-frais-title" class="display-md mt-4 text-balance">Comment reconnaître un poisson frais</h2>
+      <p class="mt-3 text-[16px] text-neutral-600 max-w-xl">
+        Quatre repères simples, à vérifier au comptoir. Nos poissonniers vous montrent avec plaisir.
+      </p>
+      <ul class="mt-8 grid sm:grid-cols-2 gap-x-8 gap-y-6">
+        {reperes.map((r) => (
+          <li class="flex gap-4">
+            <span class="pc-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={r.icon} />
+            </span>
+            <div>
+              <h3 class="pc-repere-title">{r.titre}</h3>
+              <p class="mt-1 text-[15px] leading-relaxed text-neutral-600">{r.texte}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{/* 3 · RENDEZ-VOUS CE WEEK-END ------------------------------------ */}
+<section class="pc-rdv" aria-labelledby="pc-rdv-title">
+  <div class="container-mo py-12 md:py-14 grid md:grid-cols-[1.2fr_1fr_auto] gap-8 md:gap-10 items-center">
+    <div>
+      <h2 id="pc-rdv-title" class="display-md text-balance">Rendez-vous ce week-end</h2>
+      <p class="mt-2 text-[16px] text-neutral-700">
+        Poissonnerie Mo' · {m.adresseLigne1}, {m.codePostal} {m.ville}
+      </p>
+    </div>
+    <dl class="pc-hours">
+      {horaires.map((h) => (
+        <div>
+          <dt>{h.jour}</dt>
+          <dd>{h.heures}</dd>
+        </div>
+      ))}
+    </dl>
+    <div class="flex flex-wrap gap-3">
+      <a href={m.mapsLink} target="_blank" rel="noopener noreferrer" class="btn text-white" style="background:#12808C">Itinéraire</a>
+      <a href={`tel:${m.telE164}`} class="btn btn-ghost">{m.telephone}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pc-concept { background: #12808C; color: #fff; position: relative; overflow: hidden; }
+  .pc-concept::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='120' height='28' viewBox='0 0 120 28' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 14 Q 30 0, 60 14 T 120 14' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-opacity='0.07'/%3E%3C/svg%3E");
+    background-size: 120px 28px;
+    pointer-events: none;
+  }
+  .pc-concept > * { position: relative; }
+  .pc-concept h2 { color: #fff; }
+
+  .pc-tag {
+    display: inline-block;
+    background: #fff;
+    color: #0C5C65;
+    font-weight: 800;
+    font-size: 14px;
+    padding: 0.35em 0.8em;
+    transform: rotate(-2deg);
+    transform-origin: left center;
+  }
+
+  .pc-week {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .pc-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 4px 16px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.18);
+    color: rgba(255, 255, 255, 0.45);
+  }
+  .pc-day[data-on] {
+    background: #fff;
+    color: #0C5C65;
+    transform: translateY(-6px);
+  }
+  .pc-day__name {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: clamp(1rem, 2.2vw, 1.6rem);
+    line-height: 1;
+  }
+  .pc-day__mark { height: 24px; display: flex; align-items: center; font-weight: 700; }
+  .pc-day__mark svg { width: 22px; height: 22px; }
+  .pc-day[data-on] .pc-day__mark { color: #12808C; }
+
+  .pc-proof { display: flex; flex-wrap: wrap; gap: 2.5rem; border-top: 1px solid rgba(255, 255, 255, 0.25); padding-top: 1.5rem; }
+  .pc-proof > div { display: flex; align-items: center; gap: 0.9rem; }
+  .pc-proof__big {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    line-height: 1;
+    color: #fff;
+  }
+  .pc-proof__label { font-size: 14px; font-weight: 700; line-height: 1.25; color: rgba(255, 255, 255, 0.88); }
+
+  .pc-photo { border-radius: 8px; overflow: hidden; aspect-ratio: 4 / 3; }
+  .pc-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .pc-icon {
+    width: 44px; height: 44px;
+    border-radius: 999px;
+    background: #E8F5F6;
+    color: #0C5C65;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .pc-icon svg { width: 22px; height: 22px; }
+  .pc-repere-title { font-size: 1.35rem; line-height: 1.05; color: var(--color-noir); }
+
+  .pc-rdv { background: #E8F5F6; border-top: 4px solid #12808C; }
+  .pc-hours { display: grid; gap: 0.4rem; }
+  .pc-hours > div { display: flex; justify-content: space-between; gap: 1.5rem; border-bottom: 1px solid rgba(12, 92, 101, 0.18); padding-bottom: 0.4rem; }
+  .pc-hours dt { font-weight: 700; color: #0C5C65; }
+  .pc-hours dd { font-weight: 600; color: var(--color-noir); }
+
+  @media (max-width: 520px) {
+    .pc-week { gap: 4px; }
+    .pc-day { padding: 10px 2px 12px; gap: 6px; }
+    .pc-day__mark svg { width: 16px; height: 16px; }
+  }
+</style>

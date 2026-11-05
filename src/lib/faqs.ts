@@ -49,6 +49,25 @@ export const FAQ_BOUCHERIE: FAQItem[] = [
   },
 ];
 
+export const FAQ_POISSONNERIE: FAQItem[] = [
+  {
+    q: "Quels jours arrive le poisson ?",
+    r: "Le poisson arrive uniquement le vendredi, le samedi et le dimanche. C'est le concept de la poissonnerie Mo' : trois jours d'arrivage pour un poisson ultra frais.",
+  },
+  {
+    q: "Pourquoi seulement le week-end ?",
+    r: "Parce qu'on préfère concentrer les arrivages sur les jours où vous faites vos courses. Le poisson est choisi pour être vendu rapidement, au meilleur de sa fraîcheur.",
+  },
+  {
+    q: "Comment conserver mon poisson frais ?",
+    r: "Rangez-le dès votre retour dans la partie la plus froide du réfrigérateur (entre 0 et 4 °C), dans un récipient fermé, et cuisinez-le de préférence dans les 24 heures.",
+  },
+  {
+    q: "Où se trouve la poissonnerie ?",
+    r: "Dans notre magasin Marché de Mo' Toulouse Sud — Cépière, 5 rue Joachim du Bellay, 31100 Toulouse.",
+  },
+];
+
 export const FAQ_RAYONS_GENERAL: FAQItem[] = [
   {
     q: "Combien de références propose Marché de Mo' ?",
@@ -120,5 +139,6 @@ export const FAQ_ENGAGEMENTS: FAQItem[] = [
    avec la FAQ boucherie si c'est le rayon boucherie.                  */
 export function faqsForRayon(slug: string): FAQItem[] {
   if (slug === "boucherie-halal") return FAQ_BOUCHERIE.concat(FAQ_RAYONS_GENERAL.slice(0, 1));
+  if (slug === "poissonnerie") return FAQ_POISSONNERIE;
   return FAQ_RAYONS_GENERAL;
 }

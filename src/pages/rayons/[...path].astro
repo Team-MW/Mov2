@@ -23,6 +23,7 @@ import FAQAccordion from "@components/FAQAccordion.astro";
 import LocalVideoPlayer from "@components/islands/LocalVideoPlayer.jsx";
 import InteractiveMeatMap from "@components/islands/InteractiveMeatMap.jsx";
 import BoucherieHalalSeo from "@components/BoucherieHalalSeo.astro";
+import PoissonnerieConcept from "@components/PoissonnerieConcept.astro";
 import { getCollection } from "astro:content";
 import { RAYONS, RAYONS_LIST, SITE, type RayonSlug } from "@/lib/site";
 import { faqsForRayon } from "@/lib/faqs";
@@ -607,7 +608,7 @@ const pageDesc = (() => {
       </div>
 
       <div class={heroCompact ? "lg:col-span-4" : "lg:col-span-5"}>
-        <div class={`relative rounded-[40px] overflow-hidden shadow-2xl ring-1 ring-black/5 ${heroCompact ? "aspect-[4/3]" : "aspect-[4/5]"}`}>
+        <div class={`relative rounded-lg overflow-hidden ring-1 ring-black/10 ${heroCompact ? "aspect-[4/3]" : "aspect-[4/5]"}`}>
           {slideshowActive ? (
             <div
               class="rayon-slideshow absolute inset-0"
@@ -643,10 +644,16 @@ const pageDesc = (() => {
             />
           )}
           <div class="rayon-img-overlay absolute inset-0 pointer-events-none"></div>
+          {rayonSlug === "poissonnerie" && (
+            <span class="rayon-hero-sticker">Arrivage<br />ven · sam · dim</span>
+          )}
         </div>
       </div>
     </div>
   </section>
+
+  {/* POISSONNERIE — concept vendredi / samedi / dimanche */}
+  {level === 1 && rayonSlug === "poissonnerie" && <PoissonnerieConcept />}
 
   {/* CARTE INTERACTIVE BOUCHERIE - Deuxième section */}
   {level === 1 && rayonSlug === "boucherie-halal" && (
@@ -1092,17 +1099,21 @@ const pageDesc = (() => {
           {otherRayons.map((r) => (
             <a
               href={`/rayons/${r.slug}`}
-              class="reveal group relative rounded-2xl overflow-hidden aspect-[4/5] bg-noir card-float"
+              class="reveal group relative rounded-lg overflow-hidden aspect-[4/5] bg-neutral-200"
             >
               <img
                 src={r.image}
                 alt={r.imageAlt}
                 loading="lazy"
-                class="absolute inset-0 w-full h-full object-cover opacity-75 group-hover:opacity-90 group-hover:scale-[1.06] transition-all duration-500"
+                class="absolute inset-0 w-full h-full object-cover"
+                onerror="this.closest('a').remove()"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+              <div class="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent"></div>
               <div class="absolute inset-x-0 bottom-0 p-4 md:p-5">
-                <h3 class="font-soft font-bold text-white text-[16px] md:text-[20px] leading-tight">
+                <h3
+                  class="other-rayon-tag"
+                  style={`--tag-bg: ${r.accent ?? "#1C6B35"}; --tag-ink: ${r.accentInk ?? "#FFFFFF"};`}
+                >
                   {r.nomCourt}
                 </h3>
               </div>
