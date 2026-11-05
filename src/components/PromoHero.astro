@@ -29,7 +29,9 @@ import type { PromoEntry } from "@/lib/promos-repo";
 import { supabaseSrcSet } from "@/lib/image-cdn";
 
 export interface Slide {
-  kind: "banner" | "promo" | "editorial" | "video" | "poisson";
+  kind: "banner" | "promo" | "editorial" | "video" | "rayon";
+  /** Diapo « pub rayon » (kind \"rayon\") */
+  feature?: RayonFeature;
   titre: string;
   description: string;
   eyebrow: string;
@@ -110,30 +112,130 @@ const editorialSlides = extraSlides.map((s) => ({
   videoUrl: s.videoUrl || null,
 }));
 
-/* Diapo « à la une » : Poissonnerie Mo' — arrivage ven/sam/dim uniquement. */
-const poissonSlide: Slide = {
-  kind: "poisson",
-  titre: "Poisson ultra frais",
-  description: "Arrivage uniquement le vendredi, le samedi et le dimanche.",
-  eyebrow: "Poissonnerie Mo' · Concept unique",
-  image: "/images/rayons/poissonnerie/bars-dorades.jpg",
+/* Diapos « pub rayon » — même DA que la pub Poissonnerie, une par rayon. */
+interface RayonFeature {
+  small: string;
+  lead: string; // HTML autorisé (<strong>)
+  chips: { label: string; on: boolean }[];
+  chipsLabel: string;
+  stamp: [string, string, string]; // haut, centre (HTML <br/>), bas
+  accent: string;
+  dark: string;
+  stampBg: string;
+  stampInk: string;
+  pos: string;
+  posMobile: string;
+  flip?: boolean;
+}
+const rayonSlide = (
+  o: { titre: string; eyebrow: string; image: string; imageAlt: string; ctaLabel: string; ctaHref: string; feature: RayonFeature },
+): Slide => ({
+  kind: "rayon",
+  titre: o.titre,
+  description: o.feature.lead.replace(/<[^>]+>/g, ""),
+  eyebrow: o.eyebrow,
+  image: o.image,
   imageMobile: null,
-  imageAlt: "Bars et dorades entiers sur glace à la poissonnerie Mo'",
-  ctaLabel: "Découvrir la poissonnerie",
-  ctaHref: "/rayons/poissonnerie",
-  accent: "#12808C",
+  imageAlt: o.imageAlt,
+  ctaLabel: o.ctaLabel,
+  ctaHref: o.ctaHref,
+  accent: o.feature.accent,
   prixPromo: null,
   prixOriginal: null,
   reductionPct: null,
   videoUrl: null,
+  feature: o.feature,
+});
+const on = (labels: string[]) => labels.map((label) => ({ label, on: true }));
+
+const poissonSlide = rayonSlide({
+  titre: "Poisson ultra frais",
+  eyebrow: "Poissonnerie Mo' · Concept unique",
+  image: "/images/rayons/poissonnerie/bars-dorades.jpg",
+  imageAlt: "Bars et dorades entiers sur glace à la poissonnerie Mo'",
+  ctaLabel: "Découvrir la poissonnerie",
+  ctaHref: "/rayons/poissonnerie",
+  feature: {
+    small: "Le week-end,",
+    lead: "Arrivage <strong>uniquement</strong> vendredi · samedi · dimanche",
+    chips: [
+      { label: "L", on: false }, { label: "M", on: false }, { label: "M", on: false }, { label: "J", on: false },
+      { label: "Ven", on: true }, { label: "Sam", on: true }, { label: "Dim", on: true },
+    ],
+    chipsLabel: "Jours d'arrivage : vendredi, samedi, dimanche",
+    stamp: ["Arrivage", "ven<br/>sam<br/>dim", "100 % frais"],
+    accent: "#12808C", dark: "#0C5C65", stampBg: "#EF6730", stampInk: "#1A1A1A",
+    pos: "60% 40%", posMobile: "center top",
+  },
+});
+const boucherieSlide = rayonSlide({
+  titre: "Viande halal fraîche",
+  eyebrow: "Boucherie halal Mo'",
+  image: "/images/rayons/boucherie-halal.jpg",
+  imageAlt: "Côtes de bœuf fraîches au romarin à la boucherie halal Mo'",
+  ctaLabel: "Découvrir la boucherie",
+  ctaHref: "/rayons/boucherie-halal",
+  feature: {
+    small: "Chez votre boucher,",
+    lead: "Agneau, bœuf, veau, volaille : <strong>certifiés halal</strong>, découpés à la demande",
+    chips: on(["Agneau", "Bœuf", "Veau", "Volaille"]),
+    chipsLabel: "Viandes : agneau, bœuf, veau, volaille",
+    stamp: ["Certifiée", "100 %<br/>halal", "Boucherie"],
+    accent: "#AB1819", dark: "#6E0F10", stampBg: "#FFFFFF", stampInk: "#AB1819",
+    pos: "65% center", posMobile: "70% center",
+  },
+});
+const primeursSlide = rayonSlide({
+  titre: "Fruits & légumes",
+  eyebrow: "Primeurs Mo'",
+  image: "/images/rayons/fruits-legumes/legumes-organiques.jpg",
+  imageAlt: "Poivrons, tomates cerises, artichaut et courgettes frais",
+  ctaLabel: "Découvrir les primeurs",
+  ctaHref: "/rayons/fruits-legumes",
+  feature: {
+    small: "Frais, du monde entier,",
+    lead: "Plus de <strong>120 fruits et légumes</strong>, dont des exotiques rares",
+    chips: on(["Exotiques", "De saison", "Herbes fraîches"]),
+    chipsLabel: "Exotiques, de saison, herbes fraîches",
+    stamp: ["Plus de", "120", "variétés"],
+    accent: "#0D814C", dark: "#08532F", stampBg: "#F2A955", stampInk: "#1A1A1A",
+    pos: "center center", posMobile: "center center", flip: true,
+  },
+});
+const epicesSlide = rayonSlide({
+  titre: "Épices du monde",
+  eyebrow: "Rayon Épices Mo'",
+  image: "/images/rayons/epices-du-monde/marche-aux-epices-dubai.jpg",
+  imageAlt: "Sacs d'épices, cannelle, curcuma et fleurs séchées au marché",
+  ctaLabel: "Découvrir les épices",
+  ctaHref: "/rayons/epices-du-monde",
+  feature: {
+    small: "Du Maghreb à l'Inde,",
+    lead: "Ras el hanout, curcuma, za'atar, garam masala : <strong>importés en direct</strong>",
+    chips: on(["Maghreb", "Inde", "Afrique", "Asie"]),
+    chipsLabel: "Épices du Maghreb, d'Inde, d'Afrique et d'Asie",
+    stamp: ["Import", "direct", "du monde"],
+    accent: "#EF6730", dark: "#8F3510", stampBg: "#FFFFFF", stampInk: "#8F3510",
+    pos: "center center", posMobile: "center center",
+  },
+});
+
+/* Ordre : pub poisson en une, puis promos et pubs rayons en alternance. */
+const interleave = (pubs: Slide[], promos: Slide[]): Slide[] => {
+  const out: Slide[] = [];
+  const n = Math.max(pubs.length, promos.length);
+  for (let i = 0; i < n; i++) {
+    if (pubs[i]) out.push(pubs[i]);
+    if (promos[i]) out.push(promos[i]);
+  }
+  return out;
 };
-const SEMAINE = [
-  ["L", false], ["M", false], ["M", false], ["J", false],
-  ["Ven", true], ["Sam", true], ["Dim", true],
-] as const;
 
 /* Bannière Agneau Aïd et diapo vidéo par défaut retirées (nov. 2026). */
-const initialSlides: Slide[] = [poissonSlide, ...promoSlides, ...editorialSlides];
+const initialSlides: Slide[] = [
+  ...interleave([poissonSlide, boucherieSlide, primeursSlide, epicesSlide], promoSlides),
+  ...editorialSlides,
+];
 
 const baseSlides = initialSlides;
 const slideCount = baseSlides.length;
@@ -156,7 +258,7 @@ const isGreenOverlaySlide = (s: (typeof baseSlides)[number]) =>
 const heroWidths = [800, 1200, 1600, 2400];
 const heroSizes = "62vw";
 const heroSources = loopSlides.map((s) =>
-  s.kind === "banner" || s.kind === "poisson" || s.image.startsWith("/promos/")
+  s.kind === "banner" || s.kind === "rayon" || s.image.startsWith("/promos/")
     ? { src: s.image, srcset: "" }
     : supabaseSrcSet(s.image, heroWidths, { quality: 78 }),
 );
@@ -188,14 +290,14 @@ const heroSources = loopSlides.map((s) =>
         const hideText = slide.kind === "banner";
         return (
           <article
-            class={`promo-hero-slide ${isVideo ? "promo-hero-slide-video-layout" : ""} ${isBanner ? "promo-hero-slide--banner" : ""} ${slide.kind === "poisson" ? "promo-hero-slide--poisson" : ""}`}
+            class={`promo-hero-slide ${isVideo ? "promo-hero-slide-video-layout" : ""} ${isBanner ? "promo-hero-slide--banner" : ""} ${slide.kind === "rayon" ? "promo-hero-slide--rayon" : ""} ${slide.feature?.flip ? "promo-hero-slide--flip" : ""}`}
+            style={slide.feature ? `--f-accent:${slide.feature.accent};--f-dark:${slide.feature.dark};--f-stamp-bg:${slide.feature.stampBg};--f-stamp-ink:${slide.feature.stampInk};--f-pos:${slide.feature.pos};--f-pos-m:${slide.feature.posMobile};` : (isVideo ? `background-color: ${slide.accent} !important;` : "")}
             role="group"
             aria-roledescription="diapositive"
             aria-label={`${realIndex + 1} sur ${slideCount} : ${slide.titre}`}
             data-slide-index={realIndex}
             data-dom-index={i}
             data-loop-clone={isClone ? "true" : undefined}
-            style={isVideo ? `background-color: ${slide.accent} !important;` : ""}
           >
             {isVideo ? (
               /* Split Screen Layout for Video Slide */
@@ -286,20 +388,18 @@ const heroSources = loopSlides.map((s) =>
                   )}
                 </div>
 
-                {slide.kind === "poisson" && (
+                {slide.kind === "rayon" && slide.feature && (
                   <div class="promo-hero-slide-content">
                     <div class="container-mo promo-hero-slide-inner ph-fish">
                       <span class="ph-fish-tag">{slide.eyebrow}</span>
                       <h2 class="ph-fish-title">
-                        <span class="ph-fish-title-sm">Le week-end,</span>
+                        <span class="ph-fish-title-sm">{slide.feature.small}</span>
                         {slide.titre}
                       </h2>
-                      <p class="ph-fish-lead">
-                        Arrivage <strong>uniquement</strong> vendredi · samedi · dimanche
-                      </p>
-                      <ol class="ph-fish-week" aria-label="Jours d'arrivage : vendredi, samedi, dimanche">
-                        {SEMAINE.map(([j, on]) => (
-                          <li data-on={on || undefined}>{j}</li>
+                      <p class="ph-fish-lead" set:html={slide.feature.lead} />
+                      <ol class="ph-fish-week" aria-label={slide.feature.chipsLabel}>
+                        {slide.feature.chips.map((c) => (
+                          <li data-on={c.on || undefined}>{c.label}</li>
                         ))}
                       </ol>
                       <a href={slide.ctaHref} class="promo-hero-cta" style={`--accent: ${slide.accent}`}>
@@ -310,14 +410,14 @@ const heroSources = loopSlides.map((s) =>
                       </a>
                     </div>
                     <div class="ph-fish-stamp" aria-hidden="true">
-                      <span>Arrivage</span>
-                      <strong>ven<br/>sam<br/>dim</strong>
-                      <span>100 % frais</span>
+                      <span>{slide.feature.stamp[0]}</span>
+                      <strong set:html={slide.feature.stamp[1]} />
+                      <span>{slide.feature.stamp[2]}</span>
                     </div>
                   </div>
                 )}
 
-                {!hideText && slide.kind !== "poisson" && (
+                {!hideText && slide.kind !== "rayon" && (
                   <div class="promo-hero-slide-content">
                     <div class="container-mo promo-hero-slide-inner">
                       <span class="promo-hero-eyebrow">{slide.eyebrow}</span>
@@ -611,18 +711,19 @@ const heroSources = loopSlides.map((s) =>
   }
 
   /* ---- Diapo « à la une » Poissonnerie ---- */
-  .promo-hero-slide--poisson { background: #0C5C65; }
-  .promo-hero-slide--poisson .promo-hero-slide-image { object-position: 60% 40%; }
-  .promo-hero-slide--poisson .promo-hero-slide-overlay {
+  .promo-hero-slide--rayon { background: var(--f-dark); }
+  .promo-hero-slide--rayon .promo-hero-slide-image { object-position: var(--f-pos); }
+  .promo-hero-slide--flip .promo-hero-slide-image-wrap picture { display: block; width: 100%; height: 100%; transform: scaleX(-1); }
+  .promo-hero-slide--rayon .promo-hero-slide-overlay {
     background:
-      linear-gradient(90deg, #0C5C65 0%, rgba(18,128,140,0.94) 30%, rgba(18,128,140,0.55) 55%, rgba(12,92,101,0) 78%),
+      linear-gradient(90deg, var(--f-dark) 0%, color-mix(in srgb, var(--f-accent) 95%, transparent) 34%, color-mix(in srgb, var(--f-accent) 62%, transparent) 60%, transparent 82%),
       linear-gradient(0deg, rgba(0,0,0,0.25), rgba(0,0,0,0) 40%);
   }
   .ph-fish { max-width: 680px; }
   .ph-fish-tag {
     display: inline-block;
     background: #fff;
-    color: #0C5C65;
+    color: var(--f-dark);
     font-family: var(--font-pro, inherit);
     font-weight: 800;
     font-size: 13px;
@@ -643,7 +744,7 @@ const heroSources = loopSlides.map((s) =>
     display: block;
     font-size: 0.42em;
     line-height: 1.1;
-    color: #BFEFF2;
+    color: color-mix(in srgb, var(--f-accent) 22%, white);
   }
   .ph-fish-lead {
     font-size: clamp(14px, 1.4vw, 17px);
@@ -673,7 +774,7 @@ const heroSources = loopSlides.map((s) =>
   }
   .ph-fish-week li[data-on] {
     background: #fff;
-    color: #0C5C65;
+    color: var(--f-dark);
     padding: 6px 12px;
     transform: translateY(-3px);
   }
@@ -684,8 +785,8 @@ const heroSources = loopSlides.map((s) =>
     width: clamp(120px, 13vw, 168px);
     aspect-ratio: 1;
     border-radius: 999px;
-    background: #EF6730;
-    color: #1A1A1A;
+    background: var(--f-stamp-bg);
+    color: var(--f-stamp-ink);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -693,6 +794,8 @@ const heroSources = loopSlides.map((s) =>
     text-align: center;
     transform: translateY(-50%) rotate(-10deg);
     box-shadow: 0 0 0 4px #fff;
+    outline: 2px dashed currentColor;
+    outline-offset: -9px;
     font-family: var(--font-pro, inherit);
     font-weight: 800;
     font-size: clamp(10px, 1vw, 13px);
@@ -713,12 +816,12 @@ const heroSources = loopSlides.map((s) =>
     .ph-fish-title { margin: 8px 0 6px; }
   }
   @media (max-width: 767px) {
-    .promo-hero-slide--poisson .promo-hero-slide-image { object-position: center top; }
-    .promo-hero-slide--poisson .promo-hero-slide-overlay {
-      background: linear-gradient(0deg, #0C5C65 0%, rgba(18,128,140,0.96) 52%, rgba(18,128,140,0.4) 72%, rgba(12,92,101,0) 88%);
+    .promo-hero-slide--rayon .promo-hero-slide-image { object-position: var(--f-pos-m); }
+    .promo-hero-slide--rayon .promo-hero-slide-overlay {
+      background: linear-gradient(0deg, var(--f-dark) 0%, color-mix(in srgb, var(--f-accent) 96%, transparent) 52%, color-mix(in srgb, var(--f-accent) 40%, transparent) 72%, transparent 88%);
     }
-    .promo-hero-slide--poisson .promo-hero-slide-content { align-items: flex-end; padding-bottom: 64px; }
-    .ph-fish-stamp { top: 18px; right: 16px; transform: rotate(-10deg); width: 104px; }
+    .promo-hero-slide--rayon .promo-hero-slide-content { align-items: flex-end; padding-bottom: 64px; }
+    .ph-fish-stamp { top: 18px; right: 16px; transform: rotate(-10deg); width: 112px; font-size: 9px; }
   }
 
   .promo-hero-cta {
