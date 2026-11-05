@@ -29,7 +29,7 @@ import type { PromoEntry } from "@/lib/promos-repo";
 import { supabaseSrcSet } from "@/lib/image-cdn";
 
 export interface Slide {
-  kind: "banner" | "promo" | "editorial" | "video";
+  kind: "banner" | "promo" | "editorial" | "video" | "poisson";
   titre: string;
   description: string;
   eyebrow: string;
@@ -110,8 +110,30 @@ const editorialSlides = extraSlides.map((s) => ({
   videoUrl: s.videoUrl || null,
 }));
 
+/* Diapo « à la une » : Poissonnerie Mo' — arrivage ven/sam/dim uniquement. */
+const poissonSlide: Slide = {
+  kind: "poisson",
+  titre: "Poisson ultra frais",
+  description: "Arrivage uniquement le vendredi, le samedi et le dimanche.",
+  eyebrow: "Poissonnerie Mo' · Concept unique",
+  image: "/images/rayons/poissonnerie/bars-dorades.jpg",
+  imageMobile: null,
+  imageAlt: "Bars et dorades entiers sur glace à la poissonnerie Mo'",
+  ctaLabel: "Découvrir la poissonnerie",
+  ctaHref: "/rayons/poissonnerie",
+  accent: "#12808C",
+  prixPromo: null,
+  prixOriginal: null,
+  reductionPct: null,
+  videoUrl: null,
+};
+const SEMAINE = [
+  ["L", false], ["M", false], ["M", false], ["J", false],
+  ["Ven", true], ["Sam", true], ["Dim", true],
+] as const;
+
 /* Bannière Agneau Aïd et diapo vidéo par défaut retirées (nov. 2026). */
-const initialSlides: Slide[] = [...promoSlides, ...editorialSlides];
+const initialSlides: Slide[] = [poissonSlide, ...promoSlides, ...editorialSlides];
 
 const baseSlides = initialSlides;
 const slideCount = baseSlides.length;
@@ -134,7 +156,7 @@ const isGreenOverlaySlide = (s: (typeof baseSlides)[number]) =>
 const heroWidths = [800, 1200, 1600, 2400];
 const heroSizes = "62vw";
 const heroSources = loopSlides.map((s) =>
-  s.kind === "banner" || s.image.startsWith("/promos/")
+  s.kind === "banner" || s.kind === "poisson" || s.image.startsWith("/promos/")
     ? { src: s.image, srcset: "" }
     : supabaseSrcSet(s.image, heroWidths, { quality: 78 }),
 );
@@ -166,7 +188,7 @@ const heroSources = loopSlides.map((s) =>
         const hideText = slide.kind === "banner";
         return (
           <article
-            class={`promo-hero-slide ${isVideo ? "promo-hero-slide-video-layout" : ""} ${isBanner ? "promo-hero-slide--banner" : ""}`}
+            class={`promo-hero-slide ${isVideo ? "promo-hero-slide-video-layout" : ""} ${isBanner ? "promo-hero-slide--banner" : ""} ${slide.kind === "poisson" ? "promo-hero-slide--poisson" : ""}`}
             role="group"
             aria-roledescription="diapositive"
             aria-label={`${realIndex + 1} sur ${slideCount} : ${slide.titre}`}
@@ -264,7 +286,38 @@ const heroSources = loopSlides.map((s) =>
                   )}
                 </div>
 
-                {!hideText && (
+                {slide.kind === "poisson" && (
+                  <div class="promo-hero-slide-content">
+                    <div class="container-mo promo-hero-slide-inner ph-fish">
+                      <span class="ph-fish-tag">{slide.eyebrow}</span>
+                      <h2 class="ph-fish-title">
+                        <span class="ph-fish-title-sm">Le week-end,</span>
+                        {slide.titre}
+                      </h2>
+                      <p class="ph-fish-lead">
+                        Arrivage <strong>uniquement</strong> vendredi · samedi · dimanche
+                      </p>
+                      <ol class="ph-fish-week" aria-label="Jours d'arrivage : vendredi, samedi, dimanche">
+                        {SEMAINE.map(([j, on]) => (
+                          <li data-on={on || undefined}>{j}</li>
+                        ))}
+                      </ol>
+                      <a href={slide.ctaHref} class="promo-hero-cta" style={`--accent: ${slide.accent}`}>
+                        {slide.ctaLabel}
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                          <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </a>
+                    </div>
+                    <div class="ph-fish-stamp" aria-hidden="true">
+                      <span>Arrivage</span>
+                      <strong>ven<br/>sam<br/>dim</strong>
+                      <span>100 % frais</span>
+                    </div>
+                  </div>
+                )}
+
+                {!hideText && slide.kind !== "poisson" && (
                   <div class="promo-hero-slide-content">
                     <div class="container-mo promo-hero-slide-inner">
                       <span class="promo-hero-eyebrow">{slide.eyebrow}</span>
@@ -555,6 +608,117 @@ const heroSources = loopSlides.map((s) =>
     padding: 4px 10px;
     border-radius: 6px;
     letter-spacing: 0.02em;
+  }
+
+  /* ---- Diapo « à la une » Poissonnerie ---- */
+  .promo-hero-slide--poisson { background: #0C5C65; }
+  .promo-hero-slide--poisson .promo-hero-slide-image { object-position: 60% 40%; }
+  .promo-hero-slide--poisson .promo-hero-slide-overlay {
+    background:
+      linear-gradient(90deg, #0C5C65 0%, rgba(18,128,140,0.94) 30%, rgba(18,128,140,0.55) 55%, rgba(12,92,101,0) 78%),
+      linear-gradient(0deg, rgba(0,0,0,0.25), rgba(0,0,0,0) 40%);
+  }
+  .ph-fish { max-width: 680px; }
+  .ph-fish-tag {
+    display: inline-block;
+    background: #fff;
+    color: #0C5C65;
+    font-family: var(--font-pro, inherit);
+    font-weight: 800;
+    font-size: 13px;
+    padding: 4px 10px;
+    transform: rotate(-1.5deg);
+    transform-origin: left center;
+  }
+  .ph-fish-title {
+    font-family: var(--font-display, inherit);
+    font-weight: 400;
+    text-transform: uppercase;
+    color: #fff;
+    font-size: clamp(34px, 4.4vw, 56px);
+    line-height: 0.92;
+    margin: 12px 0 8px;
+  }
+  .ph-fish-title-sm {
+    display: block;
+    font-size: 0.42em;
+    line-height: 1.1;
+    color: #BFEFF2;
+  }
+  .ph-fish-lead {
+    font-size: clamp(14px, 1.4vw, 17px);
+    font-weight: 500;
+    color: rgba(255,255,255,0.95);
+    margin: 0 0 12px;
+  }
+  .ph-fish-lead strong { font-weight: 800; color: #fff; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .ph-fish-week {
+    display: flex;
+    gap: 5px;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+  }
+  .ph-fish-week li {
+    min-width: 30px;
+    padding: 6px 7px;
+    border-radius: 4px;
+    text-align: center;
+    font-family: var(--font-display, inherit);
+    text-transform: uppercase;
+    font-size: 14px;
+    line-height: 1;
+    background: rgba(0,0,0,0.22);
+    color: rgba(255,255,255,0.45);
+  }
+  .ph-fish-week li[data-on] {
+    background: #fff;
+    color: #0C5C65;
+    padding: 6px 12px;
+    transform: translateY(-3px);
+  }
+  .ph-fish-stamp {
+    position: absolute;
+    right: clamp(40px, 5vw, 80px);
+    top: 50%;
+    width: clamp(120px, 13vw, 168px);
+    aspect-ratio: 1;
+    border-radius: 999px;
+    background: #EF6730;
+    color: #1A1A1A;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transform: translateY(-50%) rotate(-10deg);
+    box-shadow: 0 0 0 4px #fff;
+    font-family: var(--font-pro, inherit);
+    font-weight: 800;
+    font-size: clamp(10px, 1vw, 13px);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .ph-fish-stamp strong {
+    font-family: var(--font-display, inherit);
+    font-weight: 400;
+    font-size: clamp(20px, 2.3vw, 30px);
+    line-height: 0.95;
+    margin: 4px 0;
+    letter-spacing: 0;
+  }
+  /* Tablette : la diapo est basse, on garde l'essentiel (jours dans le texte). */
+  @media (min-width: 768px) and (max-width: 1199px) {
+    .ph-fish-week { display: none; }
+    .ph-fish-title { margin: 8px 0 6px; }
+  }
+  @media (max-width: 767px) {
+    .promo-hero-slide--poisson .promo-hero-slide-image { object-position: center top; }
+    .promo-hero-slide--poisson .promo-hero-slide-overlay {
+      background: linear-gradient(0deg, #0C5C65 0%, rgba(18,128,140,0.96) 52%, rgba(18,128,140,0.4) 72%, rgba(12,92,101,0) 88%);
+    }
+    .promo-hero-slide--poisson .promo-hero-slide-content { align-items: flex-end; padding-bottom: 64px; }
+    .ph-fish-stamp { top: 18px; right: 16px; transform: rotate(-10deg); width: 104px; }
   }
 
   .promo-hero-cta {
