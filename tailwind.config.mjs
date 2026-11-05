@@ -140,8 +140,8 @@ export default {
       boxShadow: {
         'logo': '0 2px 8px rgba(28, 107, 53, 0.08)',
         'logo-hover': '0 4px 16px rgba(28, 107, 53, 0.15)',
-        'card': '0 1px 3px rgba(0, 0, 0, 0.05), 0 8px 24px rgba(0, 0, 0, 0.06)',
-        'card-hover': '0 4px 12px rgba(0, 0, 0, 0.08), 0 16px 40px rgba(0, 0, 0, 0.1)',
+        'card': '0 0 0 1px rgba(0, 0, 0, 0.09)',
+        'card-hover': '0 0 0 1px rgba(0, 0, 0, 0.2)',
       },
       maxWidth: {
         'content': '1280px',

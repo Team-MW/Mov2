@@ -54,21 +54,6 @@ const BUTTON_COLORS: Record<string, string> = {
   "produits-laitiers": "#2563EB",   // Bleu roi
 };
 
-const NATIVE_EMOJIS: Record<string, string> = {
-  "boucherie-halal": "🥩",
-  "fruits-legumes": "🥬",
-  "poissonnerie": "🐟",
-  "epices-du-monde": "🌶️",
-  "cremerie": "🧀",
-  "saveurs-asie": "🍜",
-  "saveur-mediterranee": "🫒",
-  "saveurs-sud-amer": "🌽",
-  "balkans-turques": "🧀",
-  "produits-courants": "🥗",
-  "surgeles": "❄️",
-  "boulangerie": "🥖",
-  "produits-laitiers": "🥛",
-};
 ---
 
 <header
@@ -283,19 +268,13 @@ const NATIVE_EMOJIS: Record<string, string> = {
         {headerRayons.map((r) => {
           const bgCol = r.accent || BUTTON_COLORS[r.slug] || BUTTON_COLORS["fruits-legumes"];
           const inkCol = r.accentInk || "#FFFFFF";
-          const emoji = NATIVE_EMOJIS[r.slug];
           return (
             <a
               href={`/rayons/${r.slug}`}
-              class="group/tab inline-flex items-center gap-2 px-[22px] py-[8px] rounded-full text-[14.5px] font-pro font-bold transition-all shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:-translate-y-[1px] hover:scale-[1.02] shrink-0"
-              style={`background-color: ${bgCol}; color: ${inkCol}; box-shadow: 0 4px 10px ${bgCol}25;`}
+              class="group/tab inline-flex items-center px-[18px] py-[7px] rounded-md text-[14.5px] font-pro font-bold transition-opacity hover:opacity-90 shrink-0"
+              style={`background-color: ${bgCol}; color: ${inkCol};`}
             >
               <span class="inline-flex items-center gap-2.5 whitespace-nowrap">
-                {emoji && (
-                  <span class="text-[17px] leading-none shrink-0" style="font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;">
-                    {emoji}
-                  </span>
-                )}
                 {r.nomCourt}
               </span>
             </a>

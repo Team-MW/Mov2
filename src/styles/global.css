@@ -42,25 +42,7 @@
     background: var(--color-blanc);
     color: var(--color-texte);
     line-height: 1.55;
-    /* Grain noise overlay — SVG feTurbulence data URI en multiply avec
-       opacity 0.035. Donne un toucher "papier" premium (reference :
-       Apple press kits, ANDRÉ magazine). Tile natif 120px, repete. */
     position: relative;
-  }
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 50;
-    pointer-events: none;
-    opacity: 0.04;
-    mix-blend-mode: multiply;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-size: 180px 180px;
-    will-change: auto;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    body::after { display: none; }
   }
 
   /* Titres h1–h3 : Anton, toujours en capitales */
@@ -111,21 +93,12 @@
     max-width: var(--max-content);
   }
 
-  /* Boutons — avec support magnetic pull via CSS vars --mag-x/--mag-y.
-     Le JS (Layout.astro) track le curseur et set ces vars quand il entre
-     dans un rayon autour du bouton. Fallback : vars = 0 donc pas d'effet
-     sur mobile / prefers-reduced-motion. */
+  /* Boutons — coins nets, comme les étiquettes de la charte « Nos Rayons ».
+     Pas d'effet aimant ni de lévitation : changement de couleur seulement. */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-pro font-bold text-[15px] tracking-tight;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-md font-pro font-bold text-[15px];
     white-space: nowrap;
-    --mag-x: 0px;
-    --mag-y: 0px;
-    transform: translate3d(var(--mag-x), var(--mag-y), 0);
-    transition:
-      transform 0.18s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-      background-color 0.2s ease,
-      box-shadow 0.2s ease,
-      color 0.2s ease;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   }
   .btn-primary {
     background: var(--color-vert);
@@ -133,9 +106,6 @@
   }
   .btn-primary:hover {
     background: var(--color-vert-dark);
-    /* Compose magnetic translate + lift */
-    transform: translate3d(var(--mag-x), calc(var(--mag-y) - 1px), 0);
-    box-shadow: 0 8px 24px rgba(28, 107, 53, 0.28);
   }
   .btn-secondary {
     background: var(--color-blanc);
@@ -145,7 +115,6 @@
   .btn-secondary:hover {
     background: var(--color-vert);
     color: var(--color-blanc);
-    transform: translate3d(var(--mag-x), calc(var(--mag-y) - 1px), 0);
   }
 
   .btn-rouge {
@@ -154,7 +123,6 @@
   }
   .btn-rouge:hover {
     background: var(--color-rouge-dark);
-    transform: translateY(-1px);
   }
   .btn-ghost {
     background: transparent;
@@ -168,15 +136,45 @@
 
   /* Eyebrow (petit label au-dessus des titres) */
   .eyebrow {
-    @apply inline-flex items-center gap-2 font-pro font-bold uppercase tracking-[0.18em] text-[12px];
-    color: var(--color-vert);
+    @apply inline-flex items-center font-pro font-bold text-[13px];
+    background: var(--eyebrow-bg, var(--color-vert));
+    color: var(--eyebrow-ink, #fff);
+    padding: 0.3em 0.75em;
+    transform: rotate(-1.5deg);
+    transform-origin: left center;
   }
-  .eyebrow::before {
-    content: "";
+  /* Le texte reste lisible même si une page ajoute une classe de couleur
+     (ex. !text-rouge, text-vert-light) : la couleur passe sur le fond. */
+  .eyebrow[class] { color: var(--eyebrow-ink, #fff) !important; }
+  .eyebrow--rouge,
+  .eyebrow[class*="text-rouge"] { --eyebrow-bg: var(--color-rouge); }
+  .bg-noir-section .eyebrow,
+  .eyebrow[class*="text-vert-light"],
+  .eyebrow[class*="text-vert-400"] { --eyebrow-bg: var(--color-vert-light); }
+
+  /* Étiquettes rayons de la home — blocs de couleur inclinés (charte) */
+  .rayon-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem 1rem;
+    list-style: none;
+    padding: 0;
+  }
+  .rayon-tag {
     display: inline-block;
-    width: 28px;
-    height: 2px;
-    background: currentColor;
+    background: var(--tag-bg);
+    color: var(--tag-ink);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: clamp(1.05rem, 1.8vw, 1.5rem);
+    line-height: 1;
+    padding: 0.5em 0.8em 0.55em;
+    transform: rotate(var(--tag-rot, -1deg));
+    transition: transform 0.15s ease;
+  }
+  .rayon-tag:hover,
+  .rayon-tag:focus-visible {
+    transform: rotate(0deg) scale(1.04);
   }
 
   /* ------------------------------------------------------------
@@ -207,7 +205,7 @@
     font-family: var(--font-display);
     font-weight: 400;
     font-size: clamp(2.2rem, 7vw, 6.5rem);
-    line-height: 0.92;
+    line-height: 1;
     letter-spacing: 0.005em;
     word-break: break-word;
     overflow-wrap: break-word;
@@ -216,7 +214,7 @@
     font-family: var(--font-display);
     font-weight: 400;
     font-size: clamp(2.25rem, 5vw, 4.5rem);
-    line-height: 0.95;
+    line-height: 1.04;
     letter-spacing: 0.005em;
     word-break: break-word;
     overflow-wrap: break-word;
@@ -225,7 +223,7 @@
     font-family: var(--font-display);
     font-weight: 400;
     font-size: clamp(1.75rem, 3.5vw, 3rem);
-    line-height: 1;
+    line-height: 1.06;
     letter-spacing: 0.01em;
     word-break: break-word;
     overflow-wrap: break-word;
@@ -335,12 +333,11 @@
 
   /* Cards promos */
   .promo-card {
-    @apply relative flex flex-col overflow-hidden rounded-3xl bg-white transition-all duration-300;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 10px 30px rgba(0, 0, 0, 0.06);
+    @apply relative flex flex-col overflow-hidden rounded-lg bg-white transition-shadow duration-150;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.09);
   }
   .promo-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 20px 50px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
   }
 
   /* ------------------------------------------------------------
@@ -556,6 +553,7 @@
     isolation: isolate;
   }
   .btn-sheen::before {
+    display: none;
     content: "";
     position: absolute;
     inset: 0;
@@ -587,8 +585,7 @@
       box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .card-float:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.16);
   }
 
   /* ------------------------------------------------------------
@@ -916,9 +913,7 @@ img {
 }
 
 /* Improved card shadows and hover states */
-.card-float:hover {
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15), 0 8px 16px -8px rgba(0, 0, 0, 0.1);
-}
+
 
 /* Better text shadows for readability */
 .drop-shadow-lg {
@@ -988,14 +983,3 @@ img {
   }
 }
 
-/* Active click state tactile feedback for buttons and cards */
-.btn:active,
-.burger-btn:active,
-.promo-card:active,
-.produit-card:active,
-a.group:active,
-a.reveal:active,
-button:active {
-  transform: scale(0.96) translateY(1px) !important;
-  transition: transform 0.1s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}

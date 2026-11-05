@@ -382,10 +382,8 @@ const heroSources = loopSlides.map((s) =>
     aspect-ratio: 21 / 8;
     max-height: min(45vh, 360px);
     min-height: 200px;
-    border-radius: 20px;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
-    border: 3px solid #1C6B35;
   }
   .promo-hero-slide--banner {
     /* Height and aspect ratio overrides removed to inherit from .promo-hero-slide */
@@ -413,7 +411,7 @@ const heroSources = loopSlides.map((s) =>
       height: clamp(430px, 65dvh, 600px);
       max-height: 80dvh;
       min-height: 430px;
-      border-radius: 18px;
+      border-radius: 10px;
     }
     /* Banner slide — uses the mobile image (vertical aspect).
        Override the desktop `contain` rule so the artwork fills the
@@ -497,15 +495,13 @@ const heroSources = loopSlides.map((s) =>
   .promo-hero-eyebrow {
     display: inline-block;
     font-family: var(--font-pro, inherit);
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    background: color-mix(in srgb, var(--accent, #1C6B35) 85%, white 15%);
-    padding: 6px 14px;
-    border-radius: 999px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    background: var(--accent, #1C6B35);
+    padding: 4px 10px;
+    transform: rotate(-1.5deg);
+    transform-origin: left center;
+    margin-bottom: 10px;
   }
 
   .promo-hero-title {
@@ -571,22 +567,16 @@ const heroSources = loopSlides.map((s) =>
     font-family: var(--font-pro, inherit);
     font-weight: 700;
     font-size: 15px;
-    border-radius: 999px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    transition: transform 0.25s cubic-bezier(0.22,1,0.36,1),
-                box-shadow 0.25s ease,
-                background 0.25s ease,
-                color 0.25s ease;
+    border-radius: 6px;
+    transition: background 0.15s ease, color 0.15s ease;
     position: relative;
     overflow: hidden;
     isolation: isolate;
   }
   .promo-hero-cta:hover,
   .promo-hero-cta:focus-visible {
-    transform: translateY(-2px);
     background: var(--accent, #1C6B35);
     color: white;
-    box-shadow: 0 14px 36px rgba(0,0,0,0.4);
     outline: none;
   }
 

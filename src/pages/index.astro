@@ -6,14 +6,12 @@ import RayonCard from "@components/RayonCard.astro";
 import PromoCard from "@components/PromoCard.astro";
 import ProduitCard from "@components/ProduitCard.astro";
 import RecetteCard from "@components/RecetteCard.astro";
-import Stats from "@components/Stats.astro";
 import FAQAccordion from "@components/FAQAccordion.astro";
 import FeedbackPopup from "@components/FeedbackPopup.astro";
 import LocalVideoPlayer from "@components/islands/LocalVideoPlayer.jsx";
 import PromoCarousel from "@components/PromoCarousel.astro";
 import PromoHero, { type ExtraSlide } from "@components/PromoHero.astro";
 import ActuCarousel from "@components/ActuCarousel.astro";
-import KineticMarquee from "@components/KineticMarquee.astro";
 import { getActus } from "@/lib/actus";
 import { getCollection } from "astro:content";
 import { RAYONS_LIST, ENGAGEMENTS, MAGASINS, SITE } from "@/lib/site";
@@ -22,7 +20,7 @@ import { FAQ_HOME } from "@/lib/faqs";
 import { organizationSchema, websiteSchema, allMagasinsSchema, offerSchema } from "@/lib/schema";
 import { getActivePromos } from "@/lib/promos-repo";
 import { getProduitsVedettes } from "@/lib/produits-repo";
-import { getHomeEditorialSlides, getHomeMarqueeItems, getHomeSeoSettings } from "@/lib/home-content";
+import { getHomeEditorialSlides, getHomeSeoSettings } from "@/lib/home-content";
 
 /* Promos : Supabase-first (actif=true), fallback Content Collection.
    featuredPromo (red ticker under PromoHero) is selected from the
@@ -43,10 +41,6 @@ const promosHero = allPromos.filter((p) => p.data.mise_en_avant).slice(0, 4);
  * back to the previous hardcoded list when Supabase is unreachable, so
  * preview deploys / Supabase outages still render the home page. */
 const heroEditorialSlides: ExtraSlide[] = await getHomeEditorialSlides();
-
-/* Marquee labels (KineticMarquee between rayons grid and actus) — also
- * admin-editable. Falls back to a static list on Supabase failures. */
-const marqueeItems = await getHomeMarqueeItems();
 
 /* SEO Settings (Title, description, social OG Image) dynamically loaded from DB settings. */
 const seoSettings = await getHomeSeoSettings();
@@ -119,48 +113,15 @@ const schemas = [
     </section>
   )}
 
-  {/* ====================== VIDEOS TIKTOK — social proof ====================== */}
-  {/* Position 3 : Directement après les promos de la semaine */}
-  {videos.length > 0 && (
-    <section class="section bg-blanc animate-fade-up">
-      <div class="container-mo">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 reveal">
-          <div class="max-w-2xl">
-            <span class="eyebrow">Marché de Mo' en vidéos</span>
-            <h2 class="display-lg mt-4 text-balance">
-              Rencontrez nos équipes et nos rayons
-            </h2>
-          </div>
-          <a href="https://www.tiktok.com/@marchedemo" target="_blank" rel="noopener noreferrer" class="btn btn-secondary shrink-0">
-            Nous suivre sur TikTok
-          </a>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {videos.slice(0, 3).map((v) => {
-            return (
-              <LocalVideoPlayer
-                client:visible
-                src={v.data.src_local}
-                title={v.data.titre}
-                href={v.data.url_tiktok}
-              />
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  )}
-
   {/* ====================== PROMOS DE LA SEMAINE — IMPULSE BUY ====================== */}
   {promosHome.length > 0 && (
     <section class="section bg-white">
       <div class="container-mo">
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 reveal">
           <div class="max-w-2xl">
-            <span class="eyebrow !text-rouge">Promos de la semaine</span>
+            <span class="eyebrow eyebrow--rouge">Promos de la semaine</span>
             <h2 class="display-lg mt-4 text-balance">
-              Les <span class="text-rouge">vraies promos</span> du moment
+              Les promos de la semaine
             </h2>
             <p class="mt-3 text-[15px] text-neutral-600">
               Mises à jour chaque semaine. Affichées à l'euro près, dans notre magasin.
@@ -176,309 +137,42 @@ const schemas = [
     </section>
   )}
 
-  {/* ====================== WHATSAPP COMMUNITY ====================== */}
-  <section class="bg-white text-neutral-900 relative overflow-hidden py-16 md:py-24 border-y border-black/5">
-    <!-- Background accents -->
-    <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-rouge/5 blur-[120px] rounded-full translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
-    <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#25D366]/5 blur-[100px] rounded-full -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
-    
-    <div class="container-mo relative z-10 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-      <div class="text-center lg:text-left order-2 lg:order-1">
-        <h2 class="display-lg text-balance mb-5 leading-[1.1]">
-          Le catalogue <span class="text-rouge">en avant-première</span><br/>
-          sur WhatsApp !
-        </h2>
-        <p class="text-[17px] md:text-[19px] text-neutral-600 leading-relaxed max-w-xl mb-8 text-pretty mx-auto lg:mx-0">
-          Rejoignez le canal officiel du <strong>Marché de Mo'</strong>. Recevez nos alertes arrivages, nos réductions exclusives et notre catalogue numérique directement sur votre téléphone.
-        </p>
-        <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
-          <a href="https://whatsapp.com/channel/0029Vb8ix0yI1rcr1BkAll1I" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#1DA851] text-white font-bold px-8 py-4.5 rounded-[1.25rem] transition-all hover:-translate-y-1 hover:shadow-xl shadow-[#25D366]/25 text-[17px]">
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.711.927 3.149.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.768-5.77zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964 1.006-3.585c-.605-1.085-.928-2.34-.928-3.633 0-4.133 3.366-7.499 7.502-7.499 4.134 0 7.499 3.365 7.499 7.499 0 4.133-3.365 7.499-7.499 7.499z"/></svg>
-            Rejoindre maintenant
-          </a>
-          <span class="text-[13px] text-neutral-500 font-medium mt-3 sm:mt-0">100% Gratuit · Désabonnement libre</span>
+  {/* ====================== NOS RAYONS ====================== */}
+  <section class="section bg-blanc">
+    <div class="container-mo">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 reveal">
+        <div class="max-w-2xl">
+          <h2 class="display-lg text-vert">Nos rayons</h2>
+          <p class="mt-3 text-[16px] text-neutral-600 max-w-xl">
+            20 000 références, un seul ticket de caisse.
+          </p>
         </div>
+        <a href="/rayons" class="btn btn-secondary shrink-0">
+          Voir tous les rayons
+        </a>
       </div>
 
-      <div class="relative order-1 lg:order-2 flex justify-center mt-6 lg:mt-0">
-        <!-- Floating Promo Items -->
-        <div class="absolute top-4 -left-2 md:-left-12 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-2 md:p-3 border border-black/5 rotate-[-6deg] z-20 hover:rotate-0 transition-transform">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-rouge/10 flex items-center justify-center text-rouge">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-            </div>
-            <div class="pr-2">
-              <div class="text-[11px] font-bold text-neutral-500 uppercase">Promo Flash</div>
-              <div class="font-black text-rouge text-[16px] md:text-[18px] leading-none mt-0.5">-30%</div>
-            </div>
-          </div>
-        </div>
+      {/* Étiquettes rayons — reprend la charte « Nos Rayons » (blocs de couleur inclinés) */}
+      <ul class="rayon-tags mb-12" aria-label="Accès rapide aux rayons">
+        {RAYONS_LIST.map((r, i) => (
+          <li>
+            <a
+              href={`/rayons/${r.slug}`}
+              class="rayon-tag"
+              style={`--tag-bg: ${r.accent ?? "#1C6B35"}; --tag-ink: ${r.accentInk ?? "#FFFFFF"}; --tag-rot: ${[-1.6, 1.2, -0.6, 1.8, -1.2, 0.8, -1.8, 1.4][i % 8]}deg;`}
+            >
+              {r.nom}
+            </a>
+          </li>
+        ))}
+      </ul>
 
-        <div class="absolute bottom-4 -right-2 md:-right-10 bg-rouge text-white rounded-2xl shadow-[0_8px_30px_rgb(220,38,38,0.3)] p-3 rotate-[8deg] z-20 hover:rotate-0 transition-transform">
-          <div class="text-center px-2">
-            <div class="text-[10px] font-bold uppercase opacity-90 tracking-wider">Catalogue</div>
-            <div class="font-black text-[15px] md:text-[16px] leading-tight mt-0.5">Nouvelles offres</div>
-          </div>
-        </div>
-
-        <!-- WhatsApp Logo -->
-        <div class="w-48 md:w-64 lg:w-[280px] relative group z-10">
-          <div class="absolute inset-0 bg-[#25D366] blur-[50px] opacity-10 group-hover:opacity-25 transition-opacity duration-700 rounded-full"></div>
-          <div class="relative z-10 rounded-[2.5rem] bg-white p-2 md:p-3 shadow-2xl group-hover:scale-105 transition-transform duration-700 ease-out border border-neutral-100">
-            <img src="/images/whatsapp-logo.avif" alt="WhatsApp Canal" class="w-full h-auto rounded-[2rem] object-cover" />
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {/* ====================== 3 · HERO ====================== */}
-  <section class="relative overflow-hidden bg-gradient-to-br from-white via-neutral-50 to-neutral-100">
-    <!-- Watermark Mo' — parallax léger pour feel "profondeur" -->
-    <img
-      src="/logos/favicon-marchedemo.png"
-      alt=""
-      aria-hidden="true"
-      data-parallax="0.45"
-      class="absolute -right-20 top-10 w-[640px] max-w-[70%] opacity-[0.045] pointer-events-none select-none"
-    />
-    <div class="container-mo relative z-10 pt-12 lg:pt-20 pb-20 lg:pb-28 grid lg:grid-cols-12 gap-10 items-center overflow-hidden">
-      <div class="lg:col-span-7">
-        <span class="eyebrow">Supermarché ethnique · Toulouse</span>
-        <h1 class="display-xl mt-6 text-balance font-soft font-black" data-split-reveal>
-          Votre <span class="text-vert">supermarché</span><br/>
-          du monde à <span class="text-rouge">Toulouse</span>
-        </h1>
-        <p class="mt-6 max-w-xl text-[17px] leading-relaxed text-neutral-600 text-pretty">
-          <strong>Boucherie halal sur carcasse</strong>, fruits &amp; légumes exotiques, épices du monde — aux prix les plus serrés d'Occitanie.
-          <strong>Magasin</strong> ouvert <strong>7j/7</strong>.
-        </p>
-        <div class="mt-10 flex flex-col sm:flex-row gap-3 max-w-full">
-          <a href="/rayons" class="btn btn-primary btn-sheen">
-            Voir les 12 rayons
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
-          <a href="/magasins" class="btn btn-ghost">Trouver le magasin</a>
-        </div>
-
-      </div>
-
-      <!-- Hero visual : phone mockup montrant le site sur téléphone. -->
-      <div class="lg:col-span-5 relative flex items-center justify-center pt-4 lg:pt-0 overflow-visible">
-        <div class="phone-mockup">
-          <div class="phone-mockup-screen">
-            <div class="phone-screen-content relative h-full bg-neutral-950 flex flex-col text-white overflow-hidden text-[11px] select-none">
-              
-              <!-- Status bar -->
-              <div class="flex justify-between items-center px-4 pt-3 pb-1 text-[9px] font-bold text-white/90 z-20 shrink-0 bg-neutral-950">
-                <span>09:41</span>
-                <div class="flex items-center gap-1.5">
-                  <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24"><path d="M2 22h20V2z" opacity=".3"/><path d="M17 22h5V5z"/></svg>
-                  <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21l-12-12c5.52-5.52 14.48-5.52 20 0z"/></svg>
-                  <svg class="w-3.5 h-2.5" fill="currentColor" viewBox="0 0 24 24"><path d="M17 5H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm2 9h2v-4h-2v4z"/></svg>
-                </div>
-              </div>
-
-              <!-- Header App -->
-              <div class="flex justify-between items-center px-4 py-2 border-b border-white/5 bg-neutral-900/60 backdrop-blur-sm z-20 shrink-0">
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center p-0.5 shadow-sm">
-                    <img src="/logos/logo-marchedemo-rond-contourgreen.png" class="object-contain w-full h-full" alt="" />
-                  </div>
-                  <div>
-                    <div class="font-pro font-bold text-[10px] text-white">Marché de Mo'</div>
-                    <div class="text-[7px] text-vert font-semibold">Supermarché du Monde</div>
-                  </div>
-                </div>
-                <!-- Cart icon -->
-                <div class="relative p-1 bg-white/5 rounded-full">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                  </svg>
-                  <span id="sim-cart-badge" class="absolute -top-1 -right-1 bg-rouge text-white text-[7px] font-bold w-3 h-3 rounded-full flex items-center justify-center scale-0 transition-transform duration-300">0</span>
-                </div>
-              </div>
-
-              <!-- Scrollable App Content -->
-              <div id="sim-main-scroll" class="flex-1 overflow-y-auto px-3 py-3 space-y-3.5 z-10 scrollbar-none">
-                
-                <!-- Loyalty Card section inside App -->
-                <div class="relative rounded-xl overflow-hidden bg-gradient-to-br from-neutral-900 to-neutral-800 p-3 border border-white/10 shadow-md">
-                  <div class="absolute -right-4 -top-4 w-16 h-16 rounded-full bg-vert/10 blur-xl"></div>
-                  <div class="flex justify-between items-start">
-                    <div>
-                      <div class="text-[7px] text-white/50 font-bold uppercase tracking-wider">Carte de Fidélité</div>
-                      <div class="font-pro font-bold text-[11px] text-white mt-0.5">Adhérent Mo'</div>
-                    </div>
-                    <span class="text-vert text-[8px] font-bold px-1.5 py-0.5 bg-vert/10 rounded-full flex items-center gap-1">
-                      <span class="w-1 h-1 rounded-full bg-vert animate-pulse"></span>
-                      Active
-                    </span>
-                  </div>
-                  
-                  <div class="mt-3.5 flex justify-between items-end">
-                    <div>
-                      <div id="sim-loyalty-points" class="text-[13px] font-pro font-black text-white leading-none">150 <span class="text-[8px] font-medium text-white/60">points</span></div>
-                      <div class="text-[6.5px] text-white/40 mt-1">Valable dans notre magasin</div>
-                    </div>
-                    <!-- Mini Barcode -->
-                    <div class="relative flex items-center gap-[1.5px] opacity-75 h-3 bg-white/5 px-1 py-0.5 rounded overflow-hidden">
-                      <div id="sim-barcode-laser" class="absolute inset-x-0 top-0 h-[1.5px] bg-red-500 shadow-[0_0_4px_#ef4444] opacity-0"></div>
-                      <div class="w-[1px] h-2.5 bg-white"></div>
-                      <div class="w-[2px] h-2.5 bg-white"></div>
-                      <div class="w-[1px] h-2.5 bg-white"></div>
-                      <div class="w-[3px] h-2.5 bg-white"></div>
-                      <div class="w-[1px] h-2.5 bg-white"></div>
-                      <div class="w-[2px] h-2.5 bg-white"></div>
-                      <div class="w-[1px] h-2.5 bg-white"></div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Quick Categories Grid -->
-                <div class="grid grid-cols-4 gap-1.5">
-                  <div id="sim-cat-0" class="bg-white/5 rounded-lg py-1.5 px-1 text-center border border-white/5 transition-all duration-300">
-                    <span class="text-[13px]">🍉</span>
-                    <div class="text-[6.5px] font-bold mt-0.5 text-white/80">Fruits</div>
-                  </div>
-                  <div id="sim-cat-1" class="bg-white/5 rounded-lg py-1.5 px-1 text-center border border-white/5 transition-all duration-300">
-                    <span class="text-[13px]">🥩</span>
-                    <div class="text-[6.5px] font-bold mt-0.5 text-white/80">Viandes</div>
-                  </div>
-                  <div id="sim-cat-2" class="bg-white/5 rounded-lg py-1.5 px-1 text-center border border-white/5 transition-all duration-300">
-                    <span class="text-[13px]">🌶️</span>
-                    <div class="text-[6.5px] font-bold mt-0.5 text-white/80">Épices</div>
-                  </div>
-                  <div id="sim-cat-3" class="bg-white/5 rounded-lg py-1.5 px-1 text-center border border-white/5 transition-all duration-300">
-                    <span class="text-[13px]">🍙</span>
-                    <div class="text-[6.5px] font-bold mt-0.5 text-white/80">Asie</div>
-                  </div>
-                </div>
-
-                <!-- Welcome Banner (Mafé promo) -->
-                <div class="relative rounded-xl overflow-hidden bg-gradient-to-r from-vert to-vert/80 p-3 text-white">
-                  <div class="text-[8px] font-bold uppercase tracking-wider text-white/80">Offre Spéciale</div>
-                  <div class="font-pro font-bold text-[13px] mt-1 leading-tight">Mafé Poulet</div>
-                  <p class="text-[9px] text-white/90 mt-0.5">Recette authentique à -20%</p>
-                  <div class="mt-2 text-[9px] bg-white/20 inline-block px-2 py-0.5 rounded font-bold">12,90€ <span class="line-through text-white/60 ml-1">16,10€</span></div>
-                </div>
-
-                <!-- Product Catalog Title -->
-                <div class="flex justify-between items-center pt-1">
-                  <span class="font-pro font-bold text-[11px]">Produits frais du jour</span>
-                  <span class="text-[8px] text-vert font-semibold font-pro">Tout voir</span>
-                </div>
-
-                <!-- Product Grid -->
-                <div class="grid grid-cols-2 gap-2" id="sim-product-grid">
-                  <!-- Product 1 -->
-                  <div class="bg-white/5 rounded-xl p-2 border border-white/5 flex flex-col justify-between" id="sim-p1">
-                    <div>
-                      <div class="aspect-square rounded-lg bg-neutral-900 overflow-hidden relative mb-1.5">
-                        <img id="sim-p1-img" src="/images/promos/mangue.jpg" class="object-cover w-full h-full" alt="Mangue José" />
-                      </div>
-                      <div id="sim-p1-title" class="font-bold text-[9px] truncate">Mangue José</div>
-                      <div id="sim-p1-desc" class="text-[7.5px] text-neutral-400">Île de la Réunion</div>
-                    </div>
-                    <div class="mt-2 flex items-center justify-between">
-                      <span id="sim-p1-price" class="font-bold text-vert">3,90€</span>
-                      <button id="sim-add-btn" class="bg-vert text-white text-[7.5px] font-bold px-2 py-1 rounded-md transition-colors hover:bg-vert/80 shadow-sm">Ajouter</button>
-                    </div>
-                  </div>
-
-                  <!-- Product 2 -->
-                  <div class="bg-white/5 rounded-xl p-2 border border-white/5 flex flex-col justify-between" id="sim-p2">
-                    <div>
-                      <div class="aspect-square rounded-lg bg-neutral-900 overflow-hidden relative mb-1.5">
-                        <img id="sim-p2-img" src="/images/promos/agneau-halal.jpg" class="object-cover w-full h-full" alt="Bifteck de Bœuf" />
-                      </div>
-                      <div id="sim-p2-title" class="font-bold text-[9px] truncate">Bifteck de Bœuf</div>
-                      <div id="sim-p2-desc" class="text-[7.5px] text-neutral-400">Halal, origine France</div>
-                    </div>
-                    <div class="mt-2 flex items-center justify-between">
-                      <span id="sim-p2-price" class="font-bold text-vert">14,90€</span>
-                      <button id="sim-add-btn-2" class="bg-white/10 text-white text-[7.5px] font-bold px-2 py-1 rounded-md">Ajouter</button>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Delivery Tracking Section -->
-                <div class="bg-white/5 rounded-xl p-3 border border-white/5 space-y-2">
-                  <div class="flex justify-between items-center">
-                    <span class="font-pro font-bold text-[10px]">Suivi de commande</span>
-                    <span class="text-[7.5px] text-neutral-400">Réf: #MO-892</span>
-                  </div>
-                  <div class="space-y-1">
-                    <div class="flex justify-between text-[8px]">
-                      <span id="sim-delivery-status" class="text-white/90 font-medium">Préparation de votre colis...</span>
-                      <span class="font-bold text-vert">En cours</span>
-                    </div>
-                    <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-                      <div id="sim-delivery-progress" class="h-full bg-vert rounded-full" style="width: 25%"></div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
-              <!-- Floating Added-to-Cart Notification Badge -->
-              <div id="sim-float-badge" class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-vert text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg scale-0 transition-transform duration-300 z-20">
-                <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-                </svg>
-                <span class="text-[8px] font-bold">Produit ajouté !</span>
-              </div>
-
-              <!-- Loyalty Scan Overlay -->
-              <div id="sim-scan-overlay" class="absolute inset-0 bg-black/85 flex flex-col items-center justify-center z-25 opacity-0 pointer-events-none transition-opacity duration-300">
-                <div class="bg-neutral-900 border border-white/10 rounded-2xl p-4 text-center max-w-[160px] transform scale-90 transition-transform duration-300" id="sim-scan-modal">
-                  <div class="text-vert text-[20px] mb-1">🎉</div>
-                  <div class="text-[10px] font-bold text-white">Code Scanné !</div>
-                  <div class="text-[7.5px] text-neutral-400 mt-1">Votre fidélité a été validée avec succès.</div>
-                </div>
-              </div>
-
-              <!-- Splash screen overlay -->
-              <div id="sim-screen-splash" class="absolute inset-0 bg-neutral-950 flex flex-col items-center justify-center z-30 transition-opacity duration-500">
-                <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center p-1 shadow-md animate-bounce mb-3">
-                  <img src="/logos/logo-marchedemo-rond-contourgreen.png" class="object-contain w-full h-full" alt="" />
-                </div>
-                <div class="font-pro font-bold text-[14px] text-white">Marché de Mo'</div>
-                <div class="text-[8px] text-vert font-semibold mt-1 tracking-widest uppercase">Fidélité Active</div>
-                
-                <div class="mt-6 flex gap-1">
-                  <div class="w-1.5 h-1.5 bg-vert rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                  <div class="w-1.5 h-1.5 bg-vert rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-                  <div class="w-1.5 h-1.5 bg-vert rounded-full animate-bounce" style="animation-delay: 0.3s"></div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <img
-          src="/logos/logo-marchedemo-rond-contourgreen.png"
-          alt=""
-          aria-hidden="true"
-          class="absolute top-2 right-2 sm:right-4 lg:right-0 w-20 sm:w-24 md:w-28 drop-shadow-2xl rotate-[8deg] z-10 pointer-events-none rounded-full bg-white shadow-[0_12px_24px_rgba(0,0,0,0.18)]"
-        />
-        <!-- Floating badge "Disponible sur téléphone" -->
-        <div class="absolute left-1 sm:-left-2 md:-left-6 bottom-12 bg-white rounded-2xl shadow-2xl p-3 md:p-4 flex items-center gap-3 max-w-[200px] sm:max-w-[240px] z-10">
-          <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-vert/10 flex items-center justify-center text-vert shrink-0">
-            <svg class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="5" y="2" width="14" height="20" rx="2"/>
-              <line x1="12" y1="18" x2="12" y2="18.01"/>
-            </svg>
-          </div>
-          <div>
-            <div class="font-pro font-bold text-[13px] md:text-[15px] leading-tight">Pensé mobile</div>
-            <div class="text-[10px] md:text-[12px] text-neutral-500 leading-tight mt-0.5">Notre site, sur<br/>votre téléphone</div>
-          </div>
-        </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+        {/* 5 cartes = 2 lignes pleines (la 1re occupe 2 colonnes). Tous les
+            rayons restent accessibles via les étiquettes au-dessus. */}
+        {RAYONS_LIST.slice(0, 5).map((r, i) => (
+          <RayonCard rayon={r} large={i === 0} />
+        ))}
       </div>
     </div>
   </section>
@@ -490,27 +184,12 @@ const schemas = [
         <div class="max-w-2xl">
           <span class="eyebrow">Produits vedettes</span>
           <h2 class="display-lg mt-4 text-balance">
-            Du <span class="text-vert">monde entier</span>,<br/>
+            Du monde entier,<br/>
             dans votre panier
           </h2>
           <p class="mt-3 text-[15px] text-neutral-600">
             Notre sélection du moment, rayon par rayon. Prix affichés à l'euro près en magasin.
           </p>
-
-          <!-- Trust indicators (4 pills) moved from hero -->
-          <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-3 text-[13px] text-neutral-500 max-w-full">
-            <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-vert"></span> Halal certifié, sans électronarcose</span>
-            <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rouge"></span> Arrivage quotidien</span>
-            <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-noir"></span> Prix affichés en rayon</span>
-            <a
-              href="/rayons/produits-courants"
-              class="inline-flex items-center gap-2 group hover:text-rouge transition-colors"
-            >
-              <span class="w-2 h-2 rounded-full bg-rouge animate-pulse"></span>
-              <strong class="font-bold">Des prix cassés</strong>
-              <span class="text-rouge group-hover:translate-x-0.5 transition-transform">→</span>
-            </a>
-          </div>
         </div>
         <a href="/rayons" class="btn btn-secondary shrink-0 btn-sheen">
           Explorer les rayons
@@ -527,6 +206,37 @@ const schemas = [
     </div>
   </section>
 
+  {/* ====================== WHATSAPP COMMUNITY ====================== */}
+  <section class="bg-white text-neutral-900 relative overflow-hidden py-16 md:py-24 border-y border-black/5">
+    
+    <div class="container-mo relative z-10 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div class="text-center lg:text-left order-2 lg:order-1">
+        <h2 class="display-lg text-balance mb-5 leading-[1.1]">
+          Le catalogue en avant-première sur WhatsApp
+        </h2>
+        <p class="text-[17px] md:text-[19px] text-neutral-600 leading-relaxed max-w-xl mb-8 text-pretty mx-auto lg:mx-0">
+          Rejoignez le canal officiel du <strong>Marché de Mo'</strong>. Recevez nos alertes arrivages, nos réductions exclusives et notre catalogue numérique directement sur votre téléphone.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+          <a href="https://whatsapp.com/channel/0029Vb8ix0yI1rcr1BkAll1I" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#1DA851] text-white font-bold px-8 py-4 rounded-md transition-colors text-[17px]">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.711.927 3.149.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.768-5.77zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964 1.006-3.585c-.605-1.085-.928-2.34-.928-3.633 0-4.133 3.366-7.499 7.502-7.499 4.134 0 7.499 3.365 7.499 7.499 0 4.133-3.365 7.499-7.499 7.499z"/></svg>
+            Rejoindre maintenant
+          </a>
+          <span class="text-[13px] text-neutral-500 font-medium mt-3 sm:mt-0">100% Gratuit · Désabonnement libre</span>
+        </div>
+      </div>
+
+      <div class="relative order-1 lg:order-2 flex justify-center mt-6 lg:mt-0">
+        <!-- WhatsApp Logo -->
+        <div class="w-48 md:w-64 lg:w-[280px] relative group z-10">
+          <div class="relative z-10">
+            <img src="/images/whatsapp-logo.avif" alt="WhatsApp Canal" class="w-full h-auto rounded-[2rem] object-cover" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   {/* ====================== PICADELI ====================== */}
   <section class="section bg-white pb-12 pt-8">
     <div class="container-mo grid lg:grid-cols-12 gap-10 items-center">
@@ -536,7 +246,7 @@ const schemas = [
           alt="Picadeli Logo" 
           class="h-16 object-contain mb-6 mix-blend-multiply" 
         />
-        <h2 class="display-xl mt-4 text-balance" data-split-reveal>
+        <h2 class="display-lg mt-4 text-balance">
           Créez votre propre<br/>
           <span class="text-[#6BC172]">salade sur-mesure</span>
         </h2>
@@ -550,11 +260,11 @@ const schemas = [
         </div>
       </div>
       <div class="lg:col-span-6 reveal" style="--reveal-delay: 200ms">
-        <div class="relative rounded-3xl overflow-hidden shadow-2xl bg-neutral-100 p-4">
+        <div class="relative rounded-lg overflow-hidden bg-neutral-100 p-4">
           <img 
             src="/images/partenaires/picadeli-salade.webp" 
             alt="Salade fraîche Picadeli" 
-            class="w-full h-auto object-cover rounded-2xl" 
+            class="w-full h-auto object-cover rounded-lg" 
           />
         </div>
       </div>
@@ -570,7 +280,7 @@ const schemas = [
           alt="Too Good To Go Logo" 
           class="h-16 object-contain mb-6 mix-blend-multiply" 
         />
-        <h2 class="display-xl mt-4 text-balance" data-split-reveal>
+        <h2 class="display-lg mt-4 text-balance">
           Engagez-vous contre le<br/>
           <span class="text-[#00645A]">gaspillage alimentaire</span>
         </h2>
@@ -583,49 +293,16 @@ const schemas = [
         </div>
       </div>
       <div class="lg:col-span-6 lg:order-1 reveal" style="--reveal-delay: 200ms">
-        <div class="relative rounded-3xl overflow-hidden shadow-2xl bg-white p-4">
+        <div class="relative rounded-lg overflow-hidden bg-white p-4">
           <img 
             src="/images/partenaires/tgtg-banner.png" 
             alt="Paniers Too Good To Go" 
-            class="w-full h-auto object-cover rounded-2xl" 
+            class="w-full h-auto object-cover rounded-lg" 
           />
         </div>
       </div>
     </div>
   </section>
-
-  {/* ====================== NOS RAYONS ====================== */}
-  <section class="section bg-blanc">
-    <div class="container-mo">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 reveal">
-        <div class="max-w-2xl">
-          <span class="eyebrow">Nos rayons</span>
-          <h2 class="display-lg mt-4 text-balance">
-            20 000 références.<br/>
-            <span class="text-vert">Un seul ticket de caisse</span>
-          </h2>
-        </div>
-        <a href="/rayons" class="btn btn-secondary shrink-0 btn-sheen">
-          Voir tous les rayons
-        </a>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-        {RAYONS_LIST.slice(0, 6).map((r, i) => (
-          <RayonCard rayon={r} large={i === 0} />
-        ))}
-      </div>
-    </div>
-  </section>
-
-  {/* ====================== KINETIC MARQUEE — chapter break signature ======================
-      Typographie display massive qui défile. Casse le rythme visuel après
-      le mur des 12 rayons et annonce le chapitre "actualités". */}
-  <KineticMarquee
-    items={marqueeItems}
-    variant="vert"
-    speed={25}
-  />
 
   {/* ====================== ACTUS DU MARCHÉ — carousel unifié (pattern Grand Frais) ======================
       Stream agrégé : articles éditoriaux, recettes, arrivages saisonniers,
@@ -638,8 +315,8 @@ const schemas = [
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 reveal">
           <div class="max-w-2xl">
             <span class="eyebrow">Les actus du marché</span>
-            <h2 class="display-lg mt-4 text-balance" data-split-reveal>
-              Ce qui <span class="text-vert">bouge</span><br/>
+            <h2 class="display-lg mt-4 text-balance">
+              Ce qui bouge<br/>
               en ce moment
             </h2>
             <p class="mt-3 text-[15px] text-neutral-600">
@@ -657,9 +334,6 @@ const schemas = [
     </section>
   )}
 
-  {/* ====================== STATS — chiffres rassurance ====================== */}
-  <Stats variant="light" />
-
   {/* ====================== QUI EST MO' — émotionnel ====================== */}
   <section class="section bg-noir-section relative overflow-hidden">
     <img
@@ -673,7 +347,7 @@ const schemas = [
         <span class="eyebrow !text-vert-light">Notre histoire</span>
         <h2 class="display-lg mt-4 text-balance !text-white">
           Mo', c'était<br/>
-          <span class="text-vert-light">Mohamed</span>
+          Mohamed
         </h2>
         <div class="mt-6 space-y-4 text-white/75 text-[16px] leading-relaxed max-w-2xl">
           <p>
@@ -720,16 +394,16 @@ const schemas = [
         <span class="eyebrow !justify-center">Nos 4 engagements</span>
         <h2 class="display-lg mt-4 text-balance">
           Un supermarché, oui.<br/>
-          <span class="text-rouge">Un engagement</span>, surtout
+          Un engagement, surtout
         </h2>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
         {ENGAGEMENTS.map((e, i) => (
           <article
-            class="bg-white rounded-3xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 reveal"
+            class="bg-white rounded-lg p-8 shadow-card hover:shadow-card-hover transition-all duration-300 reveal"
             style={`--reveal-delay: ${i * 80}ms`}
           >
-            <div class="w-14 h-14 rounded-2xl bg-vert/10 text-vert flex items-center justify-center mb-6">
+            <div class="w-14 h-14 rounded-lg bg-vert/10 text-vert flex items-center justify-center mb-6">
               {e.icone === "heart" && (
                 <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
@@ -763,14 +437,9 @@ const schemas = [
     </div>
   </section>
 
-  {/* Intermediate Logo signature area between Engagements and Videos */}
-  <div class="w-full flex flex-col items-center justify-center overflow-hidden border-t border-b border-black/5 py-0 lg:py-2 bg-white">
-    <img src="/logos/bacgroundS1ZH.jpeg" alt="Marché de Mo" class="w-full max-w-[1200px] object-contain" loading="lazy" />
-  </div>
-
   {/* ====================== VIDEOS TIKTOK — social proof ====================== */}
   {videos.length > 0 && (
-    <section class="section bg-blanc">
+    <section class="section bg-blanc animate-fade-up">
       <div class="container-mo">
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 reveal">
           <div class="max-w-2xl">
@@ -785,7 +454,7 @@ const schemas = [
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {videos.slice(3, 6).map((v) => {
+          {videos.slice(0, 3).map((v) => {
             return (
               <LocalVideoPlayer
                 client:visible
@@ -808,7 +477,7 @@ const schemas = [
           <span class="eyebrow">Recettes du monde</span>
           <h2 class="display-lg mt-4 text-balance">
             Cuisinez la planète,<br/>
-            <span class="text-vert">avec nos rayons</span>
+            avec nos rayons
           </h2>
           <p class="mt-3 text-[15px] text-neutral-600">
             Mafé sénégalais, bibimbap coréen, tajine marocain, phở vietnamien…
@@ -836,8 +505,7 @@ const schemas = [
       <div class="text-center max-w-3xl mx-auto mb-14 reveal">
         <span class="eyebrow !justify-center">Notre magasin</span>
         <h2 class="display-lg mt-4 text-balance">
-          Votre supermarché à Toulouse.<br/>
-          <span class="text-vert">Ouvert 7j/7, même dimanche matin</span>
+          Ouvert 7j/7, même le dimanche matin
         </h2>
       </div>
 
@@ -845,7 +513,7 @@ const schemas = [
         {Object.values(MAGASINS).map((m) => (
           <a
             href={`/magasins/${m.slug}`}
-            class="group block relative overflow-hidden rounded-3xl bg-noir text-white shadow-xl hover:shadow-2xl transition-all duration-500"
+            class="group block relative overflow-hidden rounded-lg bg-noir text-white transition-all duration-500"
           >
             <div class="aspect-[4/3] sm:aspect-[16/10] relative overflow-hidden bg-noir-softer">
               <img
@@ -854,7 +522,7 @@ const schemas = [
                 loading="lazy"
                 width="1200"
                 height="750"
-                class="w-full h-full object-cover opacity-70 group-hover:opacity-85 group-hover:scale-[1.05] transition-all duration-700"
+                class="w-full h-full object-cover opacity-70 group-hover:opacity-85 transition-all duration-700"
                 onerror="this.style.opacity='0.3'"
               />
               <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent"></div>
@@ -893,6 +561,7 @@ const schemas = [
 
   {/* ====================== FEEDBACK POPUP ====================== */}
   <FeedbackPopup />
+
 </Layout>
 
 <script>
