@@ -1,0 +1,126 @@
+---
+/**
+ * RayonVitrine — section « Au rayon » (texte seul) + bande pratique
+ * (adresse, horaires, itinéraire). Utilisée sur Frais, Surgelés, Crémerie.
+ */
+import { RAYONS, MAGASINS, type RayonSlug } from "@/lib/site";
+import { RAYON_VITRINES } from "@/data/rayon-vitrines";
+
+interface Props { slug: RayonSlug; part?: "vitrine" | "visite" }
+const { slug, part = "vitrine" } = Astro.props;
+const v = RAYON_VITRINES[slug];
+const r = RAYONS[slug];
+const m = Object.values(MAGASINS)[0];
+const accent = r?.accent ?? "#1C6B35";
+const ink = r?.accentInk ?? "#FFFFFF";
+const dark = r?.accentDark ?? accent;
+---
+
+{v && part === "vitrine" && (
+  <section
+    class="section bg-white border-t border-black/5 rv"
+    style={`--rv-accent:${accent};--rv-ink:${ink};--rv-dark:${dark};`}
+    aria-labelledby={`rv-${slug}`}
+  >
+    <div class="container-mo">
+      <div class="grid lg:grid-cols-[1fr_2fr] gap-10 lg:gap-14">
+        <div>
+          <span class="eyebrow" style={`--eyebrow-bg:${accent};--eyebrow-ink:${ink}`}>{v.tag}</span>
+          <h2 id={`rv-${slug}`} class="display-md mt-4 text-balance">{v.titre}</h2>
+          <p class="mt-4 text-[16px] leading-relaxed text-neutral-700">{v.intro}</p>
+
+          <aside class="rv-tip mt-8">
+            <p class="rv-tip__title">{v.conseil.titre}</p>
+            <p class="mt-1.5 text-[15px] leading-relaxed text-neutral-700">{v.conseil.texte}</p>
+          </aside>
+        </div>
+
+        <ol class="rv-grid">
+          {v.familles.map((f, i) => (
+            <li class="rv-item">
+              <span class="rv-num" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              <h3 class="rv-name">{f.nom}</h3>
+              <p class="mt-1.5 text-[15px] leading-relaxed text-neutral-600">{f.texte}</p>
+              {f.exemples && (
+                <ul class="rv-ex">
+                  {f.exemples.map((e) => <li>{e}</li>)}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+)}
+
+{v && part === "visite" && (
+  <section class="rv-visit" style={`--rv-accent:${accent};--rv-dark:${dark};`}>
+    <div class="container-mo py-10 md:py-12 grid md:grid-cols-[1.3fr_1fr_auto] gap-6 md:gap-10 items-center">
+      <div>
+        <h2 class="text-[clamp(1.5rem,2.6vw,2rem)] leading-[1.05] text-balance">Retrouvez le rayon {r?.nomCourt} en magasin</h2>
+        <p class="mt-1.5 text-[15px] text-neutral-700">{`${m.adresseLigne1}, ${m.codePostal} ${m.ville}`}</p>
+      </div>
+      <dl class="rv-hours">
+        <div><dt>Lundi – samedi</dt><dd>{m.horaires.lundiSamedi}</dd></div>
+        <div><dt>Dimanche</dt><dd>{m.horaires.dimanche}</dd></div>
+      </dl>
+      <div class="flex flex-wrap gap-3">
+        <a href={m.mapsLink} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Itinéraire</a>
+        <a href={`tel:${m.telE164}`} class="btn btn-ghost">{m.telephone}</a>
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .rv-grid {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; gap: 0;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    border-top: 3px solid var(--rv-accent);
+  }
+  .rv-item {
+    padding: 1.4rem 1.25rem 1.5rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.09);
+  }
+  .rv-num {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--rv-dark);
+  }
+  .rv-name {
+    margin-top: 0.3rem;
+    font-size: 1.45rem;
+    line-height: 1.05;
+    color: var(--color-noir);
+  }
+  .rv-ex { list-style: none; padding: 0; margin: 0.8rem 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .rv-ex li {
+    font-size: 13px; font-weight: 600;
+    padding: 3px 9px; border-radius: 4px;
+    background: color-mix(in srgb, var(--rv-accent) 14%, white);
+    color: var(--color-noir);
+  }
+  @media (max-width: 640px) {
+    .rv-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 14px; }
+    .rv-item { padding: 1.1rem 0 1.2rem; }
+    .rv-name { font-size: 1.2rem; }
+  }
+  .rv-tip {
+    border-left: 4px solid var(--rv-accent);
+    background: color-mix(in srgb, var(--rv-accent) 9%, white);
+    padding: 1rem 1.2rem;
+    border-radius: 0 6px 6px 0;
+  }
+  .rv-tip__title { font-weight: 800; color: var(--rv-dark); }
+
+  .rv-visit {
+    background: color-mix(in srgb, var(--rv-accent) 10%, white);
+    border-top: 4px solid var(--rv-accent);
+  }
+  .rv-hours { display: grid; gap: 0.4rem; }
+  .rv-hours > div { display: flex; justify-content: space-between; gap: 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 0.4rem; }
+  .rv-hours dt { font-weight: 700; color: var(--rv-dark); }
+  .rv-hours dd { font-weight: 600; }
+</style>

@@ -59,7 +59,7 @@ export const PRODUITS_VEDETTES: ProduitVedette[] = [
     id: "huile-palme-rouge",
     nom: "Huile de palme rouge",
     image: "",
-    rayon: "cremerie",
+    rayon: "epices-du-monde",
     badge: "Import direct",
     origine: "Afrique de l'Ouest",
   },

@@ -108,11 +108,11 @@ const ACTUS_SEED: ActuItem[] = [
     titre: "Plantain précuit Afropèze",
     resume:
       "Gain de temps garanti : plantain bouilli, emballé sous-vide. Prêt à poêler ou frire.",
-    image: "/images/rayons/cremerie/slide-02-homepage-maceo-groupe-distributeur-produits-creole-.webp",
+    image: "/images/rayons/saveurs-afrique/slide-02-homepage-maceo-groupe-distributeur-produits-creole-.webp",
     imageAlt: "Sachet de plantain précuit",
-    rayon: "cremerie",
+    rayon: "fruits-legumes",
     date: new Date("2026-04-10"),
-    href: "/rayons/cremerie/feculents-farines",
+    href: "/rayons/fruits-legumes",
   },
   {
     id: "evenement-festival-africain",
@@ -120,11 +120,11 @@ const ACTUS_SEED: ActuItem[] = [
     titre: "Semaine Saveurs d'Afrique — 22 au 28 avril",
     resume:
       "Dégustations, démos cuisine, prix découverte sur tout le rayon africain. Dans notre magasin.",
-    image: "/images/rayons/cremerie/image-de-annie-spratt.jpg",
+    image: "/images/rayons/saveurs-afrique/image-de-annie-spratt.jpg",
     imageAlt: "Étal de produits africains pour la semaine festival",
-    rayon: "cremerie",
+    rayon: "epices-du-monde",
     date: new Date("2026-04-08"),
-    href: "/rayons/cremerie",
+    href: "/rayons/epices-du-monde",
   },
 ];
 

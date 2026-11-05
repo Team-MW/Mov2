@@ -184,24 +184,8 @@ export const CATEGORY_IMAGES: Partial<Record<RayonSlug, RayonImagePack>> = {
   },
 
   "cremerie": {
-    categories: {
-      "Sauces & condiments": L.africanRiceDishes,    // rice/stew/plantain plates
-      "Féculents & farines": L.peelingManioc,        // woman peeling cassava
-      "Épicerie": L.coffeeBeans,                     // roasted coffee beans
-      // "Huiles" intentionally NOT overridden — the rayon page falls back
-      // to the first DB product image (huile de palme), which is what the
-      // category actually contains. The previous OFF.maniocCongele override
-      // was a placeholder that confusingly showed cassava on the Huiles card.
-    },
-    sousCategories: {
-      "Féculents & farines": {
-        "Manioc": OFF.maniocCongele,                 // manioc nettoyé congelé
-        "Riz": OFF.rizThai,                          // riz thai parfumé
-      },
-      "Épicerie": {
-        "Graines": OFF.sesameGraines,                // graines de sésame
-      },
-    },
+    categories: {},
+    sousCategories: {},
   },
 
 
@@ -279,9 +263,6 @@ export const CATEGORY_IMAGES: Partial<Record<RayonSlug, RayonImagePack>> = {
   "produits-courants": {
     categories: {
       "Hygiène & entretien": L.cashier,              // supermarket checkout lane
-      "Épicerie salée": OFF.cornichonsPickles,
-      "Épicerie sucrée": OFF.figuesSechees,
-      "Boissons": OFF.theVert,
     },
     sousCategories: {},
   },

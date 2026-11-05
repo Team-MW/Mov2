@@ -24,6 +24,7 @@ import LocalVideoPlayer from "@components/islands/LocalVideoPlayer.jsx";
 import InteractiveMeatMap from "@components/islands/InteractiveMeatMap.jsx";
 import BoucherieHalalSeo from "@components/BoucherieHalalSeo.astro";
 import PoissonnerieConcept from "@components/PoissonnerieConcept.astro";
+import RayonVitrine from "@components/RayonVitrine.astro";
 import { getCollection } from "astro:content";
 import { RAYONS, RAYONS_LIST, SITE, type RayonSlug } from "@/lib/site";
 import { faqsForRayon } from "@/lib/faqs";
@@ -369,14 +370,6 @@ interface CultureCopy {
   intro: string;
 }
 const CULTURE_COPY: Partial<Record<RayonSlug, { primary?: CultureCopy; crossRef?: CultureCopy }>> = {
-  "cremerie": {
-    primary: {
-      eyebrow: "Au-delà de l'Afrique",
-      title: "L'Afrique, et la Caraïbe au passage.",
-      intro:
-        "Notre rayon embrasse aussi les saveurs créoles — Antilles, Réunion, Caraïbes. Les ingrédients qu'il faut pour cuisiner antillais, sans changer de rayon.",
-    },
-  },
   "saveurs-asie": {
     primary: {
       eyebrow: "Cultures du rayon",
@@ -654,6 +647,7 @@ const pageDesc = (() => {
 
   {/* POISSONNERIE — concept vendredi / samedi / dimanche */}
   {level === 1 && rayonSlug === "poissonnerie" && <PoissonnerieConcept />}
+  {level === 1 && <RayonVitrine slug={rayonSlug} />}
 
   {/* CARTE INTERACTIVE BOUCHERIE - Deuxième section */}
   {level === 1 && rayonSlug === "boucherie-halal" && (
@@ -1127,6 +1121,8 @@ const pageDesc = (() => {
   {level === 1 && rayonSlug === "boucherie-halal" && (
     <BoucherieHalalSeo />
   )}
+
+  {level === 1 && <RayonVitrine slug={rayonSlug} part="visite" />}
 
   {level === 1 && (
     <>

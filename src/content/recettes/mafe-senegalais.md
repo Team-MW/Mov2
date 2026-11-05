@@ -8,8 +8,8 @@ tempsPrepMin: 20
 tempsCuissonMin: 70
 portions: 6
 difficulte: "Facile"
-rayons: ["boucherie-halal", "cremerie", "fruits-legumes", "epices-du-monde"]
-rayonPrincipal: "cremerie"
+rayons: ["boucherie-halal", "fruits-legumes", "epices-du-monde"]
+rayonPrincipal: "boucherie-halal"
 origine: "Sénégal"
 keywords: ["mafé", "mafe senegalais", "recette arachide", "cuisine sénégalaise", "plat africain"]
 date_publication: 2026-04-01

@@ -137,8 +137,29 @@ export const FAQ_ENGAGEMENTS: FAQItem[] = [
 
 /* Helper : FAQ spécifique à un rayon — on combine la FAQ rayon général
    avec la FAQ boucherie si c'est le rayon boucherie.                  */
+export const FAQ_SURGELES: FAQItem[] = [
+  { q: "Avez-vous de la viande halal surgelée ?", r: "Oui. Le rayon Surgelés propose des viandes et des plats préparés halal, en plus de la viande fraîche de notre boucherie halal." },
+  { q: "Quels apéritifs surgelés trouve-t-on chez Mo' ?", r: "Samoussas, bricks, nems et bouchées, à frire ou à cuire au four. Idéal pour recevoir ou pour le ramadan." },
+  { q: "Comment garder mes surgelés au froid jusqu'à chez moi ?", r: "Prenez-les en fin de courses et regroupez-les dans un sac isotherme. Rangez-les au congélateur dès votre retour." },
+];
+
+export const FAQ_FRAIS: FAQItem[] = [
+  { q: "Que trouve-t-on au rayon Frais ?", r: "L'épicerie du quotidien (salée et sucrée), les boissons et les produits d'hygiène et d'entretien, à petits prix." },
+  { q: "Les prix sont-ils affichés en ligne ?", r: "Les prix sont affichés en rayon, à l'euro près. Les offres du moment sont visibles sur la page Promos." },
+  { q: "Le magasin est-il ouvert le dimanche ?", r: "Oui, le magasin est ouvert 7 jours sur 7. Les horaires sont indiqués en bas de cette page." },
+];
+
+export const FAQ_CREMERIE: FAQItem[] = [
+  { q: "Proposez-vous des fromages du monde ?", r: "Oui : feta, halloumi, mozzarella et d'autres spécialités, à côté des grands fromages affinés." },
+  { q: "Avez-vous des laits végétaux ?", r: "Oui, le rayon Crémerie propose des laits végétaux en plus des laits frais entier et demi-écrémé." },
+  { q: "Où se trouve le rayon Crémerie en magasin ?", r: "Dans l'espace des produits frais, dans nos vitrines réfrigérées. N'hésitez pas à demander à nos équipes." },
+];
+
 export function faqsForRayon(slug: string): FAQItem[] {
   if (slug === "boucherie-halal") return FAQ_BOUCHERIE.concat(FAQ_RAYONS_GENERAL.slice(0, 1));
   if (slug === "poissonnerie") return FAQ_POISSONNERIE;
+  if (slug === "surgeles") return FAQ_SURGELES;
+  if (slug === "produits-courants") return FAQ_FRAIS;
+  if (slug === "cremerie") return FAQ_CREMERIE;
   return FAQ_RAYONS_GENERAL;
 }
