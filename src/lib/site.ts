@@ -233,8 +233,13 @@ export const RAYONS: Record<RayonSlug, Rayon> = {
       "Poissons entiers, filets, fruits de mer et poissons du monde, pour toutes les cuisines.",
     longDescription:
       "Dorade, bar, sardines, maquereaux, tilapia, capitaine, crevettes, calamars — poissons de nos côtes et poissons du monde, ainsi que poissons salés et séchés pour les recettes africaines et antillaises. Demandez conseil au comptoir.",
-    image: "/images/rayons/poissonnerie.svg",
+    image: "/images/rayons/poissonnerie/sardines-etal.webp",
     imageAlt: "Rayon poissonnerie Marché de Mo' Toulouse — poissons frais et fruits de mer",
+    heroSlideshow: [
+      "/images/rayons/poissonnerie/sardines-etal.webp",
+      "/images/rayons/poissonnerie/sardines-plat.webp",
+      "/images/rayons/poissonnerie/crevettes.webp",
+    ],
     culturel: false,
     ordre: 3,
     icone: "fish",

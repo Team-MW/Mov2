@@ -132,8 +132,9 @@ const googleReviewsUrl = "https://www.google.com/search?sca_esv=987102333fe88aad
     let scrollListener = null;
 
     const LOCAL_STORAGE_KEY = "mo_feedback_dismissed_until";
-    const SHOW_DELAY_MS = 15000; // 15 seconds
-    const SCROLL_THRESHOLD = 0.5; // 50% scroll
+    // Demande d'avis seulement quand le visiteur arrive en fin de page
+    // (plus de minuteur : une popup après 15 s gênait la découverte du site).
+    const SCROLL_THRESHOLD = 0.8; // 80% scroll
 
     const getDismissedUntil = () => {
       const val = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -211,12 +212,7 @@ const googleReviewsUrl = "https://www.google.com/search?sca_esv=987102333fe88aad
         }
       });
 
-      // Show trigger 1: Timer (15s)
-      checkTimeout = setTimeout(() => {
-        showPopup(shell);
-      }, SHOW_DELAY_MS);
-
-      // Show trigger 2: Scroll past 50%
+      // Show trigger: scroll past 80%
       scrollListener = () => {
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
         const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;

@@ -983,3 +983,41 @@ img {
   }
 }
 
+
+/* ------------------------------------------------------------
+   Home — cartes partenaires, bandeau WhatsApp, infos magasin
+   ------------------------------------------------------------ */
+@layer components {
+  .partner-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.09);
+  }
+  .partner-card__media { aspect-ratio: 16 / 9; overflow: hidden; }
+  .partner-card__body { padding: 1.75rem; display: flex; flex-direction: column; flex: 1; }
+  .partner-card__body > div:last-child { margin-top: auto; padding-top: 1.5rem; }
+
+  .wa-band { background: #128C4A; color: #fff; }
+  .wa-band h2 { color: #fff; }
+
+  .store-facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 2rem;
+    border-top: 1px solid var(--color-border);
+    padding-top: 1.5rem;
+  }
+  .store-facts dt {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-texte-muted);
+    margin-bottom: 0.3rem;
+  }
+  .store-facts dd { font-size: 16px; line-height: 1.45; color: var(--color-noir); font-weight: 500; }
+  @media (max-width: 520px) { .store-facts { grid-template-columns: 1fr; } }
+}

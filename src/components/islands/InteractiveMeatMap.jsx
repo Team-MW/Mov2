@@ -1,139 +1,253 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { animalsData } from '../../data/animalsCuts';
 
-export default function InteractiveMeatMap() {
-  const [activeAnimalId, setActiveAnimalId] = useState('agneau');
-  
-  const activeAnimal = animalsData.find(a => a.id === activeAnimalId) || animalsData[0];
-  const [activeCut, setActiveCut] = useState(activeAnimal.cuts.find(c => c.id === 'gigot') || activeAnimal.cuts[0]);
+/**
+ * Carte des découpes — boucherie halal.
+ *
+ * - Onglets animaux (coins nets, rouge boucherie sur l'onglet actif).
+ * - Schéma : repères NUMÉROTÉS posés sur la silhouette (coordonnées en %
+ *   de l'image 1376×768, affichée à son ratio exact → pas de décalage).
+ * - Légende numérotée sous le schéma : tous les noms sont visibles sans
+ *   avoir à deviner où cliquer.
+ * - Fiche « conseil du boucher » : nom, description, morceaux en vitrine,
+ *   modes de cuisson, navigation précédent / suivant.
+ */
+/* Les silhouettes n'occupent qu'une partie de l'image 1376×768 : on zoome
+ * chaque animal pour qu'il remplisse le cadre (valeurs mesurées sur grille). */
+const ZOOM = { agneau: 1.25, boeuf: 1, veau: 1.15, poulet: 1.25, dinde: 1.2, lapin: 1.3, chevre: 1.15 };
 
-  const handleAnimalChange = (animalId) => {
-    setActiveAnimalId(animalId);
-    const animal = animalsData.find(a => a.id === animalId);
-    if (animal && animal.cuts.length > 0) {
-      setActiveCut(animal.cuts[0]);
-    }
+export default function InteractiveMeatMap() {
+  const [animalId, setAnimalId] = useState('agneau');
+  const animal = animalsData.find((a) => a.id === animalId) || animalsData[0];
+  const [cutIndex, setCutIndex] = useState(0);
+  const cut = animal.cuts[cutIndex] || animal.cuts[0];
+  const total = animal.cuts.length;
+
+  const selectAnimal = (id) => {
+    setAnimalId(id);
+    setCutIndex(0);
   };
+  const go = (delta) => setCutIndex((i) => (i + delta + total) % total);
 
   return (
-    <div className="bg-white rounded-[40px] shadow-sm ring-1 ring-black/5 overflow-hidden p-6 md:p-10 flex flex-col gap-8">
-      
-      {/* Tabs */}
-      <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide w-full border-b border-neutral-100 px-2">
-        {animalsData.map((animal) => (
-          <button
-            key={animal.id}
-            onClick={() => handleAnimalChange(animal.id)}
-            className={`px-6 py-2.5 rounded-full text-[14px] font-bold whitespace-nowrap transition-all duration-300 ${
-              activeAnimalId === animal.id 
-                ? 'bg-rouge text-white shadow-md' 
-                : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
-            }`}
-          >
-            {animal.name}
-          </button>
-        ))}
+    <div className="meatmap rounded-lg bg-white ring-1 ring-black/10 overflow-hidden">
+      {/* Onglets animaux */}
+      <div
+        className="flex gap-1 overflow-x-auto scrollbar-hide border-b border-black/10 px-3 md:px-6 bg-neutral-50"
+        role="tablist"
+        aria-label="Choisir un animal"
+      >
+        {animalsData.map((a) => {
+          const active = a.id === animalId;
+          return (
+            <button
+              key={a.id}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => selectAnimal(a.id)}
+              className={`relative px-4 md:px-5 py-4 text-[14px] md:text-[15px] font-bold whitespace-nowrap transition-colors ${
+                active ? 'text-rouge' : 'text-neutral-500 hover:text-noir'
+              }`}
+            >
+              {a.name}
+              <span
+                className={`absolute left-3 right-3 bottom-0 h-[3px] bg-rouge transition-opacity ${
+                  active ? 'opacity-100' : 'opacity-0'
+                }`}
+              />
+            </button>
+          );
+        })}
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-10 items-center">
-        {/* Left / Image Side */}
-        <div className="lg:w-1/2 relative w-full">
-          <div className="relative w-full aspect-video max-w-[800px] mx-auto transition-opacity duration-300" key={activeAnimalId}>
-            {/* Animal Base Image */}
-            <img 
-              src={activeAnimal.image} 
-              alt={`${activeAnimal.name} - Schéma des découpes`}
-              className="absolute inset-0 w-full h-full object-cover pointer-events-none drop-shadow-md"
+      <div className="grid lg:grid-cols-[1.25fr_1fr]">
+        {/* Schéma + légende */}
+        <div className="p-5 md:p-8 lg:border-r border-black/10">
+          <div className="relative w-full aspect-[1376/768] overflow-hidden" key={animal.id}>
+           <div
+            className="absolute inset-0"
+            style={{ transform: `scale(${ZOOM[animal.id] || 1})`, '--z': ZOOM[animal.id] || 1 }}
+           >
+            <img
+              src={animal.image}
+              alt={`${animal.name} — schéma des découpes`}
+              className="absolute inset-0 w-full h-full object-contain select-none pointer-events-none"
+              draggable="false"
             />
-
-            {/* Interactive Pins */}
-            {activeAnimal.cuts.map((cut) => {
-              const isActive = activeCut.id === cut.id;
+            {animal.cuts.map((c, i) => {
+              const active = i === cutIndex;
               return (
                 <button
-                  key={cut.id}
-                  onClick={() => setActiveCut(cut)}
-                  className="absolute flex items-center justify-center group focus:outline-none z-10"
-                  style={{ top: cut.top, left: cut.left, transform: 'translate(-50%, -50%)' }}
-                  aria-label={`Voir les détails pour ${cut.name}`}
+                  key={c.id}
+                  type="button"
+                  onClick={() => setCutIndex(i)}
+                  aria-label={`${i + 1}. ${c.name}`}
+                  aria-pressed={active}
+                  className="meatmap-pin absolute"
+                  style={{ top: c.top, left: c.left }}
+                  data-active={active || undefined}
                 >
-                  <div className={`relative flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full transition-all duration-300 ${isActive ? 'bg-rouge scale-125' : 'bg-rouge opacity-50 hover:opacity-100 hover:scale-110 shadow-lg'}`}>
-                     {isActive && (
-                       <span className="absolute inset-0 rounded-full animate-ping bg-rouge opacity-40"></span>
-                     )}
-                     <span className="block w-2 h-2 sm:w-2.5 sm:h-2.5 bg-white rounded-full shadow-sm"></span>
-                  </div>
-                  
-                  <div className={`absolute left-1/2 -translate-x-1/2 bottom-full mb-3 px-3 py-1.5 bg-noir text-white text-xs font-bold rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none ${isActive ? 'hidden' : 'hidden sm:block z-50'}`}>
-                    {cut.name}
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-transparent border-t-noir"></div>
-                  </div>
+                  {i + 1}
+                  {active && <span className="meatmap-pin-label">{c.name}</span>}
                 </button>
-              )
+              );
             })}
+           </div>
           </div>
-          <p className="text-center text-[13px] text-neutral-500 mt-4 italic">Cliquez sur un repère rouge pour voir les détails de la découpe.</p>
+
+          {/* Légende numérotée */}
+          <ol className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
+            {animal.cuts.map((c, i) => {
+              const active = i === cutIndex;
+              return (
+                <li key={c.id}>
+                  <button
+                    type="button"
+                    onClick={() => setCutIndex(i)}
+                    className={`w-full flex items-center gap-3 py-2 text-left text-[14.5px] border-b transition-colors ${
+                      active
+                        ? 'border-rouge text-rouge font-bold'
+                        : 'border-black/5 text-neutral-700 hover:text-noir'
+                    }`}
+                  >
+                    <span
+                      className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-[12px] font-bold shrink-0 ${
+                        active ? 'bg-rouge text-white' : 'bg-neutral-100 text-neutral-600'
+                      }`}
+                    >
+                      {i + 1}
+                    </span>
+                    {c.name}
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
         </div>
 
-        {/* Right / Information Side */}
-        <div className="lg:w-1/2 flex flex-col justify-center w-full">
-          <div className="bg-neutral-50/80 p-8 rounded-3xl ring-1 ring-black/5 transition-all duration-300 relative overflow-hidden min-h-[450px] flex flex-col">
-             <div className="absolute -top-12 -right-12 w-32 h-32 bg-rouge opacity-5 rounded-full blur-3xl pointer-events-none"></div>
-             
-             {/* Halal Logo */}
-             <div className="absolute top-6 right-6 w-16 h-16 opacity-90 drop-shadow-sm">
-                <img src="/images/halal-logo.png" alt="Certification Halal" className="w-full h-full object-contain" />
-             </div>
+        {/* Fiche conseil du boucher */}
+        <div className="p-5 md:p-8 bg-neutral-50 flex flex-col">
+          <div className="flex items-start justify-between gap-4">
+            <span className="eyebrow eyebrow--rouge">Le conseil du boucher</span>
+            <img
+              src="/images/halal-logo.png"
+              alt="Certifié halal"
+              className="w-12 h-12 object-contain shrink-0"
+            />
+          </div>
 
-             <div className="flex items-center gap-3 mb-5 relative mt-2">
-                <span className="w-10 h-1 bg-rouge rounded-full inline-block"></span>
-                <span className="eyebrow !text-rouge tracking-widest text-[11px] uppercase">Le conseil du boucher</span>
-             </div>
-             
-             <h3 className="text-3xl md:text-4xl font-display text-balance mb-4 text-noir">
-               {activeCut.name}
-             </h3>
-             
-             <p className="text-[15px] md:text-[16px] leading-relaxed text-neutral-600 mb-8 font-medium">
-               {activeCut.description}
-             </p>
+          <p className="mt-5 text-[13px] font-bold text-neutral-500">
+            {animal.name} · morceau {cutIndex + 1} sur {total}
+          </p>
+          <h3 className="mt-1 text-[clamp(1.9rem,3.2vw,2.6rem)] leading-[1.02] text-noir text-balance">
+            {cut.name}
+          </h3>
+          <p className="mt-4 text-[16px] leading-relaxed text-neutral-700">{cut.description}</p>
 
-             <div className="space-y-6 mt-auto">
-                <div>
-                  <h4 className="font-pro font-bold text-[14px] uppercase text-noir tracking-wide mb-3 flex items-center gap-2">
-                    <svg className="w-5 h-5 text-rouge" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    En vitrine
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {activeCut.availableMeats.map(meat => (
-                      <span key={meat} className="px-3 py-1.5 bg-white ring-1 ring-black/5 rounded-lg text-[14px] text-neutral-800 shadow-sm font-medium">
-                        {meat}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+          <dl className="mt-7 space-y-5">
+            <div>
+              <dt className="text-[12px] font-bold uppercase tracking-[0.08em] text-neutral-500 mb-2">
+                En vitrine
+              </dt>
+              <dd className="flex flex-wrap gap-2">
+                {cut.availableMeats.map((m) => (
+                  <span
+                    key={m}
+                    className="px-3 py-1.5 bg-white ring-1 ring-black/10 rounded-md text-[14px] text-noir font-medium"
+                  >
+                    {m}
+                  </span>
+                ))}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[12px] font-bold uppercase tracking-[0.08em] text-neutral-500 mb-2">
+                Idéal pour
+              </dt>
+              <dd className="flex flex-wrap gap-2">
+                {cut.cookingMethods.map((m) => (
+                  <span
+                    key={m}
+                    className="px-3 py-1.5 bg-rouge text-white rounded-md text-[14px] font-bold"
+                  >
+                    {m}
+                  </span>
+                ))}
+              </dd>
+            </div>
+          </dl>
 
-                <div>
-                  <h4 className="font-pro font-bold text-[14px] uppercase text-noir tracking-wide mb-3 flex items-center gap-2">
-                    <svg className="w-5 h-5 text-rouge" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z" />
-                    </svg>
-                    Idéal pour...
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {activeCut.cookingMethods.map(method => (
-                      <span key={method} className="px-3 py-1.5 bg-red-50 text-rouge rounded-lg text-[14px] font-bold">
-                        {method}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-             </div>
+          <div className="mt-auto pt-8 flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={() => go(-1)}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md ring-1 ring-black/15 bg-white text-[14px] font-bold text-noir hover:ring-rouge hover:text-rouge transition-colors"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+                <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Précédent
+            </button>
+            <button
+              type="button"
+              onClick={() => go(1)}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-rouge text-white text-[14px] font-bold hover:bg-rouge-dark transition-colors"
+            >
+              Morceau suivant
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+                <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
+
+      <style>{`
+        .meatmap-pin {
+          transform: translate(-50%, -50%) scale(calc(1 / var(--z, 1)));
+          width: 28px;
+          height: 28px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font: 700 13px/1 var(--font-body, system-ui);
+          color: var(--color-rouge, #8B1919);
+          background: #fff;
+          border: 2px solid var(--color-rouge, #8B1919);
+          transition: background-color .15s ease, color .15s ease, transform .15s ease;
+          z-index: 1;
+        }
+        .meatmap-pin:hover { background: #FCEEEE; }
+        .meatmap-pin[data-active] {
+          background: var(--color-rouge, #8B1919);
+          color: #fff;
+          transform: translate(-50%, -50%) scale(calc(1.15 / var(--z, 1)));
+          z-index: 2;
+        }
+        .meatmap-pin:focus-visible { outline: 3px solid var(--color-noir, #0F0F0F); outline-offset: 2px; }
+        .meatmap-pin-label {
+          position: absolute;
+          left: 50%;
+          bottom: calc(100% + 8px);
+          transform: translateX(-50%);
+          white-space: nowrap;
+          background: var(--color-noir, #0F0F0F);
+          color: #fff;
+          font: 700 12.5px/1 var(--font-body, system-ui);
+          padding: 6px 9px;
+          border-radius: 4px;
+          pointer-events: none;
+        }
+        /* Mobile : seul le repère actif est numéroté, les autres deviennent
+           de petits points pour ne pas se chevaucher. */
+        @media (max-width: 640px) {
+          .meatmap-pin { width: 12px; height: 12px; font-size: 0; border-width: 2px; }
+          .meatmap-pin[data-active] { width: 26px; height: 26px; font-size: 12px; }
+          .meatmap-pin-label { display: none; }
+        }
+      `}</style>
     </div>
   );
 }

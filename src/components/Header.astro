@@ -146,19 +146,19 @@ const BUTTON_COLORS: Record<string, string> = {
       <div class="flex items-center gap-3 shrink-0">
         <a
           href="/catalogue"
-          class="hidden xl:inline-flex px-4 py-2 rounded-full font-pro font-bold text-[13px] text-vert border border-vert/30 hover:bg-vert hover:text-white transition hover:-translate-y-0.5"
+          class="hidden xl:inline-flex px-4 py-2 rounded-md font-pro font-bold text-[13px] text-vert border border-vert/30 hover:bg-vert hover:text-white transition-colors"
         >
           Catalogues
         </a>
         <a
           href="/promos"
-          class="inline-flex items-center hover:opacity-90 transition relative z-20 my-[-20px]"
+          class="px-4 py-2 rounded-md bg-rouge text-white hover:bg-rouge-dark font-pro font-bold text-[13px] transition-colors"
         >
-          <img src="/promos/codepromo.jpeg" alt="Promos" class="h-8 md:h-12 w-auto object-contain hover:scale-105 transition-transform duration-200 mix-blend-multiply" />
+          Promos
         </a>
         <a
           href="/magasins/toulouse-sud"
-          class="px-4 py-2 border border-vert text-vert hover:bg-vert hover:text-white rounded-full font-pro font-bold text-[13px] flex items-center gap-1.5 transition hover:-translate-y-0.5"
+          class="px-4 py-2 border border-vert text-vert hover:bg-vert hover:text-white rounded-md font-pro font-bold text-[13px] flex items-center gap-1.5 transition-colors"
         >
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
@@ -198,14 +198,9 @@ const BUTTON_COLORS: Record<string, string> = {
       <!-- Promos button (big, captivating) -->
       <a
         href="/promos"
-        class="inline-flex items-center hover:opacity-90 active:scale-95 transition shrink-0"
-        aria-label="Voir les promos"
+        class="px-3 py-1.5 rounded-md bg-rouge text-white font-pro font-bold text-[13px] shrink-0"
       >
-        <img
-          src="/promos/codepromo.jpeg"
-          alt="Promos"
-          class="h-7 w-auto object-contain mix-blend-multiply"
-        />
+        Promos
       </a>
     </div>
 
@@ -341,7 +336,6 @@ const BUTTON_COLORS: Record<string, string> = {
 
       <a href="/catalogue" class="block py-2.5 border-b border-black/5 font-bold text-vert">Catalogues</a>
       <a href="/promos" class="py-2.5 border-b border-black/5 text-rouge font-bold flex items-center gap-3">
-        <img src="/promos/codepromo.jpeg" alt="Promos" class="h-6 w-auto object-contain mix-blend-multiply" />
         Promos
       </a>
       <a href="/magasins/toulouse-sud" class="block py-2.5 border-b border-black/5">Magasin</a>

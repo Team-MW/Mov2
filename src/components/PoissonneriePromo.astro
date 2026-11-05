@@ -1,0 +1,156 @@
+---
+/**
+ * PoissonneriePromo — bandeau « pub » du rayon Poissonnerie sur la home.
+ * Couleur du rayon (charte Nos Rayons : #12808C), mosaïque photo,
+ * familles de produits (= taxonomie du rayon) et 2 appels à l'action.
+ *
+ * Photos : rawpixel CC0 (cf. CREDITS.md) — à remplacer par des photos
+ * du vrai rayon dès qu'elles existent (même noms de fichiers).
+ */
+import { RAYONS } from "@/lib/site";
+import { TAXONOMIE } from "@/lib/taxonomie";
+
+const rayon = RAYONS.poissonnerie;
+const familles = Object.keys(TAXONOMIE.poissonnerie ?? {});
+const base = "/images/rayons/poissonnerie";
+---
+
+<section class="poisson-promo" aria-labelledby="poisson-promo-title">
+  <div class="container-mo grid lg:grid-cols-2 gap-10 lg:gap-14 items-center py-16 md:py-24">
+    <div class="relative z-10">
+      <span class="poisson-promo__tag">Nouveau rayon</span>
+      <h2 id="poisson-promo-title" class="display-lg mt-5 text-white text-balance">
+        La poissonnerie du Marché de Mo'
+      </h2>
+      <p class="mt-5 text-[17px] md:text-[19px] leading-relaxed text-white/90 max-w-xl">
+        Dorade, tilapia, capitaine, sardines, crevettes… Des poissons de nos
+        côtes et du monde entier, pour le thiéboudienne, le poisson braisé
+        ou la friture du vendredi.
+      </p>
+
+      <ul class="mt-8 grid grid-cols-2 gap-3 max-w-lg">
+        {familles.map((f) => (
+          <li class="poisson-promo__famille">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+              <path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            {f}
+          </li>
+        ))}
+      </ul>
+
+      <div class="mt-9 flex flex-wrap gap-3">
+        <a href={`/rayons/${rayon.slug}`} class="btn poisson-promo__cta">
+          Découvrir la poissonnerie
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+        <a href="/magasins/toulouse-sud" class="btn poisson-promo__cta--ghost">
+          Venir en magasin
+        </a>
+      </div>
+    </div>
+
+    <div class="poisson-promo__mosaic" aria-hidden="true">
+      <img class="poisson-promo__img poisson-promo__img--main" src={`${base}/sardines-plat.webp`} alt="" loading="lazy" decoding="async" width="1024" height="683" />
+      <img class="poisson-promo__img poisson-promo__img--a" src={`${base}/sardines-etal.webp`} alt="" loading="lazy" decoding="async" width="1024" height="683" />
+      <img class="poisson-promo__img poisson-promo__img--b" src={`${base}/crevettes.webp`} alt="" loading="lazy" decoding="async" width="681" height="1024" />
+      <span class="poisson-promo__sticker">Arrivages<br />de la marée</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .poisson-promo {
+    position: relative;
+    overflow: hidden;
+    background: #12808C;
+    color: #fff;
+  }
+  /* Vagues discrètes en fond */
+  .poisson-promo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='120' height='28' viewBox='0 0 120 28' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 14 Q 30 0, 60 14 T 120 14' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-opacity='0.07'/%3E%3C/svg%3E");
+    background-size: 120px 28px;
+    pointer-events: none;
+  }
+  .poisson-promo h2 { color: #fff; }
+
+  .poisson-promo__tag {
+    display: inline-block;
+    background: #fff;
+    color: #0C5C65;
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 14px;
+    padding: 0.35em 0.8em;
+    transform: rotate(-2deg);
+    transform-origin: left center;
+  }
+
+  .poisson-promo__famille {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    background: rgba(0, 0, 0, 0.16);
+    padding: 0.7rem 0.85rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.2;
+  }
+
+  .poisson-promo__cta {
+    background: #fff;
+    color: #0C5C65;
+  }
+  .poisson-promo__cta:hover { background: #E8F5F6; }
+  .poisson-promo__cta--ghost {
+    background: transparent;
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.55);
+  }
+  .poisson-promo__cta--ghost:hover { border-color: #fff; background: rgba(255, 255, 255, 0.08); }
+
+  /* Mosaïque : 1 grande photo + 2 petites, bords nets */
+  .poisson-promo__mosaic {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 12px;
+    aspect-ratio: 5 / 4;
+  }
+  .poisson-promo__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+  }
+  .poisson-promo__img--main { grid-row: 1 / 3; }
+  .poisson-promo__img--a { grid-column: 2; grid-row: 1; }
+  .poisson-promo__img--b { grid-column: 2; grid-row: 2; }
+
+  /* Sticker façon étiquette de prix */
+  .poisson-promo__sticker {
+    position: absolute;
+    left: -14px;
+    bottom: 22px;
+    background: #F2A955;
+    color: #1A1A1A;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    line-height: 1.02;
+    padding: 0.55em 0.8em;
+    transform: rotate(-4deg);
+  }
+
+  @media (max-width: 1023px) {
+    .poisson-promo__sticker { left: 8px; }
+  }
+</style>

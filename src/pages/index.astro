@@ -12,6 +12,7 @@ import LocalVideoPlayer from "@components/islands/LocalVideoPlayer.jsx";
 import PromoCarousel from "@components/PromoCarousel.astro";
 import PromoHero, { type ExtraSlide } from "@components/PromoHero.astro";
 import ActuCarousel from "@components/ActuCarousel.astro";
+import PoissonneriePromo from "@components/PoissonneriePromo.astro";
 import { getActus } from "@/lib/actus";
 import { getCollection } from "astro:content";
 import { RAYONS_LIST, ENGAGEMENTS, MAGASINS, SITE } from "@/lib/site";
@@ -96,7 +97,6 @@ const schemas = [
     <section class="relative overflow-hidden bg-rouge text-white animate-fade-up">
       <div class="container-mo py-4 md:py-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] md:text-[14px] font-pro">
         <span class="inline-flex items-center gap-2 font-bold">
-          <img src="/promos/codepromo.jpeg" alt="Promo" class="h-6 w-auto object-contain mix-blend-screen" />
           <span class="badge-promo !bg-white !text-rouge !shadow-none !min-w-0 !h-auto !px-2 !py-0.5 !text-[12px]">
             -{featuredPromo.data.reduction_pct}%
           </span>
@@ -177,6 +177,9 @@ const schemas = [
     </div>
   </section>
 
+  {/* ====================== POISSONNERIE — mise en avant du nouveau rayon ====================== */}
+  <PoissonneriePromo />
+
   {/* ====================== PRODUITS VEDETTES — vitrine sans prix ====================== */}
   <section class="section bg-white">
     <div class="container-mo">
@@ -206,101 +209,65 @@ const schemas = [
     </div>
   </section>
 
-  {/* ====================== WHATSAPP COMMUNITY ====================== */}
-  <section class="bg-white text-neutral-900 relative overflow-hidden py-16 md:py-24 border-y border-black/5">
-    
-    <div class="container-mo relative z-10 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-      <div class="text-center lg:text-left order-2 lg:order-1">
-        <h2 class="display-lg text-balance mb-5 leading-[1.1]">
-          Le catalogue en avant-première sur WhatsApp
-        </h2>
-        <p class="text-[17px] md:text-[19px] text-neutral-600 leading-relaxed max-w-xl mb-8 text-pretty mx-auto lg:mx-0">
-          Rejoignez le canal officiel du <strong>Marché de Mo'</strong>. Recevez nos alertes arrivages, nos réductions exclusives et notre catalogue numérique directement sur votre téléphone.
-        </p>
-        <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
-          <a href="https://whatsapp.com/channel/0029Vb8ix0yI1rcr1BkAll1I" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#1DA851] text-white font-bold px-8 py-4 rounded-md transition-colors text-[17px]">
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.711.927 3.149.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.768-5.77zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964 1.006-3.585c-.605-1.085-.928-2.34-.928-3.633 0-4.133 3.366-7.499 7.502-7.499 4.134 0 7.499 3.365 7.499 7.499 0 4.133-3.365 7.499-7.499 7.499z"/></svg>
-            Rejoindre maintenant
-          </a>
-          <span class="text-[13px] text-neutral-500 font-medium mt-3 sm:mt-0">100% Gratuit · Désabonnement libre</span>
-        </div>
+  {/* ====================== AUSSI DANS VOTRE MAGASIN — Picadeli + Too Good To Go ====================== */}
+  <section class="section bg-neutral-50 border-y border-black/5">
+    <div class="container-mo">
+      <div class="max-w-2xl mb-10 reveal">
+        <span class="eyebrow">En magasin</span>
+        <h2 class="display-lg mt-4 text-balance">Aussi chez Mo'</h2>
       </div>
 
-      <div class="relative order-1 lg:order-2 flex justify-center mt-6 lg:mt-0">
-        <!-- WhatsApp Logo -->
-        <div class="w-48 md:w-64 lg:w-[280px] relative group z-10">
-          <div class="relative z-10">
-            <img src="/images/whatsapp-logo.avif" alt="WhatsApp Canal" class="w-full h-auto rounded-[2rem] object-cover" />
+      <div class="grid md:grid-cols-2 gap-6">
+        <article class="partner-card reveal">
+          <div class="partner-card__media bg-neutral-100">
+            <img src="/images/partenaires/picadeli-salade.webp" alt="Salade fraîche du bar Picadeli" loading="lazy" class="w-full h-full object-contain p-4" />
           </div>
-        </div>
+          <div class="partner-card__body">
+            <img src="/images/partenaires/picadeli-logo.png" alt="Picadeli" class="h-10 w-auto self-start object-contain object-left mix-blend-multiply" />
+            <h3 class="mt-4 text-[clamp(1.6rem,2.6vw,2.1rem)] leading-[1.04]">Le bar à salade Picadeli</h3>
+            <p class="mt-3 text-[16px] text-neutral-600 leading-relaxed">
+              Composez votre salade sur-mesure avec des dizaines d'ingrédients frais, préparés chaque jour dans notre magasin de Toulouse Sud — Cépière.
+            </p>
+            <div class="mt-6 flex flex-wrap items-center gap-4">
+              <a href="/magasins/toulouse-sud" class="btn text-white" style="background:#3E9A46">Venir en magasin</a>
+              <a href="https://www.picadeli.fr/fr/nos-produits" target="_blank" rel="noopener noreferrer" class="font-bold text-[15px] underline underline-offset-4" style="color:#3E9A46">Les recettes Picadeli</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="partner-card reveal" style="--reveal-delay: 120ms">
+          <div class="partner-card__media bg-white">
+            <img src="/images/partenaires/tgtg-banner.png" alt="Paniers anti-gaspi Too Good To Go" loading="lazy" class="w-full h-full object-cover" />
+          </div>
+          <div class="partner-card__body">
+            <img src="/images/partenaires/tgtg-logo.png" alt="Too Good To Go" class="h-14 w-auto self-start object-contain object-left mix-blend-multiply" />
+            <h3 class="mt-4 text-[clamp(1.6rem,2.6vw,2.1rem)] leading-[1.04]">Paniers anti-gaspi</h3>
+            <p class="mt-3 text-[16px] text-neutral-600 leading-relaxed">
+              Avec Too Good To Go, sauvez des paniers surprises composés des invendus du jour, à prix très réduits. Bon pour la planète et pour votre porte-monnaie.
+            </p>
+            <div class="mt-6">
+              <a href="/too-good-to-go" class="btn text-white" style="background:#00645A">Découvrir notre démarche</a>
+            </div>
+          </div>
+        </article>
       </div>
     </div>
   </section>
 
-  {/* ====================== PICADELI ====================== */}
-  <section class="section bg-white pb-12 pt-8">
-    <div class="container-mo grid lg:grid-cols-12 gap-10 items-center">
-      <div class="lg:col-span-6 reveal">
-        <img 
-          src="/images/partenaires/picadeli-logo.png" 
-          alt="Picadeli Logo" 
-          class="h-16 object-contain mb-6 mix-blend-multiply" 
-        />
-        <h2 class="display-lg mt-4 text-balance">
-          Créez votre propre<br/>
-          <span class="text-[#6BC172]">salade sur-mesure</span>
-        </h2>
-        <p class="mt-6 max-w-xl text-[17px] text-neutral-600 leading-relaxed">
-          Le bar à salade <strong>Picadeli</strong> est désormais disponible dans notre magasin de Toulouse Sud — Cépière. 
-          Faites le plein de fraîcheur avec des dizaines d'ingrédients gourmands, sains, et préparés chaque jour.
+  {/* ====================== WHATSAPP — bandeau compact ====================== */}
+  <section class="wa-band">
+    <div class="container-mo py-10 md:py-12 grid md:grid-cols-[auto_1fr_auto] items-center gap-6 md:gap-10">
+      <img src="/images/whatsapp-logo.avif" alt="" aria-hidden="true" class="w-16 h-16 md:w-20 md:h-20 rounded-2xl object-cover" loading="lazy" />
+      <div>
+        <h2 class="display-md text-white">Le catalogue en avant-première sur WhatsApp</h2>
+        <p class="mt-2 text-[16px] text-white/85 max-w-2xl">
+          Arrivages, promos et catalogue de la semaine, directement sur votre téléphone. Gratuit, désabonnement en un clic.
         </p>
-        <div class="mt-8 flex flex-wrap gap-4">
-          <a href="/magasins/toulouse-sud" class="btn btn-primary bg-[#6BC172] border-[#6BC172] text-white hover:bg-[#5AA161]">Venir en magasin</a>
-          <a href="https://www.picadeli.fr/fr/nos-produits" target="_blank" rel="noopener noreferrer" class="btn btn-outline border-[#6BC172] text-[#6BC172] hover:bg-[#6BC172] hover:text-white">Voir les recettes Picadeli</a>
-        </div>
       </div>
-      <div class="lg:col-span-6 reveal" style="--reveal-delay: 200ms">
-        <div class="relative rounded-lg overflow-hidden bg-neutral-100 p-4">
-          <img 
-            src="/images/partenaires/picadeli-salade.webp" 
-            alt="Salade fraîche Picadeli" 
-            class="w-full h-auto object-cover rounded-lg" 
-          />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {/* ====================== TOO GOOD TO GO ====================== */}
-  <section class="section bg-neutral-50 pb-12 pt-8">
-    <div class="container-mo grid lg:grid-cols-12 gap-10 items-center">
-      <div class="lg:col-span-6 lg:order-2 reveal">
-        <img 
-          src="/images/partenaires/tgtg-logo.png" 
-          alt="Too Good To Go Logo" 
-          class="h-16 object-contain mb-6 mix-blend-multiply" 
-        />
-        <h2 class="display-lg mt-4 text-balance">
-          Engagez-vous contre le<br/>
-          <span class="text-[#00645A]">gaspillage alimentaire</span>
-        </h2>
-        <p class="mt-6 max-w-xl text-[17px] text-neutral-600 leading-relaxed">
-          Le <strong>Marché de Mo'</strong> s'associe à Too Good To Go. 
-          Sauvez des paniers surprises composés d'invendus de la journée à prix très réduits. Un geste pour la planète, et pour votre porte-monnaie !
-        </p>
-        <div class="mt-8 flex flex-wrap gap-4">
-          <a href="/too-good-to-go" class="btn btn-primary bg-[#00645A] border-[#00645A] text-white hover:bg-[#004e46]">Découvrir notre démarche</a>
-        </div>
-      </div>
-      <div class="lg:col-span-6 lg:order-1 reveal" style="--reveal-delay: 200ms">
-        <div class="relative rounded-lg overflow-hidden bg-white p-4">
-          <img 
-            src="/images/partenaires/tgtg-banner.png" 
-            alt="Paniers Too Good To Go" 
-            class="w-full h-auto object-cover rounded-lg" 
-          />
-        </div>
-      </div>
+      <a href="https://whatsapp.com/channel/0029Vb8ix0yI1rcr1BkAll1I" target="_blank" rel="noopener noreferrer" class="btn bg-white hover:bg-[#E9FBEF]" style="color:#128C4A">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.711.927 3.149.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.768-5.77zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964 1.006-3.585c-.605-1.085-.928-2.34-.928-3.633 0-4.133 3.366-7.499 7.502-7.499 4.134 0 7.499 3.365 7.499 7.499 0 4.133-3.365 7.499-7.499 7.499z"/></svg>
+        Rejoindre le canal
+      </a>
     </div>
   </section>
 
@@ -499,62 +466,55 @@ const schemas = [
     </div>
   </section>
 
-  {/* ====================== MAGASINS — conversion logistique ====================== */}
-  <section class="section bg-blanc">
-    <div class="container-mo">
-      <div class="text-center max-w-3xl mx-auto mb-14 reveal">
-        <span class="eyebrow !justify-center">Notre magasin</span>
-        <h2 class="display-lg mt-4 text-balance">
-          Ouvert 7j/7, même le dimanche matin
-        </h2>
-      </div>
+  {/* ====================== MAGASIN — infos pratiques ====================== */}
+  {(() => {
+    const m = Object.values(MAGASINS)[0];
+    return (
+      <section class="section bg-white">
+        <div class="container-mo grid lg:grid-cols-2 gap-10 lg:gap-14 items-stretch">
+          <div class="reveal flex flex-col">
+            <span class="eyebrow self-start">Notre magasin</span>
+            <h2 class="display-lg mt-4 text-balance">{m.nomCourt}</h2>
+            <p class="mt-4 text-[17px] text-neutral-600 leading-relaxed max-w-xl">{m.description}</p>
 
-      <div class="max-w-2xl mx-auto">
-        {Object.values(MAGASINS).map((m) => (
-          <a
-            href={`/magasins/${m.slug}`}
-            class="group block relative overflow-hidden rounded-lg bg-noir text-white transition-all duration-500"
-          >
-            <div class="aspect-[4/3] sm:aspect-[16/10] relative overflow-hidden bg-noir-softer">
-              <img
-                src={m.photo || "/images/magasins/toulouse-sud.jpg"}
-                alt={`${m.nom} — extérieur`}
-                loading="lazy"
-                width="1200"
-                height="750"
-                class="w-full h-full object-cover opacity-70 group-hover:opacity-85 transition-all duration-700"
-                onerror="this.style.opacity='0.3'"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent"></div>
-            </div>
-            <div class="absolute inset-x-0 bottom-0 p-4 sm:p-7 lg:p-10">
-              {m.badge && (
-                <span class="inline-flex items-center mb-1.5 pill pill-rouge bg-rouge !text-white text-[9.5px] sm:text-[11px]">
-                  {m.badge}
-                </span>
-              )}
-              <h3 class="font-soft font-bold text-[18px] sm:text-[26px] lg:text-[32px] leading-tight !text-white">
-                {m.nomCourt}
-              </h3>
-              <p class="mt-1 text-white/80 text-[11.5px] sm:text-[14px]">{m.adresseLigne1}, {m.codePostal} {m.ville}</p>
-              <div class="mt-2.5 sm:mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] sm:text-[12.5px] text-white/70">
-                <span class="inline-flex items-center gap-1.5">
-                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  7j/7
-                </span>
-                <span>{m.surface}</span>
-                <span>{m.parking}</span>
+            <dl class="store-facts mt-8">
+              <div>
+                <dt>Adresse</dt>
+                <dd>{m.adresseLigne1}<br />{m.codePostal} {m.ville}</dd>
               </div>
-              <span class="mt-3.5 sm:mt-6 inline-flex items-center gap-2 font-bold text-[11.5px] sm:text-[13.5px] group-hover:translate-x-1 transition-transform">
-                Voir le magasin
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
+              <div>
+                <dt>Horaires</dt>
+                <dd>Lundi – samedi : {m.horaires.lundiSamedi}<br />Dimanche : {m.horaires.dimanche}</dd>
+              </div>
+              <div>
+                <dt>Téléphone</dt>
+                <dd><a href={`tel:${m.telE164}`} class="underline underline-offset-4 hover:text-vert">{m.telephone}</a></dd>
+              </div>
+              <div>
+                <dt>Sur place</dt>
+                <dd>{m.surface} · parking {m.parking}</dd>
+              </div>
+            </dl>
+
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a href={m.mapsLink} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Itinéraire</a>
+              <a href={`/magasins/${m.slug}`} class="btn btn-secondary">Voir la page du magasin</a>
             </div>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
+          </div>
+
+          <div class="reveal rounded-lg overflow-hidden ring-1 ring-black/10 min-h-[320px] bg-neutral-100">
+            <iframe
+              src={m.mapsEmbed}
+              title={`Plan d'accès — ${m.nom}`}
+              loading="lazy"
+              class="w-full h-full min-h-[320px] border-0"
+              referrerpolicy="no-referrer"
+            ></iframe>
+          </div>
+        </div>
+      </section>
+    );
+  })()}
 
   {/* ====================== FAQ ====================== */}
   <FAQAccordion items={FAQ_HOME} />
