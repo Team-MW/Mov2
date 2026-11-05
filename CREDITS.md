@@ -44,10 +44,10 @@ Pour activer un slideshow dessus, il faudrait soit (a) une session photo en maga
   site). Les images restent la propriété de Marché de Mo'.
 - **Unsplash** : [licence Unsplash](https://unsplash.com/license) — libre pour
   usage commercial, attribution non requise mais recommandée (ci-dessus).
-- **Rawpixel (domaine public CC0)** : photos du rayon Poissonnerie, trouvées
-  via [Openverse](https://openverse.org) avec le filtre licence CC0. Aucune
-  attribution requise. À remplacer par des photos du vrai rayon dès que possible.
-  - `rayons/poissonnerie/sardines-plat.webp` — « Sardines Fish » (rawpixel)
-  - `rayons/poissonnerie/sardines-etal.webp` — « Free sardine fish image » (rawpixel)
-  - `rayons/poissonnerie/sardines-glace.webp` — « Sardines on a fish market » (rawpixel)
-  - `rayons/poissonnerie/crevettes.webp` — « Fresh shrimp » (rawpixel)
+- **Rawpixel (domaine public CC0)** : `rayons/poissonnerie/sardines-plat.webp`
+  — « Sardines Fish », trouvée via [Openverse](https://openverse.org) avec le
+  filtre licence CC0. Aucune attribution requise.
+- **Fournies par l'agence (nov. 2026)** — rayon Poissonnerie :
+  `etal-glace.jpg`, `bars-dorades.jpg`, `fruits-de-mer.jpg`.
+  Droits d'utilisation à confirmer (noms de fichiers d'origine issus de sites
+  tiers : `64f6e653…_poissonerie-min.jpg`, `Poisson-frais-entier-MB-Poissonnerie….jpg`).
