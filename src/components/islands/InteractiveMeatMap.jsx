@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { animalsData } from '../../data/animalsCuts';
+import { animalsZones } from '../../data/animalsZones';
 
 /**
  * Carte des découpes — boucherie halal.
@@ -75,6 +76,31 @@ export default function InteractiveMeatMap() {
               className="absolute inset-0 w-full h-full object-contain select-none pointer-events-none"
               draggable="false"
             />
+            {animalsZones[animal.id] && (
+              <div
+                className="meatmap-zones"
+                style={{
+                  WebkitMaskImage: `url(/images/decoupe/${animal.id}-mask.png)`,
+                  maskImage: `url(/images/decoupe/${animal.id}-mask.png)`,
+                }}
+              >
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                  {animal.cuts.map((c, i) => {
+                    const pts = animalsZones[animal.id][c.id];
+                    if (!pts) return null;
+                    return (
+                      <polygon
+                        key={c.id}
+                        points={pts}
+                        className="meatmap-zone"
+                        data-active={i === cutIndex || undefined}
+                        onClick={() => setCutIndex(i)}
+                      />
+                    );
+                  })}
+                </svg>
+              </div>
+            )}
             {animal.cuts.map((c, i) => {
               const active = i === cutIndex;
               return (
@@ -220,6 +246,28 @@ export default function InteractiveMeatMap() {
           z-index: 1;
         }
         .meatmap-pin:hover { background: #FCEEEE; }
+        /* Zones de découpe : découpées au contour exact par le masque du corps */
+        .meatmap-zones {
+          position: absolute;
+          inset: 0;
+          -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
+          -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+        }
+        .meatmap-zones svg { width: 100%; height: 100%; display: block; }
+        .meatmap-zone {
+          fill: rgba(139, 25, 25, 0);
+          stroke: var(--color-rouge, #8B1919);
+          stroke-width: 1.6px;
+          stroke-dasharray: 6 4;
+          stroke-linejoin: round;
+          vector-effect: non-scaling-stroke;
+          cursor: pointer;
+          transition: fill .15s ease;
+        }
+        .meatmap-zone:hover { fill: rgba(139, 25, 25, 0.10); }
+        .meatmap-zone[data-active] { fill: rgba(139, 25, 25, 0.26); }
         .meatmap-pin[data-active] {
           background: var(--color-rouge, #8B1919);
           color: #fff;

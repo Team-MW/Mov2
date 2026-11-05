@@ -54,9 +54,9 @@ export const animalsData = [
       { id: 'aiguillette', name: 'Aiguillette', top: '60%', left: '42%', availableMeats: ['Aiguillettes'], cookingMethods: ['Poêler rapide', 'Frire'], description: "Petite bande de chair située sous le filet, extrêmement tendre." },
       { id: 'aile', name: 'Aile', top: '53%', left: '52%', availableMeats: ['Ailes entières', 'Manchons'], cookingMethods: ['Griller', 'Frire', 'Rôtir'], description: "Parfaites marinées pour l'apéritif, les barbecues ou des buffalo wings." },
       { id: 'cuisse', name: 'Cuisse entière', top: '67%', left: '55%', availableMeats: ['Cuisse entière'], cookingMethods: ['Rôtir', 'Mijoter', 'Griller'], description: "Une viande plus foncée, juteuse et très goûtue." },
-      { id: 'haut-cuisse', name: 'Haut de cuisse', top: '61%', left: '61%', availableMeats: ['Haut de cuisse désossé', 'Haut avec os'], cookingMethods: ['Mijoter', 'Griller'], description: "Le meilleur compromis: tendre comme le filet, savoureux comme la cuisse." },
+      { id: 'haut-cuisse', name: 'Haut de cuisse', top: '53%', left: '61%', availableMeats: ['Haut de cuisse désossé', 'Haut avec os'], cookingMethods: ['Mijoter', 'Griller'], description: "Le meilleur compromis: tendre comme le filet, savoureux comme la cuisse." },
       { id: 'pilon', name: 'Pilon', top: '74%', left: '51%', availableMeats: ['Pilons'], cookingMethods: ['Rôtir', 'Frire', 'Griller'], description: "La partie inférieure de la cuisse, adorée des enfants et pratique à manger." },
-      { id: 'sot-ly-laisse', name: 'Sot-l\'y-laisse', top: '44%', left: '57%', availableMeats: ['Sot-l\'y-laisse (sur commande)'], cookingMethods: ['Poêler'], description: "Deux petits morceaux très fins de chaque côté de la colonne vertébrale. Le 'caviar' du poulet." }
+      { id: 'sot-ly-laisse', name: 'Sot-l\'y-laisse', top: '42%', left: '55%', availableMeats: ['Sot-l\'y-laisse (sur commande)'], cookingMethods: ['Poêler'], description: "Deux petits morceaux très fins de chaque côté de la colonne vertébrale. Le 'caviar' du poulet." }
     ]
   },
   {
